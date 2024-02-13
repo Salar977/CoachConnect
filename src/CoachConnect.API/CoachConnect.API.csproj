@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\" />
     <Folder Include="Extensions\" />
     <Folder Include="logs\" />
     <Folder Include="Middleware\" />

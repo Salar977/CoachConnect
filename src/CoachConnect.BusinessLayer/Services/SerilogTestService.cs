@@ -4,7 +4,7 @@ namespace CoachConnect.BusinessLayer.Services;
 
 public class SerilogTestService
 {
-    private readonly ILogger<SerilogTestService> _logger;
+    private readonly ILogger _logger;
 
     public SerilogTestService(ILogger<SerilogTestService> logger)
     {

@@ -1,18 +1,27 @@
-﻿namespace CoachConnect.DataAccess.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace CoachConnect.DataAccess.Entities;
 
 public partial class Game
 {
+    [Key]
     public int Id { get; set; }
 
-    public string Location { get; set; } = null!;
+    [Required]
+    public string Location { get; set; } = string.Empty;
 
-    public string OpponentName { get; set; } = null!;
+    [Required]
+    public string OpponentName { get; set; } = string.Empty;
 
+    [Required]
     public DateTime GameTime { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    [Required]
+    public DateTime Created { get; init; }
 
-    public DateTime? UpdatedAt { get; set; }
+    [Required]
+    public DateTime Updated { get; set; }
 
     public virtual ICollection<GameAttendance> GameAttendances { get; set; } = new List<GameAttendance>();
 }

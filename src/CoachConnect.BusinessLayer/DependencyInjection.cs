@@ -1,6 +1,4 @@
-﻿using CoachConnect.BusinessLayer.Services;
-using CoachConnect.DataAccess.Repositories;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace CoachConnect.BusinessLayer;
 

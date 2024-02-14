@@ -1,4 +1,6 @@
 using CoachConnect.BusinessLayer;
+using CoachConnect.DataAccess.Data;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +11,13 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddServices();
+//builder.Services.AddBLAndDAL();
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<CoachConnectDbContext>(options =>
+{
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+});
 
 builder.Host.UseSerilog((context, configuration) =>
 {

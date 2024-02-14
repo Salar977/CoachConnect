@@ -1,16 +1,23 @@
-﻿namespace CoachConnect.DataAccess.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CoachConnect.DataAccess.Entities;
 
 public partial class Practice
 {
+    [Key]
     public int Id { get; set; }
 
-    public string Location { get; set; } = null!;
+    [Required]
+    public string Location { get; set; } = string.Empty;
 
+    [Required]
     public DateTime PracticeDate { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    [Required]
+    public DateTime Created { get; init; }
 
-    public DateTime? UpdatedAt { get; set; }
+    [Required]
+    public DateTime Updated { get; set; }
 
     public virtual ICollection<PracticeAttendance> PracticeAttendances { get; set; } = new List<PracticeAttendance>();
 }

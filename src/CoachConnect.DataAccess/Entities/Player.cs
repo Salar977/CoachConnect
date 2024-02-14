@@ -1,22 +1,30 @@
-﻿namespace CoachConnect.DataAccess.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace CoachConnect.DataAccess.Entities;
 
 public partial class Player
 {
+    [Key]
     public int Id { get; set; }
 
+    [ForeignKey(nameof(UserId))]
     public int UserId { get; set; }
 
+    [ForeignKey(nameof(TeamId))]
     public int TeamId { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    [Required]
+    public DateTime Created { get; init; }
 
-    public DateTime? UpdatedAt { get; set; }
+    [Required]
+    public DateTime Updated { get; set; }
 
     public virtual ICollection<GameAttendance> GameAttendances { get; set; } = new List<GameAttendance>();
 
     public virtual ICollection<PracticeAttendance> PracticeAttendances { get; set; } = new List<PracticeAttendance>();
 
-    public virtual Team Team { get; set; } = null!;
+    public virtual Team? Team { get; set; }
 
-    public virtual User User { get; set; } = null!;
+    public virtual User? User { get; set; }
 }

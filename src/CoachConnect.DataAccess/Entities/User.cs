@@ -1,24 +1,36 @@
-﻿namespace CoachConnect.DataAccess.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CoachConnect.DataAccess.Entities;
 
 public partial class User
 {
+    [Key]
     public int Id { get; set; }
 
-    public string FirstName { get; set; } = null!;
+    [Required]
+    [MinLength(2), MaxLength(50)]
+    public string FirstName { get; set; } = string.Empty;
 
-    public string LastName { get; set; } = null!;
+    [Required]
+    [MinLength(2), MaxLength(50)]
+    public string LastName { get; set; } = string.Empty;
 
-    public string PhoneNumber { get; set; } = null!;
+    [Required]
+    public string PhoneNumber { get; set; } = string.Empty;
 
-    public string Email { get; set; } = null!;
+    [Required]
+    [EmailAddress]
+    public string Email { get; set; } = string.Empty;
 
-    public string HashedPassword { get; set; } = null!;
+    [Required]
+    public string HashedPassword { get; set; } = string.Empty;
 
-    public string Salt { get; set; } = null!;
+    [Required]
+    public string Salt { get; set; } = string.Empty;
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime Created { get; set; }
 
-    public DateTime? UpdatedAt { get; set; }
+    public DateTime Updated { get; set; }
 
     public virtual ICollection<Player> Players { get; set; } = new List<Player>();
 }

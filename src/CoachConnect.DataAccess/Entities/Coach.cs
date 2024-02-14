@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace CoachConnect.DataAccess.Entities;
 
-public partial class Coach
+public class Coach
 {
     [Key]
     public int Id { get; set; }

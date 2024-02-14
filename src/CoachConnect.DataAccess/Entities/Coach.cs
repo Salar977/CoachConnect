@@ -2,7 +2,7 @@
 
 namespace CoachConnect.DataAccess.Entities;
 
-public partial class Coach
+public class Coach
 {
     [Key]
     public int Id { get; set; }

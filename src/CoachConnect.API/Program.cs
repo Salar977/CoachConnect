@@ -1,3 +1,4 @@
+using CoachConnect.API.Middleware;
 using CoachConnect.BusinessLayer;
 using Serilog;
 
@@ -10,6 +11,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddServices();
+
+builder.Services.AddScoped<GlobalExceptionMiddleware>();
 
 builder.Host.UseSerilog((context, configuration) =>
 {
@@ -28,6 +31,9 @@ if (app.Environment.IsDevelopment())
 app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
+
+// middelware
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseAuthorization();
 

@@ -5,9 +5,9 @@ namespace CoachConnect.BusinessLayer;
 public static class DependencyInjection
 {
 
-    public static IServiceCollection AddBLAndDAL(this IServiceCollection services)
+    public static IServiceCollection AddBusinessLayer(this IServiceCollection services)
     {
-
+        
         return services;
     }
 }

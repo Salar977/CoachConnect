@@ -46,8 +46,9 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<UserDTO>> Post([FromBody] UserRegistrationDTO dto)
     {
         _logger.LogDebug("Registering new user");
-        await Task.Delay(10);
-        return null;
+
+        var res = await _userService.RegisterAsync(dto);
+        return res != null ? Ok(res) : BadRequest("Could not register new user");
     }
 
     // PUT api/<UsersController>/5

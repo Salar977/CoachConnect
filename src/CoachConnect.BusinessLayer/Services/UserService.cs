@@ -65,9 +65,24 @@ public class UserService : IUserService
         throw new NotImplementedException();
     }
 
-    public Task<UserDTO?> RegisterAsync(UserRegistrationDTO dto)
+    public async Task<UserDTO?> RegisterAsync(UserRegistrationDTO dto)
     {
-        throw new NotImplementedException();
+        _logger.LogDebug("Registering new user");
+
+        var existingMember = await _userRepository.GetByUserNameAsync(dto.UserName);
+        if (existingMember != null)
+        {
+            return null;
+        }
+
+        var user = _userRegistrationMapper.MapToEntity(dto);
+
+        user.Salt = BCrypt.Net.BCrypt.GenerateSalt();
+        user.HashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password, user.Salt);
+
+        var res = await _userRepository.RegisterUserAsync(user);
+
+        return _userMapper.MapToDTO(res!);
     }
 
     public Task<UserDTO?> UpdateAsync(int id, UserDTO dto, int loggedInUserId)

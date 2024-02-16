@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CoachConnect.BusinessLayer.DTOs;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,9 +24,10 @@ public class UsersController : ControllerBase
     }
 
     // POST api/<UsersController>
-    [HttpPost ("register", Name = "RegisterUSer") ]
-    public async Task<ActionResult<UserDTO>> Post([FromBody] MemberRegistrationDTO dto)
+    [HttpPost ("register", Name = "RegisterUser") ]
+    public async Task<ActionResult<UserDTO>> Post([FromBody] UserRegistrationDTO dto)
     {
+
     }
 
     // PUT api/<UsersController>/5

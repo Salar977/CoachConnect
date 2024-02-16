@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Mappers\Interfaces\" />
     <Folder Include="Validators\" />
   </ItemGroup>
 

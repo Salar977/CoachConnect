@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CoachConnect.API.Controllers;
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
 [ApiController]
 public class UsersController : ControllerBase
 {
@@ -18,10 +18,20 @@ public class UsersController : ControllerBase
     }
 
     // GET: api/<UsersController>
-    [HttpGet]
-    public IEnumerable<string> Get()
+    [HttpGet(Name = "GetAllUsers")]
+    public async Task<ActionResult<IEnumerable<UserDTO>>> GetAllUsers(int page = 1, int pageSize = 10)
     {
-        return new string[] { "value1", "value2" };
+        _logger.LogDebug("Getting all users");
+
+        if (page < 1 || pageSize < 1 || pageSize > 50)
+        {
+            _logger.LogWarning("Invalid pagination parameters Page: {page}, PageSize: {pageSize}", page, pageSize);
+
+            return BadRequest("Invalid pagination parameters - MIN page = 1, MAX pageSize = 50 ");
+        }
+
+        var res = await _userService.GetAllAsync(page, pageSize);
+        return Ok(res);
     }
 
     // GET api/<UsersController>/5
@@ -36,7 +46,8 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<UserDTO>> Post([FromBody] UserRegistrationDTO dto)
     {
         _logger.LogDebug("Registering new user");
-
+        await Task.Delay(10);
+        return null;
     }
 
     // PUT api/<UsersController>/5

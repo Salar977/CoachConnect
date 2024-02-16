@@ -6,6 +6,10 @@ public partial class User
 {
     [Key]
     public int Id { get; set; }
+    
+    [Required]
+    [MinLength(5), MaxLength(50)]
+    public string Username { get; set; } = string.Empty;
 
     [Required]
     [MinLength(2), MaxLength(50)]

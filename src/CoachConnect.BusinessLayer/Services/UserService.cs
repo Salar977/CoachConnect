@@ -4,6 +4,7 @@ using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.DataAccess.Entities;
 using CoachConnect.DataAccess.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Http.Timeouts;
 using Microsoft.Extensions.Logging;
 
@@ -25,11 +26,7 @@ public class UserService : IUserService
         _userMapper = userMapper;
         _userRegistrationMapper = userRegistrationMapper;
         _logger = logger;
-    }
-    public Task<UserDTO?> DeleteAsync(int id, int loggedInUserId)
-    {
-        throw new NotImplementedException();
-    }
+    } 
 
     public async Task<ICollection<UserDTO>> GetAllAsync(int page, int pageSize)
     {
@@ -39,40 +36,39 @@ public class UserService : IUserService
         var dtos = res.Select(user => _userMapper.MapToDTO(user)).ToList();
         return dtos;        
     }
-
-    public Task<int>? GetAuthenticatedIdAsync(string userName, string password)
-    {
-        throw new NotImplementedException();
-    }
-
+    
     public Task<UserDTO?> GetByIdAsync(int id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<UserDTO?> GetByLastNameAsync(string userLastName)
+    public async Task<UserDTO?> GetByUserNameAsync(string userName)
+    {
+        _logger.LogDebug("Getting user by username");
+
+        var res = await _userRepository.GetByUserNameAsync(userName);
+        return res != null ? _userMapper.MapToDTO(res) : null;
+    }
+
+    public Task<ICollection<UserDTO>> GetByUserLastNameAsync(string userLastName)
     {
         throw new NotImplementedException();
     }
 
-    public Task<UserDTO?> GetByPlayerAsync(string playerLastName)
+    public Task<ICollection<UserDTO>> GetByPlayerLastNameAsync(string playerLastName)
     {
         throw new NotImplementedException();
-    }
+    }      
 
-    public Task<UserDTO?> GetByUserNameAsync(string userName)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<UserDTO?> RegisterAsync(UserRegistrationDTO dto)
+    public async Task<UserDTO?> RegisterUserAsync(UserRegistrationDTO dto)
     {
         _logger.LogDebug("Registering new user");
 
-        var existingMember = await _userRepository.GetByUserNameAsync(dto.UserName);
-        if (existingMember != null)
+        var existingUser = await _userRepository.GetByUserNameAsync(dto.UserName);
+        if (existingUser != null)
         {
-            return null;
+            _logger.LogDebug("User already exists: {username}", dto.UserName);
+            return null; // sette opp custom exception? user already exists.
         }
 
         var user = _userRegistrationMapper.MapToEntity(dto);
@@ -86,6 +82,16 @@ public class UserService : IUserService
     }
 
     public Task<UserDTO?> UpdateAsync(int id, UserDTO dto, int loggedInUserId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<UserDTO?> DeleteAsync(int id, int loggedInUserId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<int>? GetAuthenticatedIdAsync(string userName, string password)  // fjernes?
     {
         throw new NotImplementedException();
     }

@@ -1,6 +1,7 @@
 ﻿using CoachConnect.DataAccess.Data;
 using CoachConnect.DataAccess.Entities;
 using CoachConnect.DataAccess.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace CoachConnect.DataAccess.Repositories;
@@ -16,29 +17,35 @@ public class UserRepository : IUserRepository
         _dbContext = dbContext;
     }
 
-    public Task<User?> DeleteAsync(int id)
+    public async Task<ICollection<User>> GetAllAsync(int page, int pageSize)
     {
-        throw new NotImplementedException();
-    }
+        _logger.LogDebug("Getting users from db");
 
-    public Task<ICollection<User>> GetAllAsync(int page, int pagesize)
-    {
-        DateTime date = DateTime.Now;
-        var user = new User
-        {
-            Id = 1, 
-            Username = "TestUserName",
-            FirstName = "Jan",
-            LastName = "Jansen",
-            PhoneNumber = "1234567890",
-            Email = "abc@abc.no",
-            HashedPassword = "12345abcabc",
-            Salt = "1234567890",
-            Created = date,
-            Updated = date            
-        };
-       
-        return Task.FromResult<ICollection<User>>(new List<User> { user });
+        int itemsToSkip = (page - 1) * pageSize;
+
+        return await _dbContext.Users
+            .OrderBy(u => u.Id)
+            .Skip(itemsToSkip)
+            .Take(pageSize)
+            .Distinct()
+            .ToListAsync();
+
+        //DateTime date = DateTime.Now;
+        //var user = new User
+        //{
+        //    Id = 1, 
+        //    Username = "TestUserName",
+        //    FirstName = "Jan",
+        //    LastName = "Jansen",
+        //    PhoneNumber = "1234567890",
+        //    Email = "abc@abc.no",
+        //    HashedPassword = "12345abcabc",
+        //    Salt = "1234567890",
+        //    Created = date,
+        //    Updated = date            
+        //};
+
+        //return Task.FromResult<ICollection<User>>(new List<User> { user });
     }
 
     public Task<User?> GetByIdAsync(int id)
@@ -46,17 +53,18 @@ public class UserRepository : IUserRepository
         throw new NotImplementedException();
     }
 
-    public Task<User?> GetByLastNameAsync(string userLastName)
+    public async Task<User?> GetByUserNameAsync(string userName)
+    {
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Username.Equals(userName));
+        return user;
+    }
+
+    public Task<ICollection<User>> GetByLastNameAsync(string userLastName)
     {
         throw new NotImplementedException();
     }
 
-    public Task<User?> GetByPlayerLastNameAsync(string playerLastName)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<User?> GetByUserNameAsync(string userName)
+    public Task<ICollection<User>> GetByPlayerLastNameAsync(string playerLastName)
     {
         throw new NotImplementedException();
     }
@@ -74,4 +82,9 @@ public class UserRepository : IUserRepository
     {
         throw new NotImplementedException();
     }
+
+    public Task<User?> DeleteAsync(int id)
+    {
+        throw new NotImplementedException();
+    }  
 }

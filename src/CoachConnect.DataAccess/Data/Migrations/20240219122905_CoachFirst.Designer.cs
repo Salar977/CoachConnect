@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoachConnect.DataAccess.Data.Migrations
 {
     [DbContext(typeof(CoachConnectDbContext))]
-    [Migration("20240216143920_CoachInitial")]
-    partial class CoachInitial
+    [Migration("20240219122905_CoachFirst")]
+    partial class CoachFirst
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -266,7 +266,7 @@ namespace CoachConnect.DataAccess.Data.Migrations
                     b.Property<DateTime>("Updated")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Username")
+                    b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");

@@ -42,20 +42,20 @@ public class UserService : IUserService
         throw new NotImplementedException();
     }
 
-    public async Task<UserDTO?> GetByUserNameAsync(string userName)
+    public async Task<UserDTO?> GetByUserNameAsync(string username)
     {
         _logger.LogDebug("Getting user by username");
 
-        var res = await _userRepository.GetByUserNameAsync(userName);
+        var res = await _userRepository.GetByUserNameAsync(username);
         return res != null ? _userMapper.MapToDTO(res) : null;
     }
 
-    public Task<ICollection<UserDTO>> GetByUserLastNameAsync(string userLastName)
+    public Task<ICollection<UserDTO>> GetByUserLastNameAsync(string userLastname)
     {
         throw new NotImplementedException();
     }
 
-    public Task<ICollection<UserDTO>> GetByPlayerLastNameAsync(string playerLastName)
+    public Task<ICollection<UserDTO>> GetByPlayerLastNameAsync(string playerLastname)
     {
         throw new NotImplementedException();
     }      
@@ -91,7 +91,7 @@ public class UserService : IUserService
         throw new NotImplementedException();
     }
 
-    public Task<int>? GetAuthenticatedIdAsync(string userName, string password)  // fjernes?
+    public Task<int>? GetAuthenticatedIdAsync(string username, string password)  // fjernes?
     {
         throw new NotImplementedException();
     }

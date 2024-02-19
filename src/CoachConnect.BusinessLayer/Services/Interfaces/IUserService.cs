@@ -10,11 +10,11 @@ public interface IUserService
 {
     Task<ICollection<UserDTO>> GetAllAsync(int page, int pageSize);
     Task<UserDTO?> GetByIdAsync(int id);
-    Task<UserDTO?> GetByUserNameAsync(string userName);
-    Task<ICollection<UserDTO>> GetByUserLastNameAsync(string userLastName);
-    Task<ICollection<UserDTO>> GetByPlayerLastNameAsync(string playerLastName);
+    Task<UserDTO?> GetByUserNameAsync(string username);
+    Task<ICollection<UserDTO>> GetByUserLastNameAsync(string userLastname);
+    Task<ICollection<UserDTO>> GetByPlayerLastNameAsync(string playerLastname);
     Task<UserDTO?> UpdateAsync(int id, UserDTO dto, int loggedInUserId);
     Task<UserDTO?> DeleteAsync(int id, int loggedInUserId);  
-    Task<int>? GetAuthenticatedIdAsync(string userName, string password);
+    Task<int>? GetAuthenticatedIdAsync(string username, string password);
     Task<UserDTO?> RegisterUserAsync(UserRegistrationDTO dto);
 }

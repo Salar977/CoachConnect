@@ -263,7 +263,7 @@ namespace CoachConnect.DataAccess.Data.Migrations
                     b.Property<DateTime>("Updated")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Username")
+                    b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");

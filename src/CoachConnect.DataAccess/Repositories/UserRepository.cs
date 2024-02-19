@@ -28,24 +28,7 @@ public class UserRepository : IUserRepository
             .Skip(itemsToSkip)
             .Take(pageSize)
             .Distinct()
-            .ToListAsync();
-
-        //DateTime date = DateTime.Now;
-        //var user = new User
-        //{
-        //    Id = 1, 
-        //    Username = "TestUserName",
-        //    FirstName = "Jan",
-        //    LastName = "Jansen",
-        //    PhoneNumber = "1234567890",
-        //    Email = "abc@abc.no",
-        //    HashedPassword = "12345abcabc",
-        //    Salt = "1234567890",
-        //    Created = date,
-        //    Updated = date            
-        //};
-
-        //return Task.FromResult<ICollection<User>>(new List<User> { user });
+            .ToListAsync();       
     }
 
     public Task<User?> GetByIdAsync(int id)
@@ -53,18 +36,18 @@ public class UserRepository : IUserRepository
         throw new NotImplementedException();
     }
 
-    public async Task<User?> GetByUserNameAsync(string userName)
+    public async Task<User?> GetByUserNameAsync(string username)
     {
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Username.Equals(userName));
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserName.Equals(username));
         return user;
     }
 
-    public Task<ICollection<User>> GetByLastNameAsync(string userLastName)
+    public Task<ICollection<User>> GetByLastNameAsync(string userLastname)
     {
         throw new NotImplementedException();
     }
 
-    public Task<ICollection<User>> GetByPlayerLastNameAsync(string playerLastName)
+    public Task<ICollection<User>> GetByPlayerLastNameAsync(string playerLastname)
     {
         throw new NotImplementedException();
     }

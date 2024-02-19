@@ -10,9 +10,9 @@ public interface IUserRepository
 {
     Task<ICollection<User>> GetAllAsync(int page, int pageSize);
     Task<User?> GetByIdAsync(int id);
-    Task<User?> GetByUserNameAsync(string userName);
-    Task<ICollection<User>> GetByLastNameAsync(string userLastName);
-    Task<ICollection<User>> GetByPlayerLastNameAsync(string playerLastName);
+    Task<User?> GetByUserNameAsync(string username);
+    Task<ICollection<User>> GetByLastNameAsync(string userLastname);
+    Task<ICollection<User>> GetByPlayerLastNameAsync(string playerLastname);
     Task<User?> RegisterUserAsync(User user);
     Task<User?> UpdateAsync(int id, User user);
     Task<User?> DeleteAsync(int id);

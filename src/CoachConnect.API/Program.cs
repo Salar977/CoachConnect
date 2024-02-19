@@ -26,6 +26,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 
+
 // Rate Limiter - Simple rate limiter with fixed 5 seconds for each request otherwise 429: Too Many Requests
 builder.Services.AddRateLimiter(rateLimiterOptions =>
 {
@@ -63,11 +64,9 @@ app.UseRateLimiter();
 
 app.UseHttpsRedirection();
 
-// middleware
-app.UseMiddleware<GlobalExceptionMiddleware>();
-
-app.UseAuthentication(); // for JWT
 app.UseAuthorization();
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.MapControllers()
     .RequireRateLimiting("fixed");

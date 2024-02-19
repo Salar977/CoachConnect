@@ -2,9 +2,8 @@
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace CoachConnect.API.Controllers;
+
 [Route("api/v1/[controller]")]
 [ApiController]
 public class UsersController : ControllerBase
@@ -43,31 +42,31 @@ public class UsersController : ControllerBase
 
     // GET api/<UsersController>/
     [HttpGet("username", Name = "GetUserByUserName")]
-    public async Task<ActionResult<UserDTO>> GetByUserName([FromQuery]string userName)
+    public async Task<ActionResult<UserDTO>> GetByUserName([FromQuery]string username)
     {
-        _logger.LogDebug("Getting user by username: {userName}", userName);
+        _logger.LogDebug("Getting user by username: {userName}", username);
 
-        var res = await _userService.GetByUserNameAsync(userName);
+        var res = await _userService.GetByUserNameAsync(username);
         return res != null ? Ok(res) : BadRequest("Could not find any user with this username");
     }
 
     // GET api/<UsersController>/
     [HttpGet("lastname", Name = "GetUserByUserLastName")]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserByUserLastName([FromQuery] string lastName)
+    public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserByUserLastName([FromQuery] string lastname)
     {
-        _logger.LogDebug("Getting user by lastname: {lastName}", lastName);
+        _logger.LogDebug("Getting user by lastname: {lastName}", lastname);
 
-        var res = await _userService.GetByUserLastNameAsync(lastName);
+        var res = await _userService.GetByUserLastNameAsync(lastname);
         return res != null ? Ok(res) : BadRequest("Could not find any users with this lastname");
     }
 
     // GET api/<UsersController>/
     [HttpGet("playername", Name = "GetUserByPlayerLastName")]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserByPlayerLastName([FromQuery] string playerName)
+    public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserByPlayerLastName([FromQuery] string playername)
     {
-        _logger.LogDebug("Getting user by playername: {playerName}", playerName);
+        _logger.LogDebug("Getting user by playername: {playerName}", playername);
 
-        var res = await _userService.GetByUserLastNameAsync(playerName);
+        var res = await _userService.GetByUserLastNameAsync(playername);
         return res != null ? Ok(res) : BadRequest("Could not find any users connected to this playername");
     }
 

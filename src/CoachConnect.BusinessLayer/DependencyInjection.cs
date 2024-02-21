@@ -11,7 +11,8 @@ public static class DependencyInjection
 
     public static IServiceCollection AddBusinessLayer(this IServiceCollection services)
     {
-       
+
+        services.AddScoped<IUserService, UserService>();
 
         return services;
     }

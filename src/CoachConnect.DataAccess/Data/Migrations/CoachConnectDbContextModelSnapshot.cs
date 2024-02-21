@@ -105,6 +105,9 @@ namespace CoachConnect.DataAccess.Data.Migrations
                     b.Property<int>("PlayerId")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("PlayerId1")
+                        .HasColumnType("char(36)");
+
                     b.Property<DateTime>("Updated")
                         .HasColumnType("datetime(6)");
 
@@ -112,16 +115,15 @@ namespace CoachConnect.DataAccess.Data.Migrations
 
                     b.HasIndex("GameId");
 
-                    b.HasIndex("PlayerId");
+                    b.HasIndex("PlayerId1");
 
                     b.ToTable("Game_attendences");
                 });
 
             modelBuilder.Entity("CoachConnect.DataAccess.Entities.Player", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<Guid>("Id")
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime(6)");
@@ -180,6 +182,9 @@ namespace CoachConnect.DataAccess.Data.Migrations
                     b.Property<int>("PlayerId")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("PlayerId1")
+                        .HasColumnType("char(36)");
+
                     b.Property<int>("PracticeId")
                         .HasColumnType("int");
 
@@ -188,7 +193,7 @@ namespace CoachConnect.DataAccess.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PlayerId");
+                    b.HasIndex("PlayerId1");
 
                     b.HasIndex("PracticeId");
 
@@ -277,7 +282,7 @@ namespace CoachConnect.DataAccess.Data.Migrations
 
                     b.HasOne("CoachConnect.DataAccess.Entities.Player", "Player")
                         .WithMany("GameAttendances")
-                        .HasForeignKey("PlayerId")
+                        .HasForeignKey("PlayerId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -309,7 +314,7 @@ namespace CoachConnect.DataAccess.Data.Migrations
                 {
                     b.HasOne("CoachConnect.DataAccess.Entities.Player", "Player")
                         .WithMany("PracticeAttendances")
-                        .HasForeignKey("PlayerId")
+                        .HasForeignKey("PlayerId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

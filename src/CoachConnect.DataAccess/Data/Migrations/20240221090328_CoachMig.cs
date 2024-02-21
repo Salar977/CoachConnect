@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CoachConnect.DataAccess.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class CoachFirst : Migration
+    public partial class CoachMig : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -136,8 +136,7 @@ namespace CoachConnect.DataAccess.Data.Migrations
                 name: "Players",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     UserId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     TeamId = table.Column<int>(type: "int", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -170,7 +169,8 @@ namespace CoachConnect.DataAccess.Data.Migrations
                     GameId = table.Column<int>(type: "int", nullable: false),
                     PlayerId = table.Column<int>(type: "int", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Updated = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    Updated = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    PlayerId1 = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -182,8 +182,8 @@ namespace CoachConnect.DataAccess.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Game_attendences_Players_PlayerId",
-                        column: x => x.PlayerId,
+                        name: "FK_Game_attendences_Players_PlayerId1",
+                        column: x => x.PlayerId1,
                         principalTable: "Players",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -199,14 +199,15 @@ namespace CoachConnect.DataAccess.Data.Migrations
                     PracticeId = table.Column<int>(type: "int", nullable: false),
                     PlayerId = table.Column<int>(type: "int", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Updated = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    Updated = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    PlayerId1 = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Practice_attendences", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Practice_attendences_Players_PlayerId",
-                        column: x => x.PlayerId,
+                        name: "FK_Practice_attendences_Players_PlayerId1",
+                        column: x => x.PlayerId1,
                         principalTable: "Players",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -225,9 +226,9 @@ namespace CoachConnect.DataAccess.Data.Migrations
                 column: "GameId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Game_attendences_PlayerId",
+                name: "IX_Game_attendences_PlayerId1",
                 table: "Game_attendences",
-                column: "PlayerId");
+                column: "PlayerId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Players_TeamId",
@@ -240,9 +241,9 @@ namespace CoachConnect.DataAccess.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Practice_attendences_PlayerId",
+                name: "IX_Practice_attendences_PlayerId1",
                 table: "Practice_attendences",
-                column: "PlayerId");
+                column: "PlayerId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Practice_attendences_PracticeId",

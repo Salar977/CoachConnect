@@ -3,10 +3,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoachConnect.DataAccess.Entities;
 
+public readonly record struct GameId(Guid gameId)
+{
+    public static GameId NewId => new GameId(Guid.NewGuid());
+    public static GameId Empty => new GameId(Guid.Empty);
+
+};
+
 public class Game
 {
     [Key]
-    public int Id { get; set; }
+    public GameId Id { get; set; }
 
     [Required]
     public string Location { get; set; } = string.Empty;

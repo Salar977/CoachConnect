@@ -2,10 +2,19 @@
 
 namespace CoachConnect.DataAccess.Entities;
 
-public partial class Practice
+
+public readonly record struct PracticeId(Guid practiceId)
+{
+    public static PracticeId NewId => new PracticeId(Guid.NewGuid());
+    public static PracticeId Empty => new PracticeId(Guid.Empty);
+
+};
+
+
+public class Practice
 {
     [Key]
-    public int Id { get; set; }
+    public PracticeId Id { get; set; }
 
     [Required]
     public string Location { get; set; } = string.Empty;

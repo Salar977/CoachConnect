@@ -1,24 +1,39 @@
 using CoachConnect.API.Middleware;
 using CoachConnect.BusinessLayer;
-using CoachConnect.DataAccess.Data;
-using Microsoft.EntityFrameworkCore;
+using CoachConnect.BusinessLayer.Services.Interfaces;
+using CoachConnect.BusinessLayer.Services;
+using CoachConnect.DataAccess;
+using CoachConnect.DataAccess.Repositories.Interfaces;
+using CoachConnect.DataAccess.Repositories;
+using Microsoft.AspNetCore.RateLimiting;
 using Serilog;
+using CoachConnect.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//builder.Services.AddBLAndDAL();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<CoachConnectDbContext>(options =>
+builder.AddSwaggerWithBasicAuthentication();
+
+builder.RegisterMappers();
+
+// Rate Limiter - Simple rate limiter with fixed 5 seconds for each request otherwise 429: Too Many Requests
+builder.Services.AddRateLimiter(rateLimiterOptions =>
 {
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+    rateLimiterOptions.AddFixedWindowLimiter("fixed", options =>
+    {
+        options.PermitLimit = 1;
+        options.Window = TimeSpan.FromSeconds(5);
+        options.QueueLimit = 0;
+        rateLimiterOptions.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    });
 });
+
+builder.Services.AddBusinessLayer();
+builder.Services.AddDataAccess(builder.Configuration);
 
 builder.Services.AddScoped<GlobalExceptionMiddleware>();
 
@@ -38,13 +53,15 @@ if (app.Environment.IsDevelopment())
 
 app.UseSerilogRequestLogging();
 
-app.UseHttpsRedirection();
+app.UseRateLimiter();
 
-// middelware
-app.UseMiddleware<GlobalExceptionMiddleware>();
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseMiddleware<GlobalExceptionMiddleware>();
+
+app.MapControllers()
+    .RequireRateLimiting("fixed");
 
 app.Run();

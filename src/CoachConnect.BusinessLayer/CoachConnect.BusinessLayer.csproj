@@ -22,9 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\" />
-    <Folder Include="Mappers\Interfaces\" />
-    <Folder Include="Services\Interfaces\" />
     <Folder Include="Validators\" />
   </ItemGroup>
 

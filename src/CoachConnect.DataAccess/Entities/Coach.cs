@@ -2,10 +2,17 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CoachConnect.DataAccess.Entities;
 
+public readonly record struct CoachId(Guid coachId)
+{
+    public static CoachId NewId => new CoachId(Guid.NewGuid());
+    public static CoachId Empty => new CoachId(Guid.Empty);
+
+};
+
 public class Coach
 {
     [Key]
-    public int Id { get; set; }
+    public CoachId Id { get; set; }
 
     [Required]
     [MinLength(2), MaxLength(50)]

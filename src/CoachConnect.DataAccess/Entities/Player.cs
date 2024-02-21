@@ -9,6 +9,7 @@ public readonly record struct PlayerId(Guid playerId)
     public static PlayerId Empty => new PlayerId(Guid.Empty);
 
 };
+
 public class Player
 {
     [Key]
@@ -18,7 +19,7 @@ public class Player
     public UserId UserId { get; set; }
 
     [ForeignKey(nameof(TeamId))]
-    public int TeamId { get; set; }
+    public TeamId TeamId { get; set; }
 
     [Required]
     public DateTime Created { get; init; }

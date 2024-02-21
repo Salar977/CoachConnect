@@ -1,6 +1,10 @@
 using CoachConnect.API.Middleware;
 using CoachConnect.BusinessLayer;
+using CoachConnect.BusinessLayer.Services.Interfaces;
+using CoachConnect.BusinessLayer.Services;
 using CoachConnect.DataAccess;
+using CoachConnect.DataAccess.Repositories.Interfaces;
+using CoachConnect.DataAccess.Repositories;
 using Microsoft.AspNetCore.RateLimiting;
 using Serilog;
 using CoachConnect.API.Extensions;

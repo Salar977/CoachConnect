@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoachConnect.DataAccess.Entities;
 
-public partial class Game
+public class Game
 {
     [Key]
     public int Id { get; set; }

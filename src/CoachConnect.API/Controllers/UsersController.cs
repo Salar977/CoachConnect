@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CoachConnect.API.Controllers;
 
-[Route("api/v1/[controller]")]
+[Route("api/v1/users")]
 [ApiController]
 public class UsersController : ControllerBase
 {
@@ -18,7 +18,7 @@ public class UsersController : ControllerBase
 
     // GET: api/v1/<UsersController>  // Husk endre alle disee til v1 og riktige linker
     [HttpGet(Name = "GetAllUsers")]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> GetAllUsers(int page = 1, int pageSize = 10)
+    public async Task<ActionResult<IEnumerable<UserDTO>>> GetAllUsers(int page = 1, int pageSize = 10) // husk legge til sortere alfabetisk både og på Coach
     {
         _logger.LogDebug("Getting all users");
 
@@ -41,13 +41,13 @@ public class UsersController : ControllerBase
     }
 
     // GET api/<UsersController>/
-    [HttpGet("username", Name = "GetUserByUserName")]
-    public async Task<ActionResult<UserDTO>> GetByUserName([FromQuery]string username)
+    [HttpGet("email", Name = "GetUserByEmail")] 
+    public async Task<ActionResult<UserDTO>> GetUserByEmail([FromQuery] string email)
     {
-        _logger.LogDebug("Getting user by username: {userName}", username);
+        _logger.LogDebug("Getting user by email: {email}", email);
 
-        var res = await _userService.GetByUserNameAsync(username);
-        return res != null ? Ok(res) : BadRequest("Could not find any user with this username");
+        var res = await _userService.GetUserByEmailAsync(email);
+        return res != null ? Ok(res) : BadRequest("Could not find any user with this email");
     }
 
     // GET api/<UsersController>/

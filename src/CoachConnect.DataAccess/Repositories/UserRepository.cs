@@ -36,9 +36,9 @@ public class UserRepository : IUserRepository
         throw new NotImplementedException();
     }
 
-    public async Task<User?> GetByUserNameAsync(string username)
+    public async Task<User?> GetUserByEmailAsync(string email) 
     {
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserName.Equals(username));
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
         return user;
     }
 
@@ -56,10 +56,15 @@ public class UserRepository : IUserRepository
     {
         _logger.LogDebug("Adding user to db");
 
+        // Generate a new UserId, denne viste ikke yngve i videon derfor jeg fikk 000-0000-00 osv på Guid
+        user.Id = UserId.NewId;
+        
         await _dbContext.Users.AddAsync(user);
         await _dbContext.SaveChangesAsync();
+
         return user;
     }
+
 
     public Task<User?> UpdateAsync(int id, User user)
     {

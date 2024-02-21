@@ -42,11 +42,11 @@ public class UserService : IUserService
         throw new NotImplementedException();
     }
 
-    public async Task<UserDTO?> GetByUserNameAsync(string username)
+    public async Task<UserDTO?> GetUserByEmailAsync(string email) 
     {
-        _logger.LogDebug("Getting user by username");
+        _logger.LogDebug("Getting user by email");
 
-        var res = await _userRepository.GetByUserNameAsync(username);
+        var res = await _userRepository.GetUserByEmailAsync(email);
         return res != null ? _userMapper.MapToDTO(res) : null;
     }
 
@@ -64,10 +64,10 @@ public class UserService : IUserService
     {
         _logger.LogDebug("Registering new user");
 
-        var existingUser = await _userRepository.GetByUserNameAsync(dto.UserName);
+        var existingUser = await _userRepository.GetUserByEmailAsync(dto.Email);
         if (existingUser != null)
         {
-            _logger.LogDebug("User already exists: {username}", dto.UserName);
+            _logger.LogDebug("User already exists: {email}", dto.Email);
             return null; // sette opp custom exception? user already exists.
         }
 
@@ -91,8 +91,8 @@ public class UserService : IUserService
         throw new NotImplementedException();
     }
 
-    public Task<int>? GetAuthenticatedIdAsync(string username, string password)  // fjernes?
-    {
-        throw new NotImplementedException();
-    }
+    //public Task<int>? GetAuthenticatedIdAsync(string username, string password)  
+    //{
+    //    throw new NotImplementedException();
+    //}
 }

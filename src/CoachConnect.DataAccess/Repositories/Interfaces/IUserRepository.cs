@@ -10,7 +10,7 @@ public interface IUserRepository
 {
     Task<ICollection<User>> GetAllAsync(int page, int pageSize);
     Task<User?> GetByIdAsync(int id);
-    Task<User?> GetByUserNameAsync(string username);
+    Task<User?> GetUserByEmailAsync(string email);
     Task<ICollection<User>> GetByLastNameAsync(string userLastname);
     Task<ICollection<User>> GetByPlayerLastNameAsync(string playerLastname);
     Task<User?> RegisterUserAsync(User user);

@@ -2,14 +2,21 @@
 
 namespace CoachConnect.DataAccess.Entities;
 
-public partial class User
+public readonly record struct UserId(Guid userId)
+{ 
+    public static UserId NewId => new UserId(Guid.NewGuid());
+    public static UserId Empty => new UserId(Guid.Empty);
+
+};
+
+public class User // Hvorfor partial??
 {
     [Key]
-    public int Id { get; set; }
+    public UserId Id { get; set; }
     
-    [Required]
-    [MinLength(5), MaxLength(50)]
-    public string UserName { get; set; } = string.Empty;
+    //[Required]
+    //[MinLength(5), MaxLength(50)]
+    //public string UserName { get; set; } = string.Empty;
 
     [Required]
     [MinLength(2), MaxLength(50)]

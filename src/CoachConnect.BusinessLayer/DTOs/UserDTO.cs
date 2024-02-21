@@ -1,8 +1,10 @@
-﻿namespace CoachConnect.BusinessLayer.DTOs;
+﻿using CoachConnect.DataAccess.Entities;
+
+namespace CoachConnect.BusinessLayer.DTOs;
 
 public record UserDTO(
-    int Id,
-    string UserName,
+    //UserId Id,
+    //string UserName,
     string FirstName,
     string LastName,
     string PhoneNumber,

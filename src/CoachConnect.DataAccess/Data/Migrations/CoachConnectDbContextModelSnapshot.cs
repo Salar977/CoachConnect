@@ -132,8 +132,8 @@ namespace CoachConnect.DataAccess.Data.Migrations
                     b.Property<DateTime>("Updated")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -227,9 +227,8 @@ namespace CoachConnect.DataAccess.Data.Migrations
 
             modelBuilder.Entity("CoachConnect.DataAccess.Entities.User", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<Guid>("Id")
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime(6)");
@@ -262,11 +261,6 @@ namespace CoachConnect.DataAccess.Data.Migrations
 
                     b.Property<DateTime>("Updated")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 

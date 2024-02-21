@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CoachConnect.API.Controllers;
 
-[Route("api/v1/[controller]")]
+[Route("api/v1/hello")]
 [ApiController]
 public class HelloController : ControllerBase
 {

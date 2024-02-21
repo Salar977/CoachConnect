@@ -4,7 +4,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # Migrations
-# src/CoachConnect.DataAccess/Data/Migrations/
+src/CoachConnect.DataAccess/Data/Migrations/
 
 # User-specific files
 *.rsuser

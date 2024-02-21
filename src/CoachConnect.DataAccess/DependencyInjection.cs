@@ -1,4 +1,6 @@
 ﻿using CoachConnect.DataAccess.Data;
+using CoachConnect.DataAccess.Repositories.Interfaces;
+using CoachConnect.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +16,9 @@ public static class DependencyInjection
         {
             options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         });
+
+        services.AddScoped<IUserRepository, UserRepository>();
+
         return services;
     }
 }

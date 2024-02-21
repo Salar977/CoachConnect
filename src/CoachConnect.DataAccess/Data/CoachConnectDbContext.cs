@@ -37,6 +37,7 @@ public class CoachConnectDbContext : DbContext
                 value => new PlayerId(value)
             );
 
+
         modelBuilder.Entity<Coach>()
             .Property(x => x.Id)
             .HasConversion(
@@ -79,12 +80,13 @@ public class CoachConnectDbContext : DbContext
                 value => new TeamId(value)
             );
 
-
         // Herfra og nedover: Configure the mapping for Player.UserId // trenger denne og pga vi har Foreignkey Userid i Player.cs (Ketils comment ikke slett comment inntil videre)
+
         modelBuilder.Entity<Player>()
             .Property(p => p.UserId)
             .HasConversion(
                 v => v.userId,  // Convert UserId to underlying type
+
                 v => new UserId(v)
             );  // Convert underlying type to UserId
 

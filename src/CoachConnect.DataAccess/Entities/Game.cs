@@ -10,6 +10,7 @@ public readonly record struct GameId(Guid gameId)
 
 };
 
+
 public class Game
 {
     [Key]

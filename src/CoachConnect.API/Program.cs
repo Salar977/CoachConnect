@@ -8,8 +8,6 @@ using CoachConnect.DataAccess.Repositories;
 using Microsoft.AspNetCore.RateLimiting;
 using Serilog;
 using CoachConnect.API.Extensions;
-using System.Text;
-using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,11 +19,6 @@ builder.Services.AddSwaggerGen();
 builder.AddSwaggerWithBasicAuthentication();
 
 builder.RegisterMappers();
-
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-
-
 
 // Rate Limiter - Simple rate limiter with fixed 5 seconds for each request otherwise 429: Too Many Requests
 builder.Services.AddRateLimiter(rateLimiterOptions =>

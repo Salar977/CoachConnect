@@ -2,12 +2,14 @@
 
 namespace CoachConnect.DataAccess.Entities;
 
+
 public readonly record struct PracticeId(Guid practiceId)
 {
     public static PracticeId NewId => new PracticeId(Guid.NewGuid());
     public static PracticeId Empty => new PracticeId(Guid.Empty);
 
 };
+
 
 public class Practice
 {

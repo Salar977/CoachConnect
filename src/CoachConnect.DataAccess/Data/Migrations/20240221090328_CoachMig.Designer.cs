@@ -3,6 +3,7 @@ using System;
 using CoachConnect.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoachConnect.DataAccess.Data.Migrations
 {
     [DbContext(typeof(CoachConnectDbContext))]
-    partial class CoachConnectDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240221090328_CoachMig")]
+    partial class CoachMig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,9 +24,9 @@ namespace CoachConnect.DataAccess.Data.Migrations
 
             modelBuilder.Entity("CoachConnect.DataAccess.Entities.Coach", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
-
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime(6)");
@@ -64,9 +67,9 @@ namespace CoachConnect.DataAccess.Data.Migrations
 
             modelBuilder.Entity("CoachConnect.DataAccess.Entities.Game", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
-
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime(6)");
@@ -92,18 +95,20 @@ namespace CoachConnect.DataAccess.Data.Migrations
 
             modelBuilder.Entity("CoachConnect.DataAccess.Entities.GameAttendance", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
-
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid>("GameId")
-                        .HasColumnType("char(36)");
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("PlayerId")
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("int");
 
+                    b.Property<Guid>("PlayerId1")
                         .HasColumnType("char(36)");
 
                     b.Property<DateTime>("Updated")
@@ -113,8 +118,7 @@ namespace CoachConnect.DataAccess.Data.Migrations
 
                     b.HasIndex("GameId");
 
-                    b.HasIndex("PlayerId");
-
+                    b.HasIndex("PlayerId1");
 
                     b.ToTable("Game_attendences");
                 });
@@ -127,10 +131,8 @@ namespace CoachConnect.DataAccess.Data.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime(6)");
 
-
-                    b.Property<Guid>("TeamId")
-                        .HasColumnType("char(36)");
-
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Updated")
                         .HasColumnType("datetime(6)");
@@ -149,10 +151,9 @@ namespace CoachConnect.DataAccess.Data.Migrations
 
             modelBuilder.Entity("CoachConnect.DataAccess.Entities.Practice", b =>
                 {
-
-                    b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
-
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime(6)");
@@ -174,29 +175,28 @@ namespace CoachConnect.DataAccess.Data.Migrations
 
             modelBuilder.Entity("CoachConnect.DataAccess.Entities.PracticeAttendance", b =>
                 {
-
-                    b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
-
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("PlayerId")
+                    b.Property<Guid>("PlayerId1")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("PracticeId")
-                        .HasColumnType("char(36)");
-
+                    b.Property<int>("PracticeId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Updated")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PlayerId");
-
+                    b.HasIndex("PlayerId1");
 
                     b.HasIndex("PracticeId");
 
@@ -205,13 +205,12 @@ namespace CoachConnect.DataAccess.Data.Migrations
 
             modelBuilder.Entity("CoachConnect.DataAccess.Entities.Team", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("CoachId")
-                        .HasColumnType("char(36)");
-
+                    b.Property<int>("CoachId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime(6)");
@@ -286,9 +285,7 @@ namespace CoachConnect.DataAccess.Data.Migrations
 
                     b.HasOne("CoachConnect.DataAccess.Entities.Player", "Player")
                         .WithMany("GameAttendances")
-
-                        .HasForeignKey("PlayerId")
-
+                        .HasForeignKey("PlayerId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -320,9 +317,7 @@ namespace CoachConnect.DataAccess.Data.Migrations
                 {
                     b.HasOne("CoachConnect.DataAccess.Entities.Player", "Player")
                         .WithMany("PracticeAttendances")
-
-                        .HasForeignKey("PlayerId")
-
+                        .HasForeignKey("PlayerId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

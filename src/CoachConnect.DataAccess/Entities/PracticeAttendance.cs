@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoachConnect.DataAccess.Entities;
 
+
 public readonly record struct PracticeAttendanceId(Guid practiceAttendanceId)
 {
     public static PracticeAttendanceId NewId => new PracticeAttendanceId(Guid.NewGuid());

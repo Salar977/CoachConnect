@@ -3,12 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoachConnect.DataAccess.Entities;
 
+
 public readonly record struct GameAttendanceId(Guid gameAttendanceId)
 {
     public static GameAttendanceId NewId => new GameAttendanceId(Guid.NewGuid());
     public static GameAttendanceId Empty => new GameAttendanceId(Guid.Empty);
 
 };
+
 
 public class GameAttendance
 {

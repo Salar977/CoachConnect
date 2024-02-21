@@ -18,4 +18,31 @@ public class CoachConnectDbContext : DbContext
     public DbSet<PracticeAttendance> Practice_attendences { get; set; }
     public DbSet<Team> Teams { get; set; }
     public DbSet<User> Users { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<User>()
+            .Property(x => x.Id)
+            .HasConversion(
+                id => id.userId,
+                value => new UserId(value)
+            );
+
+        modelBuilder.Entity<Player>()
+            .Property(x => x.Id)
+            .HasConversion(
+                id => id.playerId,
+                value => new PlayerId(value)
+            );
+
+        // Configure the mapping for Player.UserId // trenger denne og pga vi har Foreignkey Userid i Player.cs
+        modelBuilder.Entity<Player>()
+            .Property(p => p.UserId)
+            .HasConversion(
+                v => v.userId,  // Convert UserId to underlying type
+                v => new UserId(v));  // Convert underlying type to UserId
+    }
+
 }

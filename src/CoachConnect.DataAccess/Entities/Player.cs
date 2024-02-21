@@ -3,13 +3,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoachConnect.DataAccess.Entities;
 
-public partial class Player
+public readonly record struct PlayerId(Guid playerId)
+{
+    public static PlayerId NewId => new PlayerId(Guid.NewGuid());
+    public static PlayerId Empty => new PlayerId(Guid.Empty);
+
+};
+public class Player
 {
     [Key]
-    public int Id { get; set; }
+    public PlayerId Id { get; set; }
 
     [ForeignKey(nameof(UserId))]
-    public int UserId { get; set; }
+    public UserId UserId { get; set; }
 
     [ForeignKey(nameof(TeamId))]
     public int TeamId { get; set; }

@@ -24,7 +24,7 @@ public class UserRepository : IUserRepository
         int itemsToSkip = (page - 1) * pageSize;
 
         return await _dbContext.Users
-            .OrderBy(u => u.Id)
+            .OrderBy(u => u.LastName)
             .Skip(itemsToSkip)
             .Take(pageSize)
             .Distinct()

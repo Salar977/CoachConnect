@@ -15,8 +15,8 @@ public class User
     [Key]
     public UserId Id { get; set; }
 
-    [ForeignKey(nameof(PlayerId))]
-    public PlayerId PlayerId { get; set; }
+    //[ForeignKey(nameof(PlayerId))]
+    //public PlayerId PlayerId { get; set; }
 
     [Required]
     [MinLength(2), MaxLength(50)]

@@ -32,13 +32,18 @@ public class UserRepository : IUserRepository
             .ToListAsync();       
     }
 
-    public Task<User?> GetByIdAsync(int id)
+    public async Task<User?> GetByIdAsync(UserId id)
     {
-        throw new NotImplementedException();
+        _logger.LogDebug("Getting user by id from db");
+
+        var res = await _dbContext.Users.FindAsync(id);
+        return res;
     }
 
     public async Task<User?> GetUserByEmailAsync(string email)
     {
+        _logger.LogDebug("Getting user by email from db");
+
         var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
         return user;
     }

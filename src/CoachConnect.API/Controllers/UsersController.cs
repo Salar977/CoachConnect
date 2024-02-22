@@ -1,5 +1,6 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
 using CoachConnect.BusinessLayer.Services.Interfaces;
+using CoachConnect.DataAccess.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoachConnect.API.Controllers;
@@ -35,21 +36,14 @@ public class UsersController : ControllerBase
 
     // GET api/<UsersController>/5
     [HttpGet("{id}", Name = "GetUserById")] 
-    public string Get(string id)
-    {
-        return "value";
-    }
+    public async Task<ActionResult<UserDTO>> GetUserById(Guid id) // bruk Guid her pga modelbinding kjenner ikke igjen vår custom UserId, så bruk Guid her og vi må konvertere under isteden
+    {   
+        _logger.LogDebug("Getting user by id {id}", id);
 
-    //// GET api/<UsersController>/
-    //[HttpGet("email", Name = "GetUserByEmail")]
-    //public async Task<ActionResult<UserDTO>> GetUserByEmail([FromQuery] string email)
-    //{
-    //    _logger.LogDebug("Getting user by email: {email}", email);
-
-    //    var res = await _userService.GetUserByEmailAsync(email);
-    //    return res != null ? Ok(res) : BadRequest("Could not find any user with this email");
-    //}
-        
+        var userId = new UserId(id); // Convert Guid to UserId her, da funker det
+        var res = await _userService.GetByIdAsync(userId);
+        return res != null ? Ok(res) : NotFound("Could not find any user with this id");        
+    }        
 
     // POST api/<UsersController>
     [HttpPost ("register", Name = "RegisterUser") ]
@@ -63,13 +57,27 @@ public class UsersController : ControllerBase
 
     // PUT api/<UsersController>/5
     [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
+    public void UpdateUser(int id, [FromBody] string value)
     {
+        //async Task
     }
 
     // DELETE api/<UsersController>/5
     [HttpDelete("{id}")]
     public void Delete(int id)
     {
+        //async Task
     }
+
+    // Vi trenger vel ikke endepunkt på denne, legger her imens:
+
+    //// GET api/<UsersController>/
+    //[HttpGet("email", Name = "GetUserByEmail")]
+    //public async Task<ActionResult<UserDTO>> GetUserByEmail([FromQuery] string email)
+    //{
+    //    _logger.LogDebug("Getting user by email: {email}", email);
+
+    //    var res = await _userService.GetUserByEmailAsync(email);
+    //    return res != null ? Ok(res) : BadRequest("Could not find any user with this email");
+    //}
 }

@@ -29,25 +29,30 @@ public class UserService : IUserService
     } 
 
     public async Task<ICollection<UserDTO>> GetAllAsync(string? lastName, int page, int pageSize)
-    {       
+    {
         if (!string.IsNullOrEmpty(lastName))
         {
             _logger.LogDebug("Getting users by lastname: {lastName}", lastName);
-            var lastNameResults = await _userRepository.GetByLastNameAsync(lastName);
-            var lastNameDtos = lastNameResults.Select(user => _userMapper.MapToDTO(user)).ToList();
-            return lastNameDtos;
+            var res = await _userRepository.GetByLastNameAsync(lastName);
+            var dtos = res.Select(user => _userMapper.MapToDTO(user)).ToList();
+            return dtos;
         }
+        else
+        {
+            _logger.LogDebug("Getting all users");
 
-        _logger.LogDebug("Getting all users");
-
-        var res = await _userRepository.GetAllAsync( page, pageSize);
-        var dtos = res.Select(user => _userMapper.MapToDTO(user)).ToList();
-        return dtos;        
+            var res = await _userRepository.GetAllAsync(page, pageSize);
+            var dtos = res.Select(user => _userMapper.MapToDTO(user)).ToList();
+            return dtos;
+        }
     }
     
-    public Task<UserDTO?> GetByIdAsync(int id)
+    public async Task<UserDTO?> GetByIdAsync(UserId id)
     {
-        throw new NotImplementedException();
+        _logger.LogDebug("Getting user by id {id}", id);
+
+        var res = await _userRepository.GetByIdAsync(id);
+        return res != null ? _userMapper.MapToDTO(res) : null;     
     }
 
     public async Task<UserDTO?> GetUserByEmailAsync(string email)
@@ -66,7 +71,7 @@ public class UserService : IUserService
         if (existingUser != null)
         {
             _logger.LogDebug("User already exists: {email}", dto.Email);
-            return null; // sette opp custom exception? user already exists.
+            return null; // sette opp custom exception? user already exists. Returnerer nå bare BadRequesten fra controlleren.
         }
 
         var user = _userRegistrationMapper.MapToEntity(dto);

@@ -28,11 +28,19 @@ public class UserService : IUserService
         _logger = logger;
     } 
 
-    public async Task<ICollection<UserDTO>> GetAllAsync(string lastname, string email, string playerLastname, int page, int pageSize)
-    {
+    public async Task<ICollection<UserDTO>> GetAllAsync(string? lastName, int page, int pageSize)
+    {       
+        if (!string.IsNullOrEmpty(lastName))
+        {
+            _logger.LogDebug("Getting users by lastname: {lastName}", lastName);
+            var lastNameResults = await _userRepository.GetByLastNameAsync(lastName);
+            var lastNameDtos = lastNameResults.Select(user => _userMapper.MapToDTO(user)).ToList();
+            return lastNameDtos;
+        }
+
         _logger.LogDebug("Getting all users");
 
-        var res = await _userRepository.GetAllAsync(lastname, email, playerLastname, page, pageSize);
+        var res = await _userRepository.GetAllAsync( page, pageSize);
         var dtos = res.Select(user => _userMapper.MapToDTO(user)).ToList();
         return dtos;        
     }
@@ -48,17 +56,7 @@ public class UserService : IUserService
 
         var res = await _userRepository.GetUserByEmailAsync(email);
         return res != null ? _userMapper.MapToDTO(res) : null;
-    }
-
-    public Task<ICollection<UserDTO>> GetByUserLastNameAsync(string userLastname)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<ICollection<UserDTO>> GetByPlayerLastNameAsync(string playerLastname)
-    {
-        throw new NotImplementedException();
-    }
+    }  
 
     public async Task<UserDTO?> RegisterUserAsync(UserRegistrationDTO dto)
     {

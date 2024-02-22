@@ -3,6 +3,7 @@ using CoachConnect.DataAccess.Entities;
 using CoachConnect.DataAccess.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Org.BouncyCastle.Asn1.Esf;
 
 namespace CoachConnect.DataAccess.Repositories;
 
@@ -17,7 +18,7 @@ public class UserRepository : IUserRepository
         _dbContext = dbContext;
     }
 
-    public async Task<ICollection<User>> GetAllAsync(string lastname, string email, string playerLastname, int page, int pageSize)
+    public async Task<ICollection<User>> GetAllAsync(int page, int pageSize)
     {
         _logger.LogDebug("Getting users from db");
 
@@ -42,14 +43,13 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public Task<ICollection<User>> GetByLastNameAsync(string userLastname)
+    public async Task<ICollection<User>> GetByLastNameAsync(string userLastName)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<ICollection<User>> GetByPlayerLastNameAsync(string playerLastname)
-    {
-        throw new NotImplementedException();
+        return await _dbContext.Users
+            .Where(u => u.LastName
+            .Contains(userLastName))
+            .OrderBy(u => u.LastName)
+            .ToListAsync();     
     }
 
     public async Task<User?> RegisterUserAsync(User user)

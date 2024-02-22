@@ -9,11 +9,10 @@ using System.Threading.Tasks;
 namespace CoachConnect.BusinessLayer.Services.Interfaces;
 public interface IUserService
 {
-    Task<ICollection<UserDTO>> GetAllAsync(string lastname, string email, string playerLastname, int page, int pageSize);
+    Task<ICollection<UserDTO>> GetAllAsync(string lastName, int page, int pageSize);
     Task<UserDTO?> GetByIdAsync(int id);
     Task<UserDTO?> GetUserByEmailAsync(string email);
-    Task<ICollection<UserDTO>> GetByUserLastNameAsync(string userLastname);
-    Task<ICollection<UserDTO>> GetByPlayerLastNameAsync(string playerLastname);
+    //Task<ICollection<UserDTO>> GetByUserLastNameAsync(string userLastName);
     Task<UserDTO?> UpdateAsync(int id, UserDTO dto, int loggedInUserId);
     Task<UserDTO?> DeleteAsync(int id, int loggedInUserId);  
    // Task<int>? GetAuthenticatedIdAsync(string username, string password);

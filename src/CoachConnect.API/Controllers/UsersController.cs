@@ -17,10 +17,10 @@ public class UsersController : ControllerBase
     }
 
     // GET: api/v1/<UsersController>  // Husk endre alle disee til v1 og riktige linker
-    [HttpGet(Name = "GetAllUsersBy")]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> GetAllUsersBy([FromQuery]string? lastname, [FromQuery]string? email, [FromQuery] string? playerLastname, int page = 1, int pageSize = 10) // husk legge til sortere alfabetisk også på Coach
+    [HttpGet(Name = "GetUsersBy")]
+    public async Task<ActionResult<IEnumerable<UserDTO>>> GetAllUsersBy([FromQuery]string? lastName, int page = 1, int pageSize = 10) // husk legge til sortere alfabetisk også på Coach
     {
-        _logger.LogDebug("Getting all users");
+        _logger.LogDebug("Getting users");
 
         if (page < 1 || pageSize < 1 || pageSize > 50)
         {
@@ -29,8 +29,8 @@ public class UsersController : ControllerBase
             return BadRequest("Invalid pagination parameters - MIN page = 1, MAX pageSize = 50 ");
         }
 
-        var res = await _userService.GetAllAsync(lastname, email, playerLastname, page, pageSize);
-        return res != null ? Ok(res) : BadRequest("Could not find any user with your criteria");
+        var res = await _userService.GetAllAsync(lastName, page, pageSize);
+        return res != null ? Ok(res) : BadRequest("Could not find any user with this criteria");
     }
 
     // GET api/<UsersController>/5
@@ -52,21 +52,21 @@ public class UsersController : ControllerBase
 
     //// GET api/<UsersController>/
     //[HttpGet("lastname", Name = "GetUserByUserLastName")] // DENNE FOR QUERY?
-    //public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserByUserLastName([FromQuery] string lastname)
+    //public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserByUserLastName([FromQuery] string lastName)
     //{
-    //    _logger.LogDebug("Getting user by lastname: {lastName}", lastname);
+    //    _logger.LogDebug("Getting user by lastname: {lastName}", lastName);
 
-    //    var res = await _userService.GetByUserLastNameAsync(lastname);
+    //    var res = await _userService.GetByUserLastNameAsync(lastName);
     //    return res != null ? Ok(res) : BadRequest("Could not find any users with this lastname");
     //}
 
     //// GET api/<UsersController>/
     //[HttpGet("playername", Name = "GetUserByPlayerLastName")] // DENNE FOR QUERY?
-    //public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserByPlayerLastName([FromQuery] string playername)
+    //public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserByPlayerLastName([FromQuery] string playerName)
     //{
-    //    _logger.LogDebug("Getting user by playername: {playerName}", playername);
+    //    _logger.LogDebug("Getting user by playername: {playerName}", playerName);
 
-    //    var res = await _userService.GetByUserLastNameAsync(playername);
+    //    var res = await _userService.GetByUserLastNameAsync(playerName);
     //    return res != null ? Ok(res) : BadRequest("Could not find any users connected to this playername");
     //}
 

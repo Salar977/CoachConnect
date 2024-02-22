@@ -18,7 +18,7 @@ public class UsersController : ControllerBase
 
     // GET: api/v1/<UsersController>  // Husk endre alle disee til v1 og riktige linker
     [HttpGet(Name = "GetAllUsersBy")]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> GetAllUsersBy(string? lastname, string? email, string playerLastname, int page = 1, int pageSize = 10) // husk legge til sortere alfabetisk også på Coach
+    public async Task<ActionResult<IEnumerable<UserDTO>>> GetAllUsersBy([FromQuery]string? lastname, [FromQuery]string? email, [FromQuery] string? playerLastname, int page = 1, int pageSize = 10) // husk legge til sortere alfabetisk også på Coach
     {
         _logger.LogDebug("Getting all users");
 
@@ -29,8 +29,8 @@ public class UsersController : ControllerBase
             return BadRequest("Invalid pagination parameters - MIN page = 1, MAX pageSize = 50 ");
         }
 
-        var res = await _userService.GetAllAsync(lastname, email, playerLastname, page, pageSize); 
-        return Ok(res);
+        var res = await _userService.GetAllAsync(lastname, email, playerLastname, page, pageSize);
+        return res != null ? Ok(res) : BadRequest("Could not find any user with your criteria");
     }
 
     // GET api/<UsersController>/5

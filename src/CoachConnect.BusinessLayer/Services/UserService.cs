@@ -28,11 +28,11 @@ public class UserService : IUserService
         _logger = logger;
     } 
 
-    public async Task<ICollection<UserDTO>> GetAllAsync(int page, int pageSize)
+    public async Task<ICollection<UserDTO>> GetAllAsync(string lastname, string email, string playerLastname, int page, int pageSize)
     {
         _logger.LogDebug("Getting all users");
 
-        var res = await _userRepository.GetAllAsync(page, pageSize);
+        var res = await _userRepository.GetAllAsync(lastname, email, playerLastname, page, pageSize);
         var dtos = res.Select(user => _userMapper.MapToDTO(user)).ToList();
         return dtos;        
     }
@@ -42,7 +42,7 @@ public class UserService : IUserService
         throw new NotImplementedException();
     }
 
-    public async Task<UserDTO?> GetUserByEmailAsync(string email) 
+    public async Task<UserDTO?> GetUserByEmailAsync(string email)
     {
         _logger.LogDebug("Getting user by email");
 
@@ -58,7 +58,7 @@ public class UserService : IUserService
     public Task<ICollection<UserDTO>> GetByPlayerLastNameAsync(string playerLastname)
     {
         throw new NotImplementedException();
-    }      
+    }
 
     public async Task<UserDTO?> RegisterUserAsync(UserRegistrationDTO dto)
     {

@@ -1,4 +1,5 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 namespace CoachConnect.BusinessLayer.Services.Interfaces;
 public interface IUserService
 {
-    Task<ICollection<UserDTO>> GetAllAsync(int page, int pageSize);
+    Task<ICollection<UserDTO>> GetAllAsync(string lastname, string email, string playerLastname, int page, int pageSize);
     Task<UserDTO?> GetByIdAsync(int id);
     Task<UserDTO?> GetUserByEmailAsync(string email);
     Task<ICollection<UserDTO>> GetByUserLastNameAsync(string userLastname);

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace CoachConnect.DataAccess.Repositories.Interfaces;
 public interface IUserRepository
 {
-    Task<ICollection<User>> GetAllAsync(int page, int pageSize);
+    Task<ICollection<User>> GetAllAsync(string lastname, string email, string playerLastname, int page, int pageSize);
     Task<User?> GetByIdAsync(int id);
     Task<User?> GetUserByEmailAsync(string email);
     Task<ICollection<User>> GetByLastNameAsync(string userLastname);

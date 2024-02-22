@@ -17,7 +17,7 @@ public class UserRepository : IUserRepository
         _dbContext = dbContext;
     }
 
-    public async Task<ICollection<User>> GetAllAsync(int page, int pageSize)
+    public async Task<ICollection<User>> GetAllAsync(string lastname, string email, string playerLastname, int page, int pageSize)
     {
         _logger.LogDebug("Getting users from db");
 
@@ -36,7 +36,7 @@ public class UserRepository : IUserRepository
         throw new NotImplementedException();
     }
 
-    public async Task<User?> GetUserByEmailAsync(string email) 
+    public async Task<User?> GetUserByEmailAsync(string email)
     {
         var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
         return user;

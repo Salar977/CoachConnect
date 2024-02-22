@@ -17,8 +17,8 @@ public class UsersController : ControllerBase
     }
 
     // GET: api/v1/<UsersController>  // Husk endre alle disee til v1 og riktige linker
-    [HttpGet(Name = "GetUsersBy")]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> GetAllUsersBy([FromQuery]string? lastName, int page = 1, int pageSize = 10) // husk legge til sortere alfabetisk også på Coach
+    [HttpGet(Name = "GetUsers")]
+    public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers([FromQuery]string? lastName, int page = 1, int pageSize = 10) // husk legge til sortere alfabetisk også på Coach
     {
         _logger.LogDebug("Getting users");
 

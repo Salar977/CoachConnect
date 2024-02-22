@@ -49,26 +49,7 @@ public class UsersController : ControllerBase
     //    var res = await _userService.GetUserByEmailAsync(email);
     //    return res != null ? Ok(res) : BadRequest("Could not find any user with this email");
     //}
-
-    //// GET api/<UsersController>/
-    //[HttpGet("lastname", Name = "GetUserByUserLastName")] // DENNE FOR QUERY?
-    //public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserByUserLastName([FromQuery] string lastName)
-    //{
-    //    _logger.LogDebug("Getting user by lastname: {lastName}", lastName);
-
-    //    var res = await _userService.GetByUserLastNameAsync(lastName);
-    //    return res != null ? Ok(res) : BadRequest("Could not find any users with this lastname");
-    //}
-
-    //// GET api/<UsersController>/
-    //[HttpGet("playername", Name = "GetUserByPlayerLastName")] // DENNE FOR QUERY?
-    //public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserByPlayerLastName([FromQuery] string playerName)
-    //{
-    //    _logger.LogDebug("Getting user by playername: {playerName}", playerName);
-
-    //    var res = await _userService.GetByUserLastNameAsync(playerName);
-    //    return res != null ? Ok(res) : BadRequest("Could not find any users connected to this playername");
-    //}
+        
 
     // POST api/<UsersController>
     [HttpPost ("register", Name = "RegisterUser") ]

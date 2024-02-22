@@ -76,6 +76,7 @@ public class UserService : IUserService
 
         var user = _userRegistrationMapper.MapToEntity(dto);
 
+        user.Id = UserId.NewId; // Generate a new UserId. Må ha med for at UserID Guid skal fungere.
         user.Salt = BCrypt.Net.BCrypt.GenerateSalt();
         user.HashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password, user.Salt);
 
@@ -84,18 +85,23 @@ public class UserService : IUserService
         return _userMapper.MapToDTO(res!);
     }
 
-    public Task<UserDTO?> UpdateAsync(int id, UserDTO dto, int loggedInUserId)
+    public async Task<UserDTO?> UpdateAsync(UserId id, UserDTO dto)
     {
-        throw new NotImplementedException();
+        _logger.LogDebug("Updating user");
+
+        // husk at users (el admin) kun skal kunne eoppdatere sin egen user Dette må vel settes i JWT autorisering. Ikke glem må ha med dette viktig.
+
+        var user = _userMapper.MapToEntity(dto);
+        user.Id = id;
+
+        var res = await _userRepository.UpdateAsync(id, user);
+        return res != null ? _userMapper.MapToDTO(user) : null;
     }
 
-    public Task<UserDTO?> DeleteAsync(int id, int loggedInUserId)
+    public async Task<UserDTO?> DeleteAsync(UserId id)
     {
-        throw new NotImplementedException();
-    }
+        // husk at users (el admin) kun skal kunne slette sin egen user. Dette må vel settes i JWT autorisering. Ikke glem må ha med dette.
 
-    //public Task<int>? GetAuthenticatedIdAsync(string username, string password)  
-    //{
-    //    throw new NotImplementedException();
-    //}
+        throw new NotImplementedException();
+    }   
 }

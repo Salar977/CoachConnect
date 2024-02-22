@@ -24,17 +24,19 @@ public class UserRepository : IUserRepository
 
         int itemsToSkip = (page - 1) * pageSize;
 
-        return await _dbContext.Users
+        var res = await _dbContext.Users
             .OrderBy(u => u.LastName)
             .Skip(itemsToSkip)
             .Take(pageSize)
             .Distinct()
-            .ToListAsync();       
+            .ToListAsync();
+
+        return res;
     }
 
     public async Task<User?> GetByIdAsync(UserId id)
     {
-        _logger.LogDebug("Getting user by id from db");
+        _logger.LogDebug("Getting user by id: {id} from db", id);
 
         var res = await _dbContext.Users.FindAsync(id);
         return res;
@@ -42,27 +44,28 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetUserByEmailAsync(string email)
     {
-        _logger.LogDebug("Getting user by email from db");
+        _logger.LogDebug("Getting user by email: {email} from db", email);
 
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
-        return user;
+        var res = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
+        return res;
     }
 
     public async Task<ICollection<User>> GetByLastNameAsync(string userLastName)
     {
-        return await _dbContext.Users
+        _logger.LogDebug("Getting user by lastname: {userLastName} from db", userLastName);
+
+        var res = await _dbContext.Users
             .Where(u => u.LastName
             .Contains(userLastName))
-            .OrderBy(u => u.LastName)
+            .OrderBy(u => u.LastName) // husk legge til sortere alfabetisk også på Coach
             .ToListAsync();     
+
+        return res;
     }
 
     public async Task<User?> RegisterUserAsync(User user)
     {
-        _logger.LogDebug("Adding user to db");
-
-        // Generate a new UserId, denne viste ikke yngve i videon derfor jeg fikk 000-0000-00 osv på Guid
-        user.Id = UserId.NewId;
+        _logger.LogDebug("Adding user: {user} to db", user);
         
         await _dbContext.Users.AddAsync(user);
         await _dbContext.SaveChangesAsync();
@@ -70,14 +73,27 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-
-    public Task<User?> UpdateAsync(int id, User user)
+    public async Task<User?> UpdateAsync(UserId id, User user)
     {
-        throw new NotImplementedException();
+        _logger.LogDebug("Updating user: {id} in db", id);
+
+        var usr = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id.Equals(id));
+        if (usr == null) return null;
+
+        usr.FirstName = string.IsNullOrEmpty(user.FirstName) ? usr.FirstName : user.FirstName;
+        usr.LastName = string.IsNullOrEmpty(user.LastName) ? usr.LastName : user.LastName;
+        usr.PhoneNumber = string.IsNullOrEmpty(user.PhoneNumber) ? usr.PhoneNumber : user.PhoneNumber;
+        usr.Email = string.IsNullOrEmpty(user.Email) ? usr.Email : user.Email;
+        usr.Updated = DateTime.Now;
+
+        return usr;
     }
 
-    public Task<User?> DeleteAsync(int id)
+    public async Task<User?> DeleteAsync(UserId id)
     {
+        _logger.LogDebug("Deleting user: {id} from db", id);
+
+        await Task.Delay(10);
         throw new NotImplementedException();
     }  
 }

@@ -2,6 +2,7 @@
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.DataAccess.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.WebSockets;
 
 namespace CoachConnect.API.Controllers;
 
@@ -19,7 +20,7 @@ public class UsersController : ControllerBase
 
     // GET: api/v1/<UsersController>  // Husk endre alle disee til v1 og riktige linker
     [HttpGet(Name = "GetUsers")]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers([FromQuery]string? lastName, int page = 1, int pageSize = 10) // husk legge til sortere alfabetisk også på Coach
+    public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers([FromQuery]string? lastName, int page = 1, int pageSize = 10) 
     {
         _logger.LogDebug("Getting users");
 
@@ -36,14 +37,23 @@ public class UsersController : ControllerBase
 
     // GET api/<UsersController>/5
     [HttpGet("{id}", Name = "GetUserById")] 
-    public async Task<ActionResult<UserDTO>> GetUserById(Guid id) // bruk Guid her pga modelbinding kjenner ikke igjen vår custom UserId, så bruk Guid her og vi må konvertere under isteden
+    public async Task<ActionResult<UserDTO>> GetUserById([FromRoute] Guid id) // bruk Guid her pga modelbinding kjenner ikke igjen vår custom UserId, så bruk Guid her og vi må konvertere under isteden
     {   
         _logger.LogDebug("Getting user by id {id}", id);
-
-        var userId = new UserId(id); // Convert Guid to UserId her, da funker det
-        var res = await _userService.GetByIdAsync(userId);
+        
+        var res = await _userService.GetByIdAsync(new UserId(id)); //var userId = new UserId(id); // Convert Guid to UserId her, da funker det
         return res != null ? Ok(res) : NotFound("Could not find any user with this id");        
-    }        
+    }
+
+    // GET api/<UsersController>/
+    [HttpGet("email", Name = "GetUserByEmail")]
+    public async Task<ActionResult<UserDTO>> GetUserByEmail([FromQuery] string email)
+    {
+        _logger.LogDebug("Getting user by email: {email}", email);
+
+        var res = await _userService.GetUserByEmailAsync(email);
+        return res != null ? Ok(res) : BadRequest("Could not find any user with this email");
+    }
 
     // POST api/<UsersController>
     [HttpPost ("register", Name = "RegisterUser") ]
@@ -56,28 +66,22 @@ public class UsersController : ControllerBase
     }
 
     // PUT api/<UsersController>/5
-    [HttpPut("{id}")]
-    public void UpdateUser(int id, [FromBody] string value)
+    [HttpPut("{id}", Name = "Update user")]
+    public async Task<ActionResult<UserDTO>> UpdateUser([FromRoute] Guid id, [FromBody] UserDTO dto)
     {
-        //async Task
+        _logger.LogDebug("Updating user: {id}", id);
+
+        var res = await _userService.UpdateAsync(new UserId(id), dto);
+        return res != null ? Ok(res) : BadRequest("Could not update user");
     }
 
     // DELETE api/<UsersController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
+    [HttpDelete("{id}", Name = "DeleteUser")]
+    public async Task<ActionResult<UserDTO>> DeleteUser([FromRoute] Guid id)
     {
-        //async Task
-    }
+        _logger.LogDebug("Deleting user: {id}", id);
 
-    // Vi trenger vel ikke endepunkt på denne, legger her imens:
-
-    //// GET api/<UsersController>/
-    //[HttpGet("email", Name = "GetUserByEmail")]
-    //public async Task<ActionResult<UserDTO>> GetUserByEmail([FromQuery] string email)
-    //{
-    //    _logger.LogDebug("Getting user by email: {email}", email);
-
-    //    var res = await _userService.GetUserByEmailAsync(email);
-    //    return res != null ? Ok(res) : BadRequest("Could not find any user with this email");
-    //}
+        var res = await _userService.DeleteAsync(new UserId(id));
+        return res != null ? Ok(res) : BadRequest("Could not delete user");
+    }   
 }

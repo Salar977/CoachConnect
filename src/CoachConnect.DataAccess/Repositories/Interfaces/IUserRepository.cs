@@ -13,6 +13,6 @@ public interface IUserRepository
     Task<User?> GetUserByEmailAsync(string email);
     Task<ICollection<User>> GetByLastNameAsync(string userLastName);
     Task<User?> RegisterUserAsync(User user);
-    Task<User?> UpdateAsync(int id, User user);
-    Task<User?> DeleteAsync(int id);
+    Task<User?> UpdateAsync(UserId id, User user);
+    Task<User?> DeleteAsync(UserId id);
 }

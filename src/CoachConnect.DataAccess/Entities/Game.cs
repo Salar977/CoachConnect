@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoachConnect.DataAccess.Entities;
@@ -7,7 +8,6 @@ public readonly record struct GameId(Guid gameId)
 {
     public static GameId NewId => new GameId(Guid.NewGuid());
     public static GameId Empty => new GameId(Guid.Empty);
-
 };
 
 

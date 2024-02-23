@@ -1,6 +1,8 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
 using CoachConnect.BusinessLayer.Services.Interfaces;
+using CoachConnect.DataAccess.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.WebSockets;
 
 namespace CoachConnect.API.Controllers;
 
@@ -16,11 +18,11 @@ public class UsersController : ControllerBase
         _logger = logger;
     }
 
-    // GET: api/v1/<UsersController>  // Husk endre alle disee til v1 og riktige linker
-    [HttpGet(Name = "GetAllUsers")]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> GetAllUsers(int page = 1, int pageSize = 10) // husk legge til sortere alfabetisk både og på Coach
+    // GET: https://localhost:7036/api/v1/users?page=1&pageSize=10
+    [HttpGet(Name = "GetUsers")]
+    public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers([FromQuery]string? lastName, int page = 1, int pageSize = 10) 
     {
-        _logger.LogDebug("Getting all users");
+        _logger.LogDebug("Getting users");
 
         if (page < 1 || pageSize < 1 || pageSize > 50)
         {
@@ -29,19 +31,22 @@ public class UsersController : ControllerBase
             return BadRequest("Invalid pagination parameters - MIN page = 1, MAX pageSize = 50 ");
         }
 
-        var res = await _userService.GetAllAsync(page, pageSize);
-        return Ok(res);
+        var res = await _userService.GetAllAsync(lastName, page, pageSize);
+        return res != null ? Ok(res) : BadRequest("Could not find any user with this criteria");
     }
 
-    // GET api/<UsersController>/5
-    [HttpGet("{id}")]
-    public string Get(int id)
-    {
-        return "value";
+    // GET https://localhost:7036/api/v1/users/8f2466af-57c3-458c-82d8-676d80573c6c
+    [HttpGet("{id}", Name = "GetUserById")] 
+    public async Task<ActionResult<UserDTO>> GetUserById([FromRoute] Guid id) // bruk Guid her pga modelbinding kjenner ikke igjen vår custom UserId, så bruk Guid her og vi må konvertere under isteden
+    {   
+        _logger.LogDebug("Getting user by id {id}", id);
+        
+        var res = await _userService.GetByIdAsync(new UserId(id)); //var userId = new UserId(id); // Convert Guid to UserId her, da funker det
+        return res != null ? Ok(res) : NotFound("Could not find any user with this id");        
     }
 
-    // GET api/<UsersController>/
-    [HttpGet("email", Name = "GetUserByEmail")] 
+    // GET https://localhost:7036/api/v1/users/email?email=sara%40abc.no
+    [HttpGet("email", Name = "GetUserByEmail")]
     public async Task<ActionResult<UserDTO>> GetUserByEmail([FromQuery] string email)
     {
         _logger.LogDebug("Getting user by email: {email}", email);
@@ -50,45 +55,33 @@ public class UsersController : ControllerBase
         return res != null ? Ok(res) : BadRequest("Could not find any user with this email");
     }
 
-    // GET api/<UsersController>/
-    [HttpGet("lastname", Name = "GetUserByUserLastName")]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserByUserLastName([FromQuery] string lastname)
-    {
-        _logger.LogDebug("Getting user by lastname: {lastName}", lastname);
-
-        var res = await _userService.GetByUserLastNameAsync(lastname);
-        return res != null ? Ok(res) : BadRequest("Could not find any users with this lastname");
-    }
-
-    // GET api/<UsersController>/
-    [HttpGet("playername", Name = "GetUserByPlayerLastName")]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserByPlayerLastName([FromQuery] string playername)
-    {
-        _logger.LogDebug("Getting user by playername: {playerName}", playername);
-
-        var res = await _userService.GetByUserLastNameAsync(playername);
-        return res != null ? Ok(res) : BadRequest("Could not find any users connected to this playername");
-    }
-
-    // POST api/<UsersController>
+    // POST https://localhost:7036/api/v1/users/register
     [HttpPost ("register", Name = "RegisterUser") ]
     public async Task<ActionResult<UserDTO>> RegisterUser([FromBody] UserRegistrationDTO dto)
     {
-        _logger.LogDebug("Registering new user");
+        _logger.LogDebug("Registering new user: {dto}", dto);
 
         var res = await _userService.RegisterUserAsync(dto);
         return res != null ? Ok(res) : BadRequest("Could not register new user");
     }
 
-    // PUT api/<UsersController>/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
+    // PUT https://localhost:7036/api/v1/users/8f2466af-57c3-458c-82d8-676d80573c6c
+    [HttpPut("{id}", Name = "Update user")]
+    public async Task<ActionResult<UserDTO>> UpdateUser([FromRoute] Guid id, [FromBody] UserDTO dto)
     {
+        _logger.LogDebug("Updating user: {id}", id);
+
+        var res = await _userService.UpdateAsync(new UserId(id), dto);
+        return res != null ? Ok(res) : BadRequest("Could not update user");
     }
 
-    // DELETE api/<UsersController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
+    // DELETE https://localhost:7036/api/v1/users/8f2466af-57c3-458c-82d8-676d80573c6c
+    [HttpDelete("{id}", Name = "DeleteUser")]
+    public async Task<ActionResult<UserDTO>> DeleteUser([FromRoute] Guid id)
     {
-    }
+        _logger.LogDebug("Deleting user: {id}", id);
+
+        var res = await _userService.DeleteAsync(new UserId(id));
+        return res != null ? Ok(res) : BadRequest("Could not delete user");
+    }   
 }

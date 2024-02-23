@@ -2,12 +2,9 @@
 
 namespace CoachConnect.BusinessLayer.DTOs;
 
-public record UserDTO(
-    //UserId Id,
-    //string UserName,
+public record UserDTO(   
     string FirstName,
     string LastName,
+   // List<PlayerDTO> Players,
     string PhoneNumber,
-    string Email,
-    DateTime Created,
-    DateTime Updated);
+    string Email);

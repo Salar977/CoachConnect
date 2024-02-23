@@ -86,10 +86,9 @@ public class CoachConnectDbContext : DbContext
             .Property(p => p.UserId)
             .HasConversion(
                 v => v.userId,  // Convert UserId to underlying type
-
                 v => new UserId(v)
             );  // Convert underlying type to UserId
-
+              
         modelBuilder.Entity<GameAttendance>()
             .Property(x => x.GameId)
             .HasConversion(

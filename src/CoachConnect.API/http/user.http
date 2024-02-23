@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-﻿@baseUrl=https://localhost:7036
+@baseUrl=https://localhost:7036
 
 ### GET ALL / BY LASTNAME
 
@@ -30,6 +29,4 @@ Authorization: Bearer inputTokenHere
 ### DELETE USER
 DELETE {{baseUrl}}/api/v1/users/8f2466af-57c3-458c-82d8-676d80573c6c
 Authorization: Bearer inputTokenHere
-=======
-﻿
->>>>>>> main
+

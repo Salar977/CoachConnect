@@ -66,7 +66,7 @@ public class UsersController : ControllerBase
     }
 
     // PUT https://localhost:7036/api/v1/users/8f2466af-57c3-458c-82d8-676d80573c6c
-    [HttpPut("{id}", Name = "Update user")]
+    [HttpPut("{id}", Name = "UpdateUser")]
     public async Task<ActionResult<UserDTO>> UpdateUser([FromRoute] Guid id, [FromBody] UserDTO dto)
     {
         _logger.LogDebug("Updating user: {id}", id);

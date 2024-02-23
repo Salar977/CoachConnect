@@ -56,7 +56,7 @@ public class UserRepository : IUserRepository
 
         var res = await _dbContext.Users
             .Where(u => u.LastName
-            .Contains(userLastName))
+            .StartsWith(userLastName))
             .OrderBy(u => u.LastName) // husk legge til sortere alfabetisk også på Coach
             .ToListAsync();     
 
@@ -65,7 +65,7 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> RegisterUserAsync(User user)
     {
-        _logger.LogDebug("Adding user: {user} to db", user);
+        _logger.LogDebug("Adding user: {user} to db", user.Email);
         
         await _dbContext.Users.AddAsync(user);
         await _dbContext.SaveChangesAsync();
@@ -86,6 +86,8 @@ public class UserRepository : IUserRepository
         usr.Email = string.IsNullOrEmpty(user.Email) ? usr.Email : user.Email;
         usr.Updated = DateTime.Now;
 
+        await _dbContext.SaveChangesAsync();
+
         return usr;
     }
 
@@ -93,7 +95,11 @@ public class UserRepository : IUserRepository
     {
         _logger.LogDebug("Deleting user: {id} from db", id);
 
-        await Task.Delay(10);
-        throw new NotImplementedException();
+        var res = await _dbContext.Users.FindAsync(id);
+        if (res == null) return null;
+        
+        _dbContext.Users.Remove(res);
+        await _dbContext.SaveChangesAsync();
+        return res;               
     }  
 }

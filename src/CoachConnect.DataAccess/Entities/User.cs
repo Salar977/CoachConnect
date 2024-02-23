@@ -7,7 +7,6 @@ public readonly record struct UserId(Guid userId)
 { 
     public static UserId NewId => new UserId(Guid.NewGuid());
     public static UserId Empty => new UserId(Guid.Empty);
-
 };
 
 public class User 

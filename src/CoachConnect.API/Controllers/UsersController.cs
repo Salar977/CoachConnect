@@ -1,6 +1,7 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.DataAccess.Entities;
+using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.WebSockets;
 
@@ -18,22 +19,33 @@ public class UsersController : ControllerBase
         _logger = logger;
     }
 
-    // GET: https://localhost:7036/api/v1/users?page=1&pageSize=10
+    
     [HttpGet(Name = "GetUsers")]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers([FromQuery]string? lastName, int page = 1, int pageSize = 10) 
+    public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers([FromQuery] QueryObject query) 
     {
+        if(!ModelState.IsValid) return BadRequest(ModelState);
+
         _logger.LogDebug("Getting users");
 
-        if (page < 1 || pageSize < 1 || pageSize > 50)
-        {
-            _logger.LogWarning("Invalid pagination parameters Page: {page}, PageSize: {pageSize}", page, pageSize);
-
-            return BadRequest("Invalid pagination parameters - MIN page = 1, MAX pageSize = 50 ");
-        }
-
-        var res = await _userService.GetAllAsync(lastName, page, pageSize);
-        return res != null ? Ok(res) : BadRequest("Could not find any user with this criteria");
+        return Ok(await _userService.GetAllAsync(query));
     }
+
+    // GET: https://localhost:7036/api/v1/users?page=1&pageSize=10
+    //[HttpGet(Name = "GetUsers")]
+    //public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers([FromQuery] string? lastName, int page = 1, int pageSize = 10)
+    //{
+    //    _logger.LogDebug("Getting users");
+
+    //    if (page < 1 || pageSize < 1 || pageSize > 50)
+    //    {
+    //        _logger.LogWarning("Invalid pagination parameters Page: {page}, PageSize: {pageSize}", page, pageSize);
+
+    //        return BadRequest("Invalid pagination parameters - MIN page = 1, MAX pageSize = 50 ");
+    //    }
+
+    //    var res = await _userService.GetAllAsync(lastName, page, pageSize);
+    //    return res != null ? Ok(res) : BadRequest("Could not find any user with this criteria");
+    //}
 
     // GET https://localhost:7036/api/v1/users/8f2466af-57c3-458c-82d8-676d80573c6c
     [HttpGet("{id}", Name = "GetUserById")] 
@@ -46,14 +58,14 @@ public class UsersController : ControllerBase
     }
 
     // GET https://localhost:7036/api/v1/users/email?email=sara%40abc.no
-    [HttpGet("email", Name = "GetUserByEmail")]
-    public async Task<ActionResult<UserDTO>> GetUserByEmail([FromQuery] string email)
-    {
-        _logger.LogDebug("Getting user by email: {email}", email);
+    //[HttpGet("email", Name = "GetUserByEmail")]
+    //public async Task<ActionResult<UserDTO>> GetUserByEmail([FromQuery] string email)
+    //{
+    //    _logger.LogDebug("Getting user by email: {email}", email);
 
-        var res = await _userService.GetUserByEmailAsync(email);
-        return res != null ? Ok(res) : BadRequest("Could not find any user with this email");
-    }
+    //    var res = await _userService.GetUserByEmailAsync(email);
+    //    return res != null ? Ok(res) : BadRequest("Could not find any user with this email");
+    //}
 
     // POST https://localhost:7036/api/v1/users/register
     [HttpPost ("register", Name = "RegisterUser") ]

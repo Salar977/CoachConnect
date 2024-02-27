@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CoachConnect.BusinessLayer\CoachConnect.BusinessLayer.csproj" />
+    <ProjectReference Include="..\CoachConnect.Shared\CoachConnect.Shared.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,14 +1,11 @@
 ﻿using CoachConnect.DataAccess.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CoachConnect.Shared.Helpers;
 
 namespace CoachConnect.DataAccess.Repositories.Interfaces;
 public interface IUserRepository
 {
-    Task<ICollection<User>> GetAllAsync(int page, int pageSize);
+    // Task<ICollection<User>> GetAllAsync(int page, int pageSize);
+    Task<ICollection<User>> GetAllAsync(QueryObject query);
     Task<User?> GetByIdAsync(UserId id);
     Task<User?> GetUserByEmailAsync(string email);
     Task<ICollection<User>> GetByLastNameAsync(string userLastName);

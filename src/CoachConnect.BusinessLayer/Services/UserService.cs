@@ -1,11 +1,9 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
-using CoachConnect.BusinessLayer.Mappers;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.DataAccess.Entities;
 using CoachConnect.DataAccess.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Http.Timeouts;
+using CoachConnect.Shared.Helpers;
 using Microsoft.Extensions.Logging;
 
 namespace CoachConnect.BusinessLayer.Services;
@@ -28,25 +26,32 @@ public class UserService : IUserService
         _logger = logger;
     } 
 
-    public async Task<ICollection<UserDTO>> GetAllAsync(string? lastName, int page, int pageSize)
+    public async Task<ICollection<UserDTO>> GetAllAsync(QueryObject query)
     {
-        if (!string.IsNullOrEmpty(lastName))
-        {
-            _logger.LogDebug("Getting users by lastname: {lastName}", lastName);
-            var res = await _userRepository.GetByLastNameAsync(lastName);
-            var dtos = res.Select(user => _userMapper.MapToDTO(user)).ToList();
-            return dtos;
-        }
-        else
-        {
-            _logger.LogDebug("Getting all users");
-
-            var res = await _userRepository.GetAllAsync(page, pageSize);
-            var dtos = res.Select(user => _userMapper.MapToDTO(user)).ToList();
-            return dtos;
-        }
+        _logger.LogDebug("Getting all users");
+        var res = await _userRepository.GetAllAsync(query);
+        return res.Select(user => _userMapper.MapToDTO(user)).ToList();
     }
-    
+
+    //public async Task<ICollection<UserDTO>> GetAllAsync(string? lastName, int page, int pageSize)
+    //{
+    //    if (!string.IsNullOrEmpty(lastName))
+    //    {
+    //        _logger.LogDebug("Getting users by lastname: {lastName}", lastName);
+    //        var res = await _userRepository.GetByLastNameAsync(lastName);
+    //        var dtos = res.Select(user => _userMapper.MapToDTO(user)).ToList();
+    //        return dtos;
+    //    }
+    //    else
+    //    {
+    //        _logger.LogDebug("Getting all users");
+
+    //        var res = await _userRepository.GetAllAsync(page, pageSize);
+    //        var dtos = res.Select(user => _userMapper.MapToDTO(user)).ToList();
+    //        return dtos;
+    //    }
+    //}
+
     public async Task<UserDTO?> GetByIdAsync(UserId id)
     {
         _logger.LogDebug("Getting user by id: {id}", id);

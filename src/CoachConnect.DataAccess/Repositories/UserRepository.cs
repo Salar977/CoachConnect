@@ -1,6 +1,7 @@
 ﻿using CoachConnect.DataAccess.Data;
 using CoachConnect.DataAccess.Entities;
 using CoachConnect.DataAccess.Repositories.Interfaces;
+using CoachConnect.Shared.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Asn1.Esf;
@@ -18,28 +19,75 @@ public class UserRepository : IUserRepository
         _dbContext = dbContext;
     }
 
-    public async Task<ICollection<User>> GetAllAsync(int page, int pageSize)
+    public async Task<ICollection<User>> GetAllAsync(QueryObject query)
     {
         _logger.LogDebug("Getting users from db");
 
-        int itemsToSkip = (page - 1) * pageSize;
+        var users = _dbContext.Users.AsQueryable();
 
-        var res = await _dbContext.Users
-            .OrderBy(u => u.LastName)
-            .Skip(itemsToSkip)
-            .Take(pageSize)
-            .Distinct()
+        if(!string.IsNullOrWhiteSpace(query.FirstName))
+        {
+            users = users.Where(u => u.FirstName.Contains(query.FirstName));
+        }
+
+        if (!string.IsNullOrWhiteSpace(query.LastName))
+        {
+            users = users.Where(u => u.LastName.Contains(query.LastName));
+        }
+
+        if (!string.IsNullOrWhiteSpace(query.PhoneNumber))
+        {
+            users = users.Where(u => u.PhoneNumber.Contains(query.PhoneNumber));
+        }
+
+        if (!string.IsNullOrWhiteSpace(query.Email))
+        {
+            users = users.Where(u => u.Email.Contains(query.Email));
+        }
+
+        if (!string.IsNullOrWhiteSpace(query.SortBy))
+        {
+            if (query.SortBy.Equals("FirtName", StringComparison.OrdinalIgnoreCase))
+            {
+                users = query.IsDescending ? users.OrderByDescending(x => x.FirstName) : users.OrderBy(x => x.FirstName);
+            }
+
+            if (query.SortBy.Equals("LastName", StringComparison.OrdinalIgnoreCase))
+            {
+                users = query.IsDescending ? users.OrderByDescending(x => x.LastName) : users.OrderBy(x => x.LastName);
+            }
+        }
+
+        var skipNumber = (query.PageNumber - 1) * query.PageSize;
+
+        return await users
+            .Skip(skipNumber)
+            .Take(query.PageSize)
             .ToListAsync();
-
-        return res;
     }
+
+    //public async Task<ICollection<User>> GetAllAsync(int page, int pageSize)
+    //{
+    //    _logger.LogDebug("Getting users from db");
+
+    //    int itemsToSkip = (page - 1) * pageSize;
+
+    //    var res = await _dbContext.Users
+    //        .OrderBy(u => u.LastName)
+    //        .Skip(itemsToSkip)
+    //        .Take(pageSize)
+    //        .Distinct()
+    //        .ToListAsync();
+
+    //    return res;
+    //}
+
 
     public async Task<User?> GetByIdAsync(UserId id)
     {
         _logger.LogDebug("Getting user by id: {id} from db", id);
 
-        var res = await _dbContext.Users.FindAsync(id);
-        return res;
+        return await _dbContext.Users.FindAsync(id);
     }
 
     public async Task<User?> GetUserByEmailAsync(string email)

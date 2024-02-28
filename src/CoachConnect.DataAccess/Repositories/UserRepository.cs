@@ -47,7 +47,7 @@ public class UserRepository : IUserRepository
 
         if (!string.IsNullOrWhiteSpace(query.SortBy))
         {
-            if (query.SortBy.Equals("FirtName", StringComparison.OrdinalIgnoreCase))
+            if (query.SortBy.Equals("FirstName", StringComparison.OrdinalIgnoreCase))
             {
                 users = query.IsDescending ? users.OrderByDescending(x => x.FirstName) : users.OrderBy(x => x.FirstName);
             }

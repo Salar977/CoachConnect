@@ -16,8 +16,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.AddSwaggerWithBasicAuthentication();
-
 builder.RegisterMappers();
 
 // Rate Limiter - Simple rate limiter with fixed 5 seconds for each request otherwise 429: Too Many Requests

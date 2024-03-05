@@ -1,4 +1,5 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
+using CoachConnect.BusinessLayer.Services;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.DataAccess.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -55,32 +56,32 @@ public class GamesController : ControllerBase
         return games != null ? Ok(games) : NotFound($"No games found with opponent name '{opponentName}'");
     }
 
-    //[HttpPost(Name = "CreateGame")]
-    //public async Task<ActionResult<GameDTO>> CreateGame([FromBody] GameDTO gameDTO)
-    //{
-    //    _logger.LogDebug("Creating new game");
+    [HttpPost(Name = "CreateGame")]
+    public async Task<ActionResult<GameDTO>> CreateGame([FromBody] GameDTO gameDTO)
+    {
+        _logger.LogDebug("Create new Game");
 
-    //    var createdGame = await _gameService.CreateAsync(gameDTO);
-    //    return CreatedAtRoute("GetGameById", new { id = createdGame.Id }, createdGame);
-    //}
+        var res = await _gameService.CreateAsync(gameDTO);
+        return res != null ? Ok(res) : BadRequest("Could not Create new game");
+    }
 
     //[HttpPut("{id}", Name = "UpdateGame")]
     //public async Task<IActionResult> UpdateGame(GameId id, [FromBody] GameDTO gameDTO)
     //{
     //    _logger.LogDebug("Updating game with ID: {id}", id);
 
-        //    try
-        //    {
-        //        var updatedGame = await _gameService.UpdateAsync(id, gameDTO);
-        //        return Ok(updatedGame);
-        //    }
-        //    catch (KeyNotFoundException)
-        //    {
-        //        return NotFound($"Game with ID '{id}' not found");
-        //    }
-        //}
+    //    try
+    //    {
+    //        var updatedGame = await _gameService.UpdateAsync(id, gameDTO);
+    //        return Ok(updatedGame);
+    //    }
+    //    catch (KeyNotFoundException)
+    //    {
+    //        return NotFound($"Game with ID '{id}' not found");
+    //    }
+    //}
 
-        [HttpDelete("{id}", Name = "DeleteGame")]
+    [HttpDelete("{id}", Name = "DeleteGame")]
     public async Task<IActionResult> DeleteGame(GameId id)
     {
         _logger.LogDebug("Deleting game with ID: {id}", id);

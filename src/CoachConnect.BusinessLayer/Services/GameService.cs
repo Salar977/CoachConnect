@@ -29,7 +29,7 @@ public class GameService : IGameService
         _logger = logger;
     }
 
-    public async Task<Game> CreateAsync(Game game)
+    public async Task CreateAsync(GameDTO gameDTO)
     {
         _logger.LogDebug("Creating new game");
 
@@ -42,11 +42,6 @@ public class GameService : IGameService
 
         // Konverter det opprettede spillet til DTO og returner det
         return createdGame;
-    }
-
-    public Task CreateAsync(GameDTO gameDTO)
-    {
-        throw new NotImplementedException();
     }
 
     public async Task<bool> DeleteAsync(GameId id)
@@ -116,7 +111,7 @@ public class GameService : IGameService
         return games;
     }
 
-    public async Task<Game> UpdateAsync(GameId id, Game game)
+    public async Task<Game> UpdateAsync(GameId id, GameDTO game)
     {
         _logger.LogDebug("Updating game");
 

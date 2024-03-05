@@ -19,9 +19,9 @@ public interface IGameService
 
     Task<IEnumerable<Game>> GetByGameTimeAsync(DateTime gameTime); // Hent kamp basert på spilltidspunktet
 
-    Task<Game> CreateAsync(Game game); // Opprette en ny kamp
+    Task<Game> CreateAsync(GameDTO gameDTO); // Opprette en ny kamp
 
-    Task<Game> UpdateAsync(GameId id, Game game); // Oppdater et eksisterende kamp
+    Task<Game> UpdateAsync(GameId id, GameDTO gameDto); // Oppdater et eksisterende kamp
 
     Task<bool> DeleteAsync(GameId id); // Slett en kamp basert på ID
 

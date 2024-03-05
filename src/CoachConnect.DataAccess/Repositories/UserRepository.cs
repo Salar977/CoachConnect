@@ -1,8 +1,10 @@
 ﻿using CoachConnect.DataAccess.Data;
 using CoachConnect.DataAccess.Entities;
 using CoachConnect.DataAccess.Repositories.Interfaces;
+using CoachConnect.Shared.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Org.BouncyCastle.Asn1.Esf;
 
 namespace CoachConnect.DataAccess.Repositories;
 
@@ -17,47 +19,101 @@ public class UserRepository : IUserRepository
         _dbContext = dbContext;
     }
 
-    public async Task<ICollection<User>> GetAllAsync(int page, int pageSize)
+    public async Task<ICollection<User>> GetAllAsync(QueryObject query)
     {
         _logger.LogDebug("Getting users from db");
 
-        int itemsToSkip = (page - 1) * pageSize;
+        var users = _dbContext.Users.AsQueryable();
 
-        return await _dbContext.Users
-            .OrderBy(u => u.Id)
-            .Skip(itemsToSkip)
-            .Take(pageSize)
-            .Distinct()
-            .ToListAsync();       
+        if(!string.IsNullOrWhiteSpace(query.FirstName))
+        {
+            users = users.Where(u => u.FirstName.Contains(query.FirstName));
+        }
+
+        if (!string.IsNullOrWhiteSpace(query.LastName))
+        {
+            users = users.Where(u => u.LastName.Contains(query.LastName));
+        }
+
+        if (!string.IsNullOrWhiteSpace(query.PhoneNumber))
+        {
+            users = users.Where(u => u.PhoneNumber.Contains(query.PhoneNumber));
+        }
+
+        if (!string.IsNullOrWhiteSpace(query.Email))
+        {
+            users = users.Where(u => u.Email.Contains(query.Email));
+        }
+
+        if (!string.IsNullOrWhiteSpace(query.SortBy))
+        {
+            if (query.SortBy.Equals("FirstName", StringComparison.OrdinalIgnoreCase))
+            {
+                users = query.IsDescending ? users.OrderByDescending(x => x.FirstName) : users.OrderBy(x => x.FirstName);
+            }
+
+            if (query.SortBy.Equals("LastName", StringComparison.OrdinalIgnoreCase))
+            {
+                users = query.IsDescending ? users.OrderByDescending(x => x.LastName) : users.OrderBy(x => x.LastName);
+            }
+        }
+
+        var skipNumber = (query.PageNumber - 1) * query.PageSize;
+
+        return await users
+            .Skip(skipNumber)
+            .Take(query.PageSize)
+            .ToListAsync();
     }
 
-    public Task<User?> GetByIdAsync(int id)
+    //public async Task<ICollection<User>> GetAllAsync(int page, int pageSize)
+    //{
+    //    _logger.LogDebug("Getting users from db");
+
+    //    int itemsToSkip = (page - 1) * pageSize;
+
+    //    var res = await _dbContext.Users
+    //        .OrderBy(u => u.LastName)
+    //        .Skip(itemsToSkip)
+    //        .Take(pageSize)
+    //        .Distinct()
+    //        .ToListAsync();
+
+    //    return res;
+    //}
+
+
+    public async Task<User?> GetByIdAsync(UserId id)
     {
-        throw new NotImplementedException();
+        _logger.LogDebug("Getting user by id: {id} from db", id);
+
+        return await _dbContext.Users.FindAsync(id);
     }
 
-    public async Task<User?> GetUserByEmailAsync(string email) 
+    public async Task<User?> GetUserByEmailAsync(string email)
     {
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
-        return user;
+        _logger.LogDebug("Getting user by email: {email} from db", email);
+
+        var res = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
+        return res;
     }
 
-    public Task<ICollection<User>> GetByLastNameAsync(string userLastname)
+    public async Task<ICollection<User>> GetByLastNameAsync(string userLastName)
     {
-        throw new NotImplementedException();
-    }
+        _logger.LogDebug("Getting user by lastname: {userLastName} from db", userLastName);
 
-    public Task<ICollection<User>> GetByPlayerLastNameAsync(string playerLastname)
-    {
-        throw new NotImplementedException();
+        var res = await _dbContext.Users
+            .Where(u => u.LastName
+            .StartsWith(userLastName))
+            .OrderBy(u => u.LastName) // husk legge til sortere alfabetisk også på Coach
+            .ToListAsync();     
+
+        return res;
     }
 
     public async Task<User?> RegisterUserAsync(User user)
     {
-        _logger.LogDebug("Adding user to db");
-
-        // Generate a new UserId, denne viste ikke yngve i videon derfor jeg fikk 000-0000-00 osv på Guid
-        user.Id = UserId.NewId;
+        _logger.LogDebug("Adding user: {user} to db", user.Email);
         
         await _dbContext.Users.AddAsync(user);
         await _dbContext.SaveChangesAsync();
@@ -65,14 +121,33 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-
-    public Task<User?> UpdateAsync(int id, User user)
+    public async Task<User?> UpdateAsync(UserId id, User user)
     {
-        throw new NotImplementedException();
+        _logger.LogDebug("Updating user: {id} in db", id);
+
+        var usr = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id.Equals(id));
+        if (usr == null) return null;
+
+        usr.FirstName = string.IsNullOrEmpty(user.FirstName) ? usr.FirstName : user.FirstName;
+        usr.LastName = string.IsNullOrEmpty(user.LastName) ? usr.LastName : user.LastName;
+        usr.PhoneNumber = string.IsNullOrEmpty(user.PhoneNumber) ? usr.PhoneNumber : user.PhoneNumber;
+        usr.Email = string.IsNullOrEmpty(user.Email) ? usr.Email : user.Email;
+        usr.Updated = DateTime.Now;
+
+        await _dbContext.SaveChangesAsync();
+
+        return usr;
     }
 
-    public Task<User?> DeleteAsync(int id)
+    public async Task<User?> DeleteAsync(UserId id)
     {
-        throw new NotImplementedException();
+        _logger.LogDebug("Deleting user: {id} from db", id);
+
+        var res = await _dbContext.Users.FindAsync(id);
+        if (res == null) return null;
+        
+        _dbContext.Users.Remove(res);
+        await _dbContext.SaveChangesAsync();
+        return res;               
     }  
 }

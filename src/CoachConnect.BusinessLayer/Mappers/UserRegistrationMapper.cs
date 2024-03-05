@@ -15,8 +15,7 @@ public class UserRegistrationMapper : IMapper<User, UserRegistrationDTO>
     {
         var dtNow = DateTime.Now;
         return new User() 
-        {
-            //UserName = dto.UserName,
+        {           
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             PhoneNumber = dto.PhoneNumber,

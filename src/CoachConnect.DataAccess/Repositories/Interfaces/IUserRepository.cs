@@ -1,19 +1,15 @@
 ﻿using CoachConnect.DataAccess.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CoachConnect.Shared.Helpers;
 
 namespace CoachConnect.DataAccess.Repositories.Interfaces;
 public interface IUserRepository
 {
-    Task<ICollection<User>> GetAllAsync(int page, int pageSize);
-    Task<User?> GetByIdAsync(int id);
+    // Task<ICollection<User>> GetAllAsync(int page, int pageSize);
+    Task<ICollection<User>> GetAllAsync(QueryObject query);
+    Task<User?> GetByIdAsync(UserId id);
     Task<User?> GetUserByEmailAsync(string email);
-    Task<ICollection<User>> GetByLastNameAsync(string userLastname);
-    Task<ICollection<User>> GetByPlayerLastNameAsync(string playerLastname);
+    Task<ICollection<User>> GetByLastNameAsync(string userLastName);
     Task<User?> RegisterUserAsync(User user);
-    Task<User?> UpdateAsync(int id, User user);
-    Task<User?> DeleteAsync(int id);
+    Task<User?> UpdateAsync(UserId id, User user);
+    Task<User?> DeleteAsync(UserId id);
 }

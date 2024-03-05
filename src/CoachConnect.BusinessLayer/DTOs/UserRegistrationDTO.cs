@@ -1,7 +1,6 @@
 ﻿namespace CoachConnect.BusinessLayer.DTOs;
 
-public record UserRegistrationDTO(
-    //string UserName,
+public record UserRegistrationDTO(   
     string FirstName,
     string LastName,
     string PhoneNumber,

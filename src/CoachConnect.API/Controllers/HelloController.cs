@@ -18,5 +18,4 @@ public class HelloController : ControllerBase
             sb.Append($"Adress: {adr.AddressFamily} {adr.ToString()}\n");
         return $"Hello from host: {hostName}\n{sb.ToString()}";
     }
-
 }

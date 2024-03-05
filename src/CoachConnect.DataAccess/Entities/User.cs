@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoachConnect.DataAccess.Entities;
 
@@ -6,18 +7,13 @@ public readonly record struct UserId(Guid userId)
 { 
     public static UserId NewId => new UserId(Guid.NewGuid());
     public static UserId Empty => new UserId(Guid.Empty);
-
 };
 
-public class User // Hvorfor partial??
+public class User 
 {
     [Key]
     public UserId Id { get; set; }
-    
-    //[Required]
-    //[MinLength(5), MaxLength(50)]
-    //public string UserName { get; set; } = string.Empty;
-
+        
     [Required]
     [MinLength(2), MaxLength(50)]
     public string FirstName { get; set; } = string.Empty;

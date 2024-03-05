@@ -21,4 +21,8 @@
     <Folder Include="Entities\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CoachConnect.Shared\CoachConnect.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

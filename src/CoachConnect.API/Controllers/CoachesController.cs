@@ -1,15 +1,28 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CoachConnect.BusinessLayer.DTOs;
+using CoachConnect.Shared.Helpers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CoachConnect.API.Controllers;
 [Route("api/v1/coaches")]
 [ApiController]
 public class CoachesController : ControllerBase
 {
+    private readonly ILogger<CoachesController> _logger;
+
+    public CoachesController(ILogger<CoachesController> logger)
+    {
+        _logger = logger;
+    }
+
     // GET: api/<CoachesController> // fyll inn disse
     [HttpGet(Name = "GetCoaches")]
-    public IEnumerable<string> Get()
+    public async Task<ActionResult<IEnumerable<CoachDTO>>> GetCoaches([FromQuery] QueryObject query)
     {
-        return new string[] { "value1", "value2" };
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        _logger.LogDebug("Getting coaches");
+
+        return Ok(await _coachService.GetAllAsync(query));
     }
 
     // GET api/<CoachesController>/5

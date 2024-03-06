@@ -91,7 +91,7 @@ public class UsersController : ControllerBase
     [HttpPost("register", Name = "RegisterUser")]
     public async Task<ActionResult<UserDTO>> RegisterUser([FromBody] UserRegistrationDTO dto)
     {
-        _logger.LogDebug("Registering new user: {dto}", dto);
+        _logger.LogDebug("Registering new user: {email}", dto.Email);
 
         var res = await _userService.RegisterUserAsync(dto);
         return res != null ? Ok(res) : BadRequest("Could not register new user");

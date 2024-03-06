@@ -64,7 +64,7 @@ public class CoachesController : ControllerBase
     [HttpPost("register", Name = "RegisterCoach")]
     public async Task<ActionResult<CoachDTO>> RegisterCoach([FromBody] CoachRegistrationDTO dto)
     {
-        _logger.LogDebug("Registering new coach: {dto}", dto);
+        _logger.LogDebug("Registering new coach: {email}", dto.Email);
 
         var res = await _coachService.RegisterCoachAsync(dto);
         return res != null ? Ok(res) : BadRequest("Could not register new coach");

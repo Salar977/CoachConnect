@@ -5,6 +5,7 @@ using CoachConnect.DataAccess.Entities;
 using CoachConnect.DataAccess.Repositories.Interfaces;
 using CoachConnect.Shared.Helpers;
 using Microsoft.Extensions.Logging;
+using Serilog.Core;
 
 namespace CoachConnect.BusinessLayer.Services;
 
@@ -94,7 +95,7 @@ public class UserService : IUserService
 
     public async Task<UserDTO?> RegisterUserAsync(UserRegistrationDTO dto)
     {
-        _logger.LogDebug("Registering new user: {dto}", dto);
+        _logger.LogDebug("Registering new user: {email}", dto.Email);
 
         var existingUser = await _userRepository.GetByEmailAsync(dto.Email);
         if (existingUser != null)

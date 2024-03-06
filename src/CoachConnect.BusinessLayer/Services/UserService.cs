@@ -67,29 +67,7 @@ public class UserService : IUserService
         var res = await _userRepository.GetByEmailAsync(email);
         return res != null ? _userMapper.MapToDTO(res) : null;
     }  
-
-    public async Task<UserDTO?> RegisterUserAsync(UserRegistrationDTO dto)
-    {
-        _logger.LogDebug("Registering new user: {dto}", dto);
-
-        var existingUser = await _userRepository.GetByEmailAsync(dto.Email);
-        if (existingUser != null)
-        {
-            _logger.LogDebug("User already exists: {email}", dto.Email);
-            return null; // sette opp custom exception? user already exists. Returnerer nå bare BadRequesten fra controlleren.
-        }
-
-        var user = _userRegistrationMapper.MapToEntity(dto);
-
-        user.Id = UserId.NewId; // Generate a new UserId. Må ha med for at UserID Guid skal fungere.
-        user.Salt = BCrypt.Net.BCrypt.GenerateSalt();
-        user.HashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password, user.Salt);
-
-        var res = await _userRepository.RegisterUserAsync(user);
-        
-        return res != null ? _userMapper.MapToDTO(res) : null;
-    }
-
+    
     public async Task<UserDTO?> UpdateAsync(UserId id, UserDTO dto)
     {
         _logger.LogDebug("Updating user: {id}", id);
@@ -112,5 +90,27 @@ public class UserService : IUserService
         
         var res = await _userRepository.DeleteAsync(id);
         return res != null ? _userMapper.MapToDTO(res) : null;
-    }   
+    }
+
+    public async Task<UserDTO?> RegisterUserAsync(UserRegistrationDTO dto)
+    {
+        _logger.LogDebug("Registering new user: {dto}", dto);
+
+        var existingUser = await _userRepository.GetByEmailAsync(dto.Email);
+        if (existingUser != null)
+        {
+            _logger.LogDebug("User already exists: {email}", dto.Email);
+            return null; // sette opp custom exception? user already exists. Returnerer nå bare BadRequesten fra controlleren.
+        }
+
+        var user = _userRegistrationMapper.MapToEntity(dto);
+
+        user.Id = UserId.NewId; // Generate a new UserId. Må ha med for at UserID Guid skal fungere.
+        user.Salt = BCrypt.Net.BCrypt.GenerateSalt();
+        user.HashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password, user.Salt);
+
+        var res = await _userRepository.RegisterUserAsync(user);
+
+        return res != null ? _userMapper.MapToDTO(res) : null;
+    }
 }

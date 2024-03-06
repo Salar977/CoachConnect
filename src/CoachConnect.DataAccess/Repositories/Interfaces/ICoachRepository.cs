@@ -10,9 +10,9 @@ namespace CoachConnect.DataAccess.Repositories.Interfaces;
 public interface ICoachRepository
 {
     Task<ICollection<Coach>> GetAllAsync(QueryObject query);
-    Task<Coach>? GetByIdAsync(CoachId id);
-    Task<Coach>? GetByEmailAsync(string email);
-    Task<Coach>? UpdateAsync(CoachId id, Coach coach);
-    Task<Coach>? DeleteAsync(CoachId id);
-    Task<Coach>? RegisterCoachAsync(Coach coach);
+    Task<Coach?> GetByIdAsync(CoachId id);
+    Task<Coach?> GetByEmailAsync(string email);
+    Task<Coach?> UpdateAsync(CoachId id, Coach coach);
+    Task<Coach?> DeleteAsync(CoachId id);
+    Task<Coach?> RegisterCoachAsync(Coach coach);
 }

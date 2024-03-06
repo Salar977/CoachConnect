@@ -18,7 +18,7 @@ public class CoachesController : ControllerBase
         _logger = logger;
     }
 
-    // GET: api/<CoachesController> // fyll inn disse
+    // GET: https://localhost:7036/api/v1/coaches
     [HttpGet(Name = "GetCoaches")]
     public async Task<ActionResult<IEnumerable<CoachDTO>>> GetCoaches([FromQuery] QueryObject query)
     {
@@ -29,17 +29,11 @@ public class CoachesController : ControllerBase
         return Ok(await _coachService.GetAllAsync(query));
     }
 
-    // GET api/<CoachesController>/5
-    [HttpGet("{id}")]
+    // GET api/<CoachesController>/5 // fyll inn disse
+    [HttpGet("{id}", Name = "GetCoachById")]
     public string Get(int id)
     {
         return "value";
-    }
-
-    // POST api/<CoachesController>
-    [HttpPost]
-    public void Post([FromBody] string value)
-    {
     }
 
     // PUT api/<CoachesController>/5
@@ -52,5 +46,15 @@ public class CoachesController : ControllerBase
     [HttpDelete("{id}")]
     public void Delete(int id)
     {
+    }
+
+    // POST https://localhost:7036/api/v1/coaches/register
+    [HttpPost("register", Name = "RegisterCoach")]
+    public async Task<ActionResult<CoachDTO>> RegisterCoach([FromBody] CoachRegistrationDTO dto)
+    {
+        _logger.LogDebug("Registering new coach: {dto}", dto);
+
+        var res = await _coachService.RegisterCoachAsync(dto);
+        return res != null ? Ok(res) : BadRequest("Could not register new coach");
     }
 }

@@ -65,17 +65,7 @@ public class UsersController : ControllerBase
 
     //    var res = await _userService.GetUserByEmailAsync(email);
     //    return res != null ? Ok(res) : BadRequest("Could not find any user with this email");
-    //}
-
-    // POST https://localhost:7036/api/v1/users/register
-    [HttpPost ("register", Name = "RegisterUser") ]
-    public async Task<ActionResult<UserDTO>> RegisterUser([FromBody] UserRegistrationDTO dto)
-    {
-        _logger.LogDebug("Registering new user: {dto}", dto);
-
-        var res = await _userService.RegisterUserAsync(dto);
-        return res != null ? Ok(res) : BadRequest("Could not register new user");
-    }
+    //}  
 
     // PUT https://localhost:7036/api/v1/users/8f2466af-57c3-458c-82d8-676d80573c6c
     [HttpPut("{id}", Name = "UpdateUser")]
@@ -95,5 +85,15 @@ public class UsersController : ControllerBase
 
         var res = await _userService.DeleteAsync(new UserId(id));
         return res != null ? Ok(res) : BadRequest("Could not delete user");
-    }   
+    }
+
+    // POST https://localhost:7036/api/v1/users/register
+    [HttpPost("register", Name = "RegisterUser")]
+    public async Task<ActionResult<UserDTO>> RegisterUser([FromBody] UserRegistrationDTO dto)
+    {
+        _logger.LogDebug("Registering new user: {dto}", dto);
+
+        var res = await _userService.RegisterUserAsync(dto);
+        return res != null ? Ok(res) : BadRequest("Could not register new user");
+    }
 }

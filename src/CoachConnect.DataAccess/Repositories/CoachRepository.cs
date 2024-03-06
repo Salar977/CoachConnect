@@ -65,9 +65,11 @@ public class CoachRepository : ICoachRepository
             .ToListAsync();
     }
 
-    public Task<Coach?> GetByIdAsync(CoachId id)
+    public async Task<Coach?> GetByIdAsync(CoachId id)
     {
-        throw new NotImplementedException();
+        _logger.LogDebug("Getting coach by id: {id} from db", id);
+
+        return await _dbContext.Coaches.FindAsync(id);
     }
 
     public async Task<Coach?> GetByEmailAsync(string email)
@@ -78,9 +80,22 @@ public class CoachRepository : ICoachRepository
         return res;
     }      
 
-    public Task<Coach?> UpdateAsync(CoachId id, Coach coach)
+    public async Task<Coach?> UpdateAsync(CoachId id, Coach coach)
     {
-        throw new NotImplementedException();
+        _logger.LogDebug("Updating coach: {id} in db", id);
+
+        var cch = await _dbContext.Coaches.FirstOrDefaultAsync(c => c.Id.Equals(id));
+        if (cch == null) return null;
+
+        cch.FirstName = string.IsNullOrEmpty(coach.FirstName) ? cch.FirstName : coach.FirstName;
+        cch.LastName = string.IsNullOrEmpty(coach.LastName) ? cch.LastName : coach.LastName;
+        cch.PhoneNumber = string.IsNullOrEmpty(coach.PhoneNumber) ? cch.PhoneNumber : coach.PhoneNumber;
+        cch.Email = string.IsNullOrEmpty(coach.Email) ? cch.Email : coach.Email;
+        cch.Updated = DateTime.Now;
+
+        await _dbContext.SaveChangesAsync();
+
+        return cch;
     }
 
     public Task<Coach?> DeleteAsync(CoachId id)

@@ -35,9 +35,12 @@ public class CoachService : ICoachService
         return res.Select(coach => _coachMapper.MapToDTO(coach)).ToList();
     }
 
-    public Task<CoachDTO?> GetByIdAsync(CoachId id)
+    public async Task<CoachDTO?> GetByIdAsync(CoachId id)
     {
-        throw new NotImplementedException();
+        _logger.LogDebug("Getting coach by id: {id}", id);
+
+        var res = await _coachRepository.GetByIdAsync(id);
+        return res != null ? _coachMapper.MapToDTO(res) : null;
     }
 
     public async Task<CoachDTO?> GetByEmailAsync(string email)
@@ -48,9 +51,18 @@ public class CoachService : ICoachService
         return res != null ? _coachMapper.MapToDTO(res) : null;
     }     
 
-    public Task<CoachDTO?> UpdateAsync(CoachId id, CoachDTO dto)
+    public async Task<CoachDTO?> UpdateAsync(CoachId id, CoachDTO dto)
     {
-        throw new NotImplementedException();
+        _logger.LogDebug("Updating coach: {id}", id);
+
+        // husk at coaches (el admin) kun skal kunne eoppdatere sin egen coach Dette må vel settes i JWT autorisering. Ikke glem må ha med dette viktig.
+        // kanksje noe som : throw new UnauthorizedAccessException($"Coach {loggedInUserId} has no access to delete coach {id}");
+
+        var coach = _coachMapper.MapToEntity(dto);
+        coach.Id = id;
+
+        var res = await _coachRepository.UpdateAsync(id, coach);
+        return res != null ? _coachMapper.MapToDTO(coach) : null;
     }
 
     public Task<CoachDTO?> DeleteAsync(CoachId id)

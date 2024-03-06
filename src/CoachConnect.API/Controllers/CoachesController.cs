@@ -1,6 +1,7 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
 using CoachConnect.BusinessLayer.Services;
 using CoachConnect.BusinessLayer.Services.Interfaces;
+using CoachConnect.DataAccess.Entities;
 using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,23 +30,31 @@ public class CoachesController : ControllerBase
         return Ok(await _coachService.GetAllAsync(query));
     }
 
-    // GET api/<CoachesController>/5 // fyll inn disse
+    // GET https://localhost:7036/api/v1/coaches/2b1e02fc-4b92-4b0d-84a7-2418ff07ac13
     [HttpGet("{id}", Name = "GetCoachById")]
-    public string Get(int id)
+    public async Task<ActionResult<CoachDTO>> GetCoachById([FromRoute] Guid id)
     {
-        return "value";
+        _logger.LogDebug("Getting coach by id {id}", id);
+
+        var res = await _coachService.GetByIdAsync(new CoachId(id)); // Convert Guid to CoachId her, da funker det
+        return res != null ? Ok(res) : NotFound("Could not find any coach with this id");
     }
 
-    // PUT api/<CoachesController>/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
+    // PUT https://localhost:7036/api/v1/coaches/92a93093-c123-4748-a8d9-558d61690d76
+    [HttpPut("{id}", Name = "UpdateCoach")]
+    public async Task<ActionResult<CoachDTO>> UpdateCoach(Guid id, [FromBody] CoachDTO dto)
     {
+        _logger.LogDebug("Updating coach: {id}", id);
+
+        var res = await _coachService.UpdateAsync(new CoachId(id), dto);
+        return res != null ? Ok(res) : BadRequest("Could not update coach");
     }
 
-    // DELETE api/<CoachesController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
+    // DELETE https://localhost:7036/api/v1/users/2b1e02fc-4b92-4b0d-84a7-2418ff07ac13
+    [HttpDelete("{id}", Name = "DeleteCoach")]
+    public async Task<ActionResult<CoachDTO>> Delete(Guid id)
     {
+
     }
 
     // POST https://localhost:7036/api/v1/coaches/register

@@ -1,5 +1,6 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
 using CoachConnect.BusinessLayer.Mappers;
+using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.DataAccess.Entities;
 using CoachConnect.Shared.Helpers;
@@ -10,9 +11,15 @@ namespace CoachConnect.BusinessLayer.Services;
 public class CoachService : ICoachService
 {
     private readonly ILogger<CoachService> _logger;
+    private readonly IMapper<Coach, CoachDTO> _coachMapper;
+    private readonly IMapper<Coach, CoachRegistrationDTO> _coachRegistartionMapper;
 
-    public CoachService(ILogger<CoachService> logger)
+    public CoachService(IMapper<Coach, CoachDTO> coachMapper,
+                        IMapper<Coach, CoachRegistrationDTO> coachRegistrationMapper,
+                        ILogger<CoachService> logger)
     {
+        _coachMapper = coachMapper;
+        _coachRegistartionMapper = coachRegistrationMapper;
         _logger = logger;
     }
 

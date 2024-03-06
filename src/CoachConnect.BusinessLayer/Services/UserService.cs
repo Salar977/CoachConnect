@@ -19,7 +19,7 @@ public class UserService : IUserService
                        IMapper<User, UserDTO> userMapper,
                        IMapper<User, UserRegistrationDTO> userRegistrationMapper,
                        ILogger<UserService> logger)
-    {
+    {   
         _userRepository = userRepository;
         _userMapper = userMapper;
         _userRegistrationMapper = userRegistrationMapper;

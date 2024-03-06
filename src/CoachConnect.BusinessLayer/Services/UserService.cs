@@ -60,7 +60,7 @@ public class UserService : IUserService
         return res != null ? _userMapper.MapToDTO(res) : null;     
     }
 
-    public async Task<UserDTO?> GetUserByEmailAsync(string email)
+    public async Task<UserDTO?> GetByEmailAsync(string email)
     {
         _logger.LogDebug("Getting user by email: {email}", email);
 

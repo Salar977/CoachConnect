@@ -64,7 +64,7 @@ public class UserService : IUserService
     {
         _logger.LogDebug("Getting user by email: {email}", email);
 
-        var res = await _userRepository.GetUserByEmailAsync(email);
+        var res = await _userRepository.GetByEmailAsync(email);
         return res != null ? _userMapper.MapToDTO(res) : null;
     }  
 
@@ -72,7 +72,7 @@ public class UserService : IUserService
     {
         _logger.LogDebug("Registering new user: {dto}", dto);
 
-        var existingUser = await _userRepository.GetUserByEmailAsync(dto.Email);
+        var existingUser = await _userRepository.GetByEmailAsync(dto.Email);
         if (existingUser != null)
         {
             _logger.LogDebug("User already exists: {email}", dto.Email);

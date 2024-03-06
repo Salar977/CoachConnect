@@ -11,9 +11,9 @@ namespace CoachConnect.BusinessLayer.Services.Interfaces;
 public interface ICoachService
 {
     Task<ICollection<CoachDTO>> GetAllAsync(QueryObject query);
-    Task<CoachDTO> GetByIdAsync(CoachId id);
-    Task<CoachDTO> GetByEmailAsync(string email);
-    Task<CoachDTO> UpdateAsync(CoachId id, CoachDTO dto);
-    Task<CoachDTO> DeleteAsync(CoachId id);
-    Task<CoachDTO> RegisterCoach(CoachRegistrationDTO dto);
+    Task<CoachDTO>? GetByIdAsync(CoachId id);
+    Task<CoachDTO>? GetByEmailAsync(string email);
+    Task<CoachDTO>? UpdateAsync(CoachId id, CoachDTO dto);
+    Task<CoachDTO>? DeleteAsync(CoachId id);
+    Task<CoachDTO>? RegisterCoach(CoachRegistrationDTO dto);
 }

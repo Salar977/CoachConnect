@@ -90,7 +90,7 @@ public class UserRepository : IUserRepository
         return await _dbContext.Users.FindAsync(id);
     }
 
-    public async Task<User?> GetUserByEmailAsync(string email)
+    public async Task<User?> GetByEmailAsync(string email)
     {
         _logger.LogDebug("Getting user by email: {email} from db", email);
 
@@ -98,28 +98,18 @@ public class UserRepository : IUserRepository
         return res;
     }
 
-    public async Task<ICollection<User>> GetByLastNameAsync(string userLastName)
-    {
-        _logger.LogDebug("Getting user by lastname: {userLastName} from db", userLastName);
+    //public async Task<ICollection<User>> GetByLastNameAsync(string userLastName)
+    //{
+    //    _logger.LogDebug("Getting user by lastname: {userLastName} from db", userLastName);
 
-        var res = await _dbContext.Users
-            .Where(u => u.LastName
-            .StartsWith(userLastName))
-            .OrderBy(u => u.LastName) // husk legge til sortere alfabetisk også på Coach
-            .ToListAsync();     
+    //    var res = await _dbContext.Users
+    //        .Where(u => u.LastName
+    //        .StartsWith(userLastName))
+    //        .OrderBy(u => u.LastName) // husk legge til sortere alfabetisk også på Coach
+    //        .ToListAsync();     
 
-        return res;
-    }
-
-    public async Task<User?> RegisterUserAsync(User user)
-    {
-        _logger.LogDebug("Adding user: {user} to db", user.Email);
-        
-        await _dbContext.Users.AddAsync(user);
-        await _dbContext.SaveChangesAsync();
-
-        return user;
-    }
+    //    return res;
+    //}  
 
     public async Task<User?> UpdateAsync(UserId id, User user)
     {
@@ -149,5 +139,15 @@ public class UserRepository : IUserRepository
         _dbContext.Users.Remove(res);
         await _dbContext.SaveChangesAsync();
         return res;               
-    }  
+    }
+
+    public async Task<User?> RegisterUserAsync(User user)
+    {
+        _logger.LogDebug("Adding user: {user} to db", user.Email);
+
+        await _dbContext.Users.AddAsync(user);
+        await _dbContext.SaveChangesAsync();
+
+        return user;
+    }
 }

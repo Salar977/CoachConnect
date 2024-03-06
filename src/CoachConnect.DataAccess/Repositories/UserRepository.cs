@@ -19,50 +19,50 @@ public class UserRepository : IUserRepository
         _dbContext = dbContext;
     }
 
-    public async Task<ICollection<User>> GetAllAsync(QueryObject query)
+    public async Task<ICollection<User>> GetAllAsync(UserQuery userQuery)
     {
         _logger.LogDebug("Getting users from db");
 
         var users = _dbContext.Users.AsQueryable();
 
-        if(!string.IsNullOrWhiteSpace(query.FirstName))
+        if(!string.IsNullOrWhiteSpace(userQuery.FirstName))
         {
-            users = users.Where(u => u.FirstName.Contains(query.FirstName));
+            users = users.Where(u => u.FirstName.Contains(userQuery.FirstName));
         }
 
-        if (!string.IsNullOrWhiteSpace(query.LastName))
+        if (!string.IsNullOrWhiteSpace(userQuery.LastName))
         {
-            users = users.Where(u => u.LastName.Contains(query.LastName));
+            users = users.Where(u => u.LastName.Contains(userQuery.LastName));
         }
 
-        if (!string.IsNullOrWhiteSpace(query.PhoneNumber))
+        if (!string.IsNullOrWhiteSpace(userQuery.PhoneNumber))
         {
-            users = users.Where(u => u.PhoneNumber.Contains(query.PhoneNumber));
+            users = users.Where(u => u.PhoneNumber.Contains(userQuery.PhoneNumber));
         }
 
-        if (!string.IsNullOrWhiteSpace(query.Email))
+        if (!string.IsNullOrWhiteSpace(userQuery.Email))
         {
-            users = users.Where(u => u.Email.Contains(query.Email));
+            users = users.Where(u => u.Email.Contains(userQuery.Email));
         }
 
-        if (!string.IsNullOrWhiteSpace(query.SortBy))
+        if (!string.IsNullOrWhiteSpace(userQuery.SortBy))
         {
-            if (query.SortBy.Equals("FirstName", StringComparison.OrdinalIgnoreCase))
+            if (userQuery.SortBy.Equals("FirstName", StringComparison.OrdinalIgnoreCase))
             {
-                users = query.IsDescending ? users.OrderByDescending(x => x.FirstName) : users.OrderBy(x => x.FirstName);
+                users = userQuery.IsDescending ? users.OrderByDescending(x => x.FirstName) : users.OrderBy(x => x.FirstName);
             }
 
-            if (query.SortBy.Equals("LastName", StringComparison.OrdinalIgnoreCase))
+            if (userQuery.SortBy.Equals("LastName", StringComparison.OrdinalIgnoreCase))
             {
-                users = query.IsDescending ? users.OrderByDescending(x => x.LastName) : users.OrderBy(x => x.LastName);
+                users = userQuery.IsDescending ? users.OrderByDescending(x => x.LastName) : users.OrderBy(x => x.LastName);
             }
         }
 
-        var skipNumber = (query.PageNumber - 1) * query.PageSize;
+        var skipNumber = (userQuery.PageNumber - 1) * userQuery.PageSize;
 
         return await users
             .Skip(skipNumber)
-            .Take(query.PageSize)
+            .Take(userQuery.PageSize)
             .ToListAsync();
     }
 

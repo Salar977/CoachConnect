@@ -1,6 +1,6 @@
 ﻿namespace CoachConnect.Shared.Helpers;
 
-public class QueryObject
+public class UserQuery
 {
     public string? FirstName { get; set; } = null;
     public string? LastName { get; set; } = null;

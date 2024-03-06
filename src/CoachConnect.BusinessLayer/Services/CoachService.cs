@@ -77,7 +77,7 @@ public class CoachService : ICoachService
 
     public async Task<CoachDTO?> RegisterCoachAsync(CoachRegistrationDTO dto)
     {
-        _logger.LogDebug("Registering new coach: {dto}", dto);
+        _logger.LogDebug("Registering new coach: {email}", dto.Email);
 
         var existingCoach = await _coachRepository.GetByEmailAsync(dto.Email);
         if (existingCoach != null)

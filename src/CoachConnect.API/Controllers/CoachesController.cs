@@ -52,9 +52,12 @@ public class CoachesController : ControllerBase
 
     // DELETE https://localhost:7036/api/v1/users/2b1e02fc-4b92-4b0d-84a7-2418ff07ac13
     [HttpDelete("{id}", Name = "DeleteCoach")]
-    public async Task<ActionResult<CoachDTO>> Delete(Guid id)
+    public async Task<ActionResult<CoachDTO>> DeleteCoach([FromRoute] Guid id)
     {
+        _logger.LogDebug("Deleting coach: {id}", id);
 
+        var res = await _coachService.DeleteAsync(new CoachId(id));
+        return res != null ? Ok(res) : BadRequest("Could not delete coach");
     }
 
     // POST https://localhost:7036/api/v1/coaches/register

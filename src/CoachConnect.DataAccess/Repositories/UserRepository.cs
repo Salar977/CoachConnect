@@ -125,7 +125,6 @@ public class UserRepository : IUserRepository
         usr.Updated = DateTime.Now;
 
         await _dbContext.SaveChangesAsync();
-
         return usr;
     }
 

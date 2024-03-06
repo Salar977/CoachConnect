@@ -94,13 +94,19 @@ public class CoachRepository : ICoachRepository
         cch.Updated = DateTime.Now;
 
         await _dbContext.SaveChangesAsync();
-
         return cch;
     }
 
-    public Task<Coach?> DeleteAsync(CoachId id)
+    public async Task<Coach?> DeleteAsync(CoachId id)
     {
-        throw new NotImplementedException();
+        _logger.LogDebug("Deleting coach: {id} from db", id);
+
+        var res = await _dbContext.Coaches.FindAsync(id);
+        if (res == null) return null;
+
+        _dbContext.Coaches.Remove(res);
+        await _dbContext.SaveChangesAsync();
+        return res;
     }
 
     public async Task<Coach?> RegisterCoachAsync(Coach coach)

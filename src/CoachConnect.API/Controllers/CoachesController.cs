@@ -1,4 +1,6 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
+using CoachConnect.BusinessLayer.Services;
+using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,10 +9,12 @@ namespace CoachConnect.API.Controllers;
 [ApiController]
 public class CoachesController : ControllerBase
 {
-    private readonly ILogger<CoachesController> _logger;
+    private readonly ICoachService _coachService;
+    private readonly ILogger<CoachesController> _logger;    
 
-    public CoachesController(ILogger<CoachesController> logger)
+    public CoachesController(ICoachService coachService ,ILogger<CoachesController> logger)
     {
+        _coachService = coachService;
         _logger = logger;
     }
 

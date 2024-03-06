@@ -3,6 +3,6 @@
 public record CoachDTO(
     string FirstName,
     string LastName,
-    string Phonenumber,
     // List<TeamDTO> Teams,
+    string PhoneNumber,    
     string Email);

@@ -4,23 +4,22 @@ using CoachConnect.DataAccess.Entities;
 
 namespace CoachConnect.BusinessLayer.Mappers;
 
-public class UserMapper : IMapper<User, UserDTO>
+public class CoachMapper : IMapper<Coach, CoachDTO>
 {
-    public UserDTO MapToDTO(User entity)
+    public CoachDTO MapToDTO(Coach entity)
     {
-        return new UserDTO(entity.FirstName, entity.LastName, entity.PhoneNumber, entity.Email); // PLayers??
+        return new CoachDTO(entity.FirstName, entity.LastName, entity.PhoneNumber, entity.Email); // Teams??
     }
 
-    public User MapToEntity(UserDTO dto) // Players??
+    public Coach MapToEntity(CoachDTO dto) // Teams??
     {
         var dtNow = DateTime.Now;
-        return new User()
-        {          
-            FirstName = dto.FirstName, 
+        return new Coach()
+        {
+            FirstName = dto.FirstName,
             LastName = dto.LastName,
             PhoneNumber = dto.PhoneNumber,
             Email = dto.Email,
-            
         };
     }
 }

@@ -35,7 +35,7 @@ public class User
     [Required]
     public string Salt { get; set; } = string.Empty;
 
-    public DateTime Created { get; set; }
+    public DateTime Created { get; init; }
 
     public DateTime Updated { get; set; }
 

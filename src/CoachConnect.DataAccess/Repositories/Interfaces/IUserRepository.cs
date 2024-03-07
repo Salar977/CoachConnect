@@ -7,9 +7,9 @@ public interface IUserRepository
     // Task<ICollection<User>> GetAllAsync(int page, int pageSize);
     Task<ICollection<User>> GetAllAsync(UserQuery userQuery);
     Task<User?> GetByIdAsync(UserId id);
-    Task<User?> GetUserByEmailAsync(string email);
-    Task<ICollection<User>> GetByLastNameAsync(string userLastName);
-    Task<User?> RegisterUserAsync(User user);
+    Task<User?> GetByEmailAsync(string email);
+    //Task<ICollection<User>> GetByLastNameAsync(string userLastName); // KAn vels lettes pga er innebygd i Getall??   
     Task<User?> UpdateAsync(UserId id, User user);
     Task<User?> DeleteAsync(UserId id);
+    Task<User?> RegisterUserAsync(User user);
 }

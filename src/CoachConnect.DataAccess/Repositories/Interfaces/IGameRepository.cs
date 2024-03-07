@@ -13,11 +13,11 @@ public interface IGameRepository
 
     Task<ICollection<Game>> GetAllAsync(GameQuery gameQuery); // Hent alle kampene i systemet med paginering
 
-    Task<ICollection<Game>> GetByOpponentNameAsync(string opponentName); // Hent kamper basert på motstanderens navn
+    //Task<ICollection<Game>> GetByOpponentNameAsync(string opponentName); // Hent kamper basert på motstanderens navn
 
-    Task<ICollection<Game>> GetByLocationAsync(string location); // Hent kamp basert på plasseringen
+    //Task<ICollection<Game>> GetByLocationAsync(string location); // Hent kamp basert på plasseringen
 
-    Task<ICollection<Game>> GetByGameTimeAsync(DateTime gameTime); // Hent kamp basert på spilltidspunktet
+    //Task<ICollection<Game>> GetByGameTimeAsync(DateTime gameTime); // Hent kamp basert på spilltidspunktet
 
     Task<Game?> CreateAsync(Game game); // Opprette en ny kamp
 

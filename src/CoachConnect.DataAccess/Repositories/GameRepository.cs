@@ -65,6 +65,19 @@ namespace CoachConnect.DataAccess.Repositories
                 games = games.Where(g => g.GameTime == gameQuery.GameTime);
             }
 
+            if (!string.IsNullOrWhiteSpace(gameQuery.SortBy))
+            {
+                if (gameQuery.SortBy.Equals("Location", StringComparison.OrdinalIgnoreCase))
+                {
+                    games = gameQuery.IsDescending ? games.OrderByDescending(x => x.Location) : games.OrderBy(x => x.Location);
+                }
+
+                if (gameQuery.SortBy.Equals("Opponent name", StringComparison.OrdinalIgnoreCase))
+                {
+                    games = gameQuery.IsDescending ? games.OrderByDescending(x => x.OpponentName) : games.OrderBy(x => x.OpponentName);
+                }
+            }
+
             var skipNumber = (gameQuery.PageNumber - 1) * gameQuery.PageSize;
 
             return await games
@@ -88,10 +101,10 @@ namespace CoachConnect.DataAccess.Repositories
         //    return res;
         //}
 
-        public Task<ICollection<Game>> GetByGameTimeAsync(DateTime gameTime)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task<ICollection<Game>> GetByGameTimeAsync(DateTime gameTime)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public async Task<Game?> GetByIdAsync(GameId id)
         {
@@ -100,23 +113,23 @@ namespace CoachConnect.DataAccess.Repositories
             return await _dbContext.Games.FindAsync(id);
         }
 
-        public Task<ICollection<Game>> GetByLocationAsync(string location)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task<ICollection<Game>> GetByLocationAsync(string location)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public async Task<ICollection<Game>> GetByOpponentNameAsync(string opponentName)
-        {
-            _logger.LogDebug("Getting Game by opponent name: {opponentName} from db", opponentName);
+        //public async Task<ICollection<Game>> GetByOpponentNameAsync(string opponentName)
+        //{
+        //    _logger.LogDebug("Getting Game by opponent name: {opponentName} from db", opponentName);
 
-            var res = await _dbContext.Games
-                .Where(g => g.OpponentName
-                .StartsWith(opponentName))
-                .OrderBy(g => g.OpponentName) 
-                .ToListAsync();
+        //    var res = await _dbContext.Games
+        //        .Where(g => g.OpponentName
+        //        .StartsWith(opponentName))
+        //        .OrderBy(g => g.OpponentName) 
+        //        .ToListAsync();
 
-            return res;
-        }
+        //    return res;
+        //}
 
         public async Task<Game?> UpdateAsync(GameId id, Game game)
         {

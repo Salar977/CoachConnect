@@ -57,10 +57,10 @@ namespace CoachConnect.BusinessLayer.Services
             return res.Select(game => _gameMapper.MapToDTO(game)).ToList();
         }
 
-        public Task<ICollection<GameDTO>> GetByGameTimeAsync(DateTime gameTime)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task<ICollection<GameDTO>> GetByGameTimeAsync(DateTime gameTime)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public async Task<GameDTO?> GetByIdAsync(GameId id)
         {
@@ -70,19 +70,19 @@ namespace CoachConnect.BusinessLayer.Services
             return res != null ? _gameMapper.MapToDTO(res) : null;
         }
 
-        public Task<ICollection<GameDTO>> GetByLocationAsync(string location)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task<ICollection<GameDTO>> GetByLocationAsync(string location)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public async Task<ICollection<GameDTO>> GetByOpponentNameAsync(string opponentName)
-        {
-            _logger.LogDebug("Getting Game by opponent name: {opponentName}", opponentName);
+        //public async Task<ICollection<GameDTO>> GetByOpponentNameAsync(string opponentName)
+        //{
+        //    _logger.LogDebug("Getting Game by opponent name: {opponentName}", opponentName);
 
-            var res = await _gameRepository.GetByOpponentNameAsync(opponentName);
-            var dtos = res.Select(game => _gameMapper.MapToDTO(game)).ToList();
-            return dtos;
-        }
+        //    var res = await _gameRepository.GetByOpponentNameAsync(opponentName);
+        //    var dtos = res.Select(game => _gameMapper.MapToDTO(game)).ToList();
+        //    return dtos;
+        //}
 
         public async Task<GameDTO?> UpdateAsync(GameId id, GameDTO gameDto)
         {

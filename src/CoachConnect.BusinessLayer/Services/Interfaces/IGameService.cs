@@ -14,11 +14,11 @@ public interface IGameService
 
     Task<ICollection<GameDTO>> GetAllAsync(GameQuery gameQuery); // Hent alle kampene i systemet med paginering
 
-    Task<ICollection<GameDTO>> GetByOpponentNameAsync(string opponentName); // Hent kamper basert på motstanderens navn
+    //Task<ICollection<GameDTO>> GetByOpponentNameAsync(string opponentName); // Hent kamper basert på motstanderens navn
 
-    Task<ICollection<GameDTO>> GetByLocationAsync(string location); // Hent kamp basert på plasseringen
+    //Task<ICollection<GameDTO>> GetByLocationAsync(string location); // Hent kamp basert på plasseringen
 
-    Task<ICollection<GameDTO>> GetByGameTimeAsync(DateTime gameTime); // Hent kamp basert på spilltidspunktet
+    //Task<ICollection<GameDTO>> GetByGameTimeAsync(DateTime gameTime); // Hent kamp basert på spilltidspunktet
 
     Task<GameDTO?> CreateAsync(GameDTO gameDTO); // Opprette en ny kamp
 

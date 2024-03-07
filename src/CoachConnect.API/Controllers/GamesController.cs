@@ -58,14 +58,14 @@ public class GamesController : ControllerBase
         return game != null ? Ok(game) : NotFound($"Game with ID '{id}' not found");
     }
 
-    [HttpGet("opponent", Name = "GetGamesByOpponentName")]
-    public async Task<ActionResult<IEnumerable<GameDTO>>> GetGamesByOpponentName([FromQuery] string opponentName)
-    {
-        _logger.LogDebug("Getting games by opponent name: {opponentName}", opponentName);
+    //[HttpGet("opponent", Name = "GetGamesByOpponentName")]
+    //public async Task<ActionResult<IEnumerable<GameDTO>>> GetGamesByOpponentName([FromQuery] string opponentName)
+    //{
+    //    _logger.LogDebug("Getting games by opponent name: {opponentName}", opponentName);
 
-        var games = await _gameService.GetByOpponentNameAsync(opponentName);
-        return games != null ? Ok(games) : NotFound($"No games found with opponent name '{opponentName}'");
-    }
+    //    var games = await _gameService.GetByOpponentNameAsync(opponentName);
+    //    return games != null ? Ok(games) : NotFound($"No games found with opponent name '{opponentName}'");
+    //}
 
     [HttpPost("register", Name = "CreateGame")]
     public async Task<ActionResult<GameDTO>> CreateGame([FromBody] GameDTO gameDTO)

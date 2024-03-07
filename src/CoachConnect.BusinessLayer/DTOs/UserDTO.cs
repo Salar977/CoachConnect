@@ -9,4 +9,4 @@ public record UserDTO(
    //List<PlayerDTO> Players,
     string PhoneNumber,
     string Email,
-    UserId id);
+    UserId Id);

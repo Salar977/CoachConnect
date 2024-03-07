@@ -13,7 +13,7 @@ public class CoachMapper : IMapper<Coach, CoachDTO>
 
     public Coach MapToEntity(CoachDTO dto) // Teams??
     {
-        var dtNow = DateTime.Now;
+        // var dtNow = DateTime.Now;
         return new Coach()
         {
             FirstName = dto.FirstName,

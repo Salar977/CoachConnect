@@ -13,14 +13,13 @@ public class UserMapper : IMapper<User, UserDTO>
 
     public User MapToEntity(UserDTO dto) // Players??
     {
-        var dtNow = DateTime.Now;
+        // var dtNow = DateTime.Now;
         return new User()
         {          
             FirstName = dto.FirstName, 
             LastName = dto.LastName,
             PhoneNumber = dto.PhoneNumber,
-            Email = dto.Email,
-            
+            Email = dto.Email,            
         };
     }
 }

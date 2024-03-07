@@ -28,7 +28,7 @@ public class CoachService : ICoachService
         _logger = logger;
     }
 
-    public async Task<ICollection<CoachDTO>> GetAllAsync(QueryObject query)
+    public async Task<ICollection<CoachDTO>> GetAllAsync(CoachQuery query)
     {
         _logger.LogDebug("Getting all coaches");
         var res = await _coachRepository.GetAllAsync(query);

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace CoachConnect.DataAccess.Repositories.Interfaces;
 public interface ICoachRepository
 {
-    Task<ICollection<Coach>> GetAllAsync(QueryObject query);
+    Task<ICollection<Coach>> GetAllAsync(CoachQuery query);
     Task<Coach?> GetByIdAsync(CoachId id);
     Task<Coach?> GetByEmailAsync(string email);
     Task<Coach?> UpdateAsync(CoachId id, Coach coach);

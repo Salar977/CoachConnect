@@ -21,7 +21,7 @@ public class CoachesController : ControllerBase
 
     // GET: https://localhost:7036/api/v1/coaches
     [HttpGet(Name = "GetCoaches")]
-    public async Task<ActionResult<IEnumerable<CoachDTO>>> GetCoaches([FromQuery] QueryObject query)
+    public async Task<ActionResult<IEnumerable<CoachDTO>>> GetCoaches([FromQuery] CoachQuery query)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 

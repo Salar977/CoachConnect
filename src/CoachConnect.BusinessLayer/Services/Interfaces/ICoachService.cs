@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace CoachConnect.BusinessLayer.Services.Interfaces;
 public interface ICoachService
 {
-    Task<ICollection<CoachDTO>> GetAllAsync(QueryObject query);
+    Task<ICollection<CoachDTO>> GetAllAsync(CoachQuery query);
     Task<CoachDTO?> GetByIdAsync(CoachId id);
     Task<CoachDTO?> GetByEmailAsync(string email);
     Task<CoachDTO?> UpdateAsync(CoachId id, CoachDTO dto);

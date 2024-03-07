@@ -21,79 +21,89 @@ namespace CoachConnect.DataAccess.Repositories
             _logger = logger;
         }
 
-        public async Task<Game> CreateAsync(Game game) // Metode som oppretter et nytt spill i databasen.
+        public async Task<Game?> CreateAsync(Game game)
         {
-            if (game == null) // Sjekker om det medfølgende game-objektet er null.
-            {
-                throw new ArgumentNullException(nameof(game), "Game object cannot be null"); // Kaster et unntak hvis game-objektet er null.
-            }
+            _logger.LogDebug("Adding Game to DB");
 
-            //game.Created = DateTime.UtcNow; // Setter opprettelsestidspunktet til den nåværende UTC-tiden.
-            game.Updated = DateTime.UtcNow; // Setter oppdateringstidspunktet til den nåværende UTC-tiden.
+            await _dbContext.Games.AddAsync(game);
+            await _dbContext.SaveChangesAsync();
 
-            await _dbContext.Games.AddAsync(game); // Legger til det nye spillet i databasen asynkront.
-            await _dbContext.SaveChangesAsync(); // Lagrer endringene i databasen asynkront.
-
-            return game; // Returnerer det opprettede spillet.
+            return game;
         }
 
-        public async Task<bool> DeleteAsync(GameId id) // Metode som sletter et spill fra databasen basert på ID.
+        public async Task<Game?> DeleteAsync(GameId id)
         {
-            var game = await _dbContext.Games.FindAsync(id); // Finner spillet med den angitte ID-en asynkront.
-            if (game == null) // Sjekker om spillet ble funnet.
-            {
-                return false; // Returnerer false hvis spillet ikke ble funnet.
-            }
+            _logger.LogDebug("Deleting Game: {id} from db", id);
 
-            _dbContext.Games.Remove(game); // Fjerner spillet fra databasen.
-            await _dbContext.SaveChangesAsync(); // Lagrer endringene i databasen asynkront.
-            return true; // Returnerer true hvis spillet ble funnet og slettet.
+            var res = await _dbContext.Games.FindAsync(id);
+            if (res == null) return null;
+
+            _dbContext.Games.Remove(res);
+            await _dbContext.SaveChangesAsync();
+            return res;
         }
 
-        public async Task<IEnumerable<Game>> GetAllAsync(int page, int pageSize) // Metode som henter alle spillene fra databasen med paginering.
+        public async Task<ICollection<Game>> GetAllAsync(int page, int pageSize)
         {
-            return await _dbContext.Games // Returnerer en liste over spillene basert på paginering.
-                .Skip((page - 1) * pageSize) // Hopper over de første (page - 1) sidene.
-                .Take(pageSize) // Tar de neste 'pageSize' spillene.
-                .ToListAsync(); // Konverterer resultatet til en liste asynkront.
+            _logger.LogDebug("Getting Games from db");
+
+            int itemsToSkip = (page - 1) * pageSize;
+
+            var res = await _dbContext.Games
+                .OrderBy(g => g.OpponentName)
+                .Skip(itemsToSkip)
+                .Take(pageSize)
+                .Distinct()
+                .ToListAsync();
+
+            return res;
         }
 
-        public async Task<IEnumerable<Game>> GetByGameTimeAsync(DateTime gameTime) // Metode som henter spill basert på spilletidspunktet.
+        public Task<ICollection<Game>> GetByGameTimeAsync(DateTime gameTime)
         {
-            return await _dbContext.Games.Where(g => g.GameTime == gameTime).ToListAsync(); // Returnerer spillene som har angitt spilletidspunkt asynkront.
+            throw new NotImplementedException();
         }
 
-        public async Task<Game?> GetByIdAsync(GameId id) // Metode som henter et spill basert på GameID.
+        public async Task<Game?> GetByIdAsync(GameId id)
         {
-            return await _dbContext.Games.FindAsync(id); // Returnerer spillet med den angitte ID-en asynkront.
+            _logger.LogDebug("Getting Game by id: {id} from db", id);
+
+            return await _dbContext.Games.FindAsync(id);
         }
 
-        public async Task<IEnumerable<Game>> GetByLocationAsync(string location) // Metode som henter spill basert på lokasjon.
+        public Task<ICollection<Game>> GetByLocationAsync(string location)
         {
-            return await _dbContext.Games.Where(g => g.Location == location).ToListAsync(); // Returnerer spillene som har angitt lokasjon asynkront.
+            throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Game>> GetByOpponentNameAsync(string opponentName) // Metode som henter spill basert på motstanderens navn.
+        public async Task<ICollection<Game>> GetByOpponentNameAsync(string opponentName)
         {
-            return await _dbContext.Games.Where(g => g.OpponentName == opponentName).ToListAsync(); // Returnerer spillene som har angitt motstanderens navn asynkront.
+            _logger.LogDebug("Getting Game by opponent name: {opponentName} from db", opponentName);
+
+            var res = await _dbContext.Games
+                .Where(g => g.OpponentName
+                .StartsWith(opponentName))
+                .OrderBy(g => g.OpponentName) 
+                .ToListAsync();
+
+            return res;
         }
 
-        public async Task<Game> UpdateAsync(GameId id, Game game) // Metode som oppdaterer et eksisterende spill.
+        public async Task<Game?> UpdateAsync(GameId id, Game game)
         {
-            var existingGame = await _dbContext.Games.FindAsync(id); // Finner det eksisterende spillet basert på ID-en asynkront.
-            if (existingGame == null) // Sjekker om spillet ble funnet.
-            {
-                throw new KeyNotFoundException($"Game with ID '{id}' not found"); // Kaster et unntak hvis spillet ikke ble funnet.
-            }
+            _logger.LogDebug("Updating Game: {id} in db", id);
 
-            // Oppdaterer egenskapene til det eksisterende spillet med egenskapene til det nye spillet
-            existingGame.Location = game.Location; // Oppdaterer lokasjonen til det eksisterende spillet.
-            existingGame.OpponentName = game.OpponentName; // Oppdaterer motstanderens navn til det eksisterende spillet.
-            existingGame.GameTime = game.GameTime; // Oppdaterer spilletidspunktet til det eksisterende spillet.
-            existingGame.Updated = DateTime.UtcNow; // Oppdaterer oppdateringstidspunktet til det eksisterende spillet til nåværende UTC-tid.
+            var gme = await _dbContext.Games.FirstOrDefaultAsync(g => g.Id.Equals(id));
+            if (gme == null) return null;
 
-            await _dbContext.SaveChangesAsync(); // Lagrer endringene i databasen asynkront.
-            return existingGame; // Returnerer det oppdaterte spillet.
+            gme.Location = string.IsNullOrEmpty(game.Location) ? gme.Location : game.Location;
+            gme.OpponentName = string.IsNullOrEmpty(game.OpponentName) ? gme.OpponentName : game.OpponentName;
+            gme.GameTime = game.GameTime;
+            gme.Updated = DateTime.Now;
+
+            await _dbContext.SaveChangesAsync();
+
+            return gme;
         }
     }
 }

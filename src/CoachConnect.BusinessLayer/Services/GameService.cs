@@ -1,138 +1,103 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
+using CoachConnect.BusinessLayer.Mappers;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.DataAccess.Entities;
+using CoachConnect.DataAccess.Repositories;
 using CoachConnect.DataAccess.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace CoachConnect.BusinessLayer.Services;
-public class GameService : IGameService
+namespace CoachConnect.BusinessLayer.Services
 {
-    private readonly IGameRepository _gameRepository;
-    private readonly IMapper<Game, GameDTO> _gameMapper;
-    private readonly IMapper<User, UserRegistrationDTO> _userRegistrationMapper;
-    private readonly ILogger<GameService> _logger;
-
-    public GameService(IGameRepository gameRepository,
-                       IMapper<Game, GameDTO> gameMapper,
-                       IMapper<User, UserRegistrationDTO> userRegistrationMapper,
-                       ILogger<GameService> logger)
+    public class GameService : IGameService
     {
-        _gameRepository = gameRepository;
-        _gameMapper = gameMapper;
-        _userRegistrationMapper = userRegistrationMapper;
-        _logger = logger;
-    }
+        private readonly IGameRepository _gameRepository;
+        private readonly IMapper<Game, GameDTO> _gameMapper;
+        private readonly ILogger<GameService> _logger;
 
-    public async Task CreateAsync(GameDTO gameDTO)
-    {
-        _logger.LogDebug("Creating new game");
-
-        // Sett opprettelses- og oppdateringstidspunktet til nåværende tidspunkt
-        //game.Created = DateTime.UtcNow;
-        game.Updated = DateTime.UtcNow;
-
-        // Bruk repository til å legge til det nye spillet i databasen
-        var createdGame = await _gameRepository.CreateAsync(game);
-
-        // Konverter det opprettede spillet til DTO og returner det
-        return createdGame;
-    }
-
-    public async Task<bool> DeleteAsync(GameId id)
-    {
-        _logger.LogDebug("Deleting game");
-
-        // Bruk repository til å slette spillet basert på ID
-        var deleted = await _gameRepository.DeleteAsync(id);
-
-        // Returner true hvis spillet ble slettet, ellers false
-        return deleted;
-    }
-
-    public async Task<IEnumerable<Game>> GetAllAsync(int page, int pageSize)
-    {
-        _logger.LogDebug("Getting all games");
-
-        // Bruk repository til å hente alle spillene med paginering
-        var games = await _gameRepository.GetAllAsync(page, pageSize);
-
-        // Returner resultatet
-        return games;
-    }
-
-    public async Task<IEnumerable<Game>> GetByGameTimeAsync(DateTime gameTime)
-    {
-        _logger.LogDebug("Getting games by game time");
-
-        // Bruk repository til å hente spill basert på spilltidspunktet
-        var games = await _gameRepository.GetByGameTimeAsync(gameTime);
-
-        // Returner resultatet
-        return games;
-    }
-
-    public async Task<Game> GetByIdAsync(GameId id)
-    {
-        _logger.LogDebug("Getting game by ID");
-
-        // Bruk repository til å hente et spill basert på ID
-        var game = await _gameRepository.GetByIdAsync(id);
-
-        // Returner resultatet
-        return game;
-    }
-
-
-    public async Task<IEnumerable<Game>> GetByLocationAsync(string location)
-    {
-        _logger.LogDebug("Getting games by location");
-
-        // Bruk repository til å hente spill basert på lokasjon
-        var games = await _gameRepository.GetByLocationAsync(location);
-
-        // Returner resultatet
-        return games;
-    }
-
-    public async Task<IEnumerable<Game>> GetByOpponentNameAsync(string opponentName)
-    {
-        _logger.LogDebug("Getting games by opponent name");
-
-        // Bruk repository til å hente spill basert på motstanderens navn
-        var games = await _gameRepository.GetByOpponentNameAsync(opponentName);
-
-        // Returner resultatet
-        return games;
-    }
-
-    public async Task<Game> UpdateAsync(GameId id, GameDTO game)
-    {
-        _logger.LogDebug("Updating game");
-
-        // Sjekk om spillet med den gitte ID-en eksisterer
-        var existingGame = await _gameRepository.GetByIdAsync(id);
-        if (existingGame == null)
+        public GameService(IGameRepository gameRepository,
+                           IMapper<Game, GameDTO> gameMapper,
+                           ILogger<GameService> logger)
         {
-            _logger.LogWarning("Game not found: {id}", id);
-            return null;
+            _gameRepository = gameRepository;
+            _gameMapper = gameMapper;
+            _logger = logger;
         }
 
-        // Oppdaterer egenskapene til det eksisterende spillet med egenskapene til det nye spillet
-        existingGame.Location = game.Location;
-        existingGame.OpponentName = game.OpponentName;
-        existingGame.GameTime = game.GameTime;
-        existingGame.Updated = DateTime.UtcNow;
+        public async Task<GameDTO?> CreateAsync(GameDTO gameDTO)
+        {
+            _logger.LogDebug("Create new Game");
+            //Husk legge til sjekke om kampen finnes fra før dersom ikke så legge til ny kamp
 
-        // Lagre endringene ved hjelp av repository
-        var updatedGame = await _gameRepository.UpdateAsync(id, existingGame);
+            var game = _gameMapper.MapToEntity(gameDTO);
+            game.Id = GameId.NewId;
 
-        // Returner det oppdaterte spillet
-        return updatedGame;
+            var res = await _gameRepository.CreateAsync(game);
+
+            return res != null ? _gameMapper.MapToDTO(res) : null;
+        }
+
+        public async Task<GameDTO?> DeleteAsync(GameId id)
+        {
+            _logger.LogDebug("Deleting Game: {id}", id);
+
+            var res = await _gameRepository.DeleteAsync(id);
+            return res != null ? _gameMapper.MapToDTO(res) : null;
+        }
+
+        public async Task<ICollection<GameDTO>> GetAllAsync(int page, int pageSize)
+        {
+            _logger.LogDebug("Getting all games");
+            var res = await _gameRepository.GetAllAsync(page, pageSize);
+            var dtos = res.Select(game => _gameMapper.MapToDTO(game)).ToList();
+            return dtos;
+
+        }
+
+        public Task<ICollection<GameDTO>> GetByGameTimeAsync(DateTime gameTime)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<GameDTO?> GetByIdAsync(GameId id)
+        {
+            _logger.LogDebug("Getting Game by id: {id}", id);
+
+            var res = await _gameRepository.GetByIdAsync(id);
+            return res != null ? _gameMapper.MapToDTO(res) : null;
+        }
+
+        public Task<ICollection<GameDTO>> GetByLocationAsync(string location)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<ICollection<GameDTO>> GetByOpponentNameAsync(string opponentName)
+        {
+            _logger.LogDebug("Getting Game by opponent name: {opponentName}", opponentName);
+
+            var res = await _gameRepository.GetByOpponentNameAsync(opponentName);
+            var dtos = res.Select(game => _gameMapper.MapToDTO(game)).ToList();
+            return dtos;
+        }
+
+        public async Task<GameDTO?> UpdateAsync(GameId id, GameDTO gameDto)
+        {
+            _logger.LogDebug("Updating Game: {id}", id);
+
+            // husk at users (el admin) kun skal kunne eoppdatere sin egen user Dette må vel settes i JWT autorisering. Ikke glem må ha med dette viktig.
+            // kanksje noe som : throw new UnauthorizedAccessException($"User {loggedInUserId} has no access to delete user {id}");
+
+            var game = _gameMapper.MapToEntity(gameDto);
+            game.Id = id;
+
+            var res = await _gameRepository.UpdateAsync(id, game);
+            return res != null ? _gameMapper.MapToDTO(game) : null;
+        }
     }
+    
 }

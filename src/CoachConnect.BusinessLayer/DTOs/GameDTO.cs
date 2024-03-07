@@ -1,4 +1,5 @@
 ﻿using CoachConnect.DataAccess.Entities;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +9,8 @@ using System.Threading.Tasks;
 namespace CoachConnect.BusinessLayer.DTOs;
 
 public record GameDTO(
-    GameId Id,
+    
     string Location,
     string OpponentName,
     DateTime GameTime,
-    DateTime Created,
-    DateTime Updated);
+    GameId Id);

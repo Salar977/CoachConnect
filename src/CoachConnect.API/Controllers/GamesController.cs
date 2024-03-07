@@ -39,11 +39,11 @@ public class GamesController : ControllerBase
     }
 
     [HttpGet("{id}", Name = "GetGameById")]
-    public async Task<ActionResult<GameDTO>> GetGameById(GameId id)
+    public async Task<ActionResult<GameDTO>> GetGameById(Guid id)
     {
         _logger.LogDebug("Getting game by ID: {id}", id);
 
-        var game = await _gameService.GetByIdAsync(id);
+        var game = await _gameService.GetByIdAsync(new GameId(id));
         return game != null ? Ok(game) : NotFound($"Game with ID '{id}' not found");
     }
 
@@ -56,7 +56,7 @@ public class GamesController : ControllerBase
         return games != null ? Ok(games) : NotFound($"No games found with opponent name '{opponentName}'");
     }
 
-    [HttpPost(Name = "CreateGame")]
+    [HttpPost("register", Name = "CreateGame")]
     public async Task<ActionResult<GameDTO>> CreateGame([FromBody] GameDTO gameDTO)
     {
         _logger.LogDebug("Create new Game");
@@ -65,28 +65,22 @@ public class GamesController : ControllerBase
         return res != null ? Ok(res) : BadRequest("Could not Create new game");
     }
 
-    //[HttpPut("{id}", Name = "UpdateGame")]
-    //public async Task<IActionResult> UpdateGame(GameId id, [FromBody] GameDTO gameDTO)
-    //{
-    //    _logger.LogDebug("Updating game with ID: {id}", id);
+    [HttpPut("{id}", Name = "UpdateGame")]
+    public async Task<ActionResult<GameDTO>> UpdateGame(Guid id, [FromBody] GameDTO gameDTO)
+    {
+        _logger.LogDebug("Updating game with ID: {id}", id);
 
-    //    try
-    //    {
-    //        var updatedGame = await _gameService.UpdateAsync(id, gameDTO);
-    //        return Ok(updatedGame);
-    //    }
-    //    catch (KeyNotFoundException)
-    //    {
-    //        return NotFound($"Game with ID '{id}' not found");
-    //    }
-    //}
+        var res = await _gameService.UpdateAsync(new GameId(id), gameDTO);
+        return res != null ? Ok(res) : BadRequest("Could not update Game");
+    }
 
     [HttpDelete("{id}", Name = "DeleteGame")]
-    public async Task<IActionResult> DeleteGame(GameId id)
+    public async Task<ActionResult<GameDTO>> DeleteGame(Guid id)
     {
         _logger.LogDebug("Deleting game with ID: {id}", id);
 
-        var deleted = await _gameService.DeleteAsync(id);
-        return deleted ? NoContent() : NotFound($"Game with ID '{id}' not found");
+        var res = await _gameService.DeleteAsync(new GameId(id));
+        return res != null ? Ok(res) : BadRequest("Could not delete Game");
     }
+
 }

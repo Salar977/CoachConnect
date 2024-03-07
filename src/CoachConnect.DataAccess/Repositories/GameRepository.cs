@@ -1,6 +1,7 @@
 ﻿using CoachConnect.DataAccess.Data;
 using CoachConnect.DataAccess.Entities;
 using CoachConnect.DataAccess.Repositories.Interfaces;
+using CoachConnect.Shared.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -43,21 +44,49 @@ namespace CoachConnect.DataAccess.Repositories
             return res;
         }
 
-        public async Task<ICollection<Game>> GetAllAsync(int page, int pageSize)
+        public async Task<ICollection<Game>> GetAllAsync(GameQuery gameQuery)
         {
             _logger.LogDebug("Getting Games from db");
 
-            int itemsToSkip = (page - 1) * pageSize;
+            var games = _dbContext.Games.AsQueryable();
 
-            var res = await _dbContext.Games
-                .OrderBy(g => g.OpponentName)
-                .Skip(itemsToSkip)
-                .Take(pageSize)
-                .Distinct()
+            if (!string.IsNullOrWhiteSpace(gameQuery.Location))
+            {
+                games = games.Where(g => g.Location.Contains(gameQuery.Location));
+            }
+
+            if (!string.IsNullOrWhiteSpace(gameQuery.OpponentName))
+            {
+                games = games.Where(g => g.OpponentName.Contains(gameQuery.OpponentName));
+            }
+
+            if (gameQuery.GameTime != null && gameQuery.GameTime != DateTime.MinValue)
+            {
+                games = games.Where(g => g.GameTime == gameQuery.GameTime);
+            }
+
+            var skipNumber = (gameQuery.PageNumber - 1) * gameQuery.PageSize;
+
+            return await games
+                .Skip(skipNumber)
+                .Take(gameQuery.PageSize)
                 .ToListAsync();
-
-            return res;
         }
+        //public async Task<ICollection<Game>> GetAllAsync(int page, int pageSize)
+        //{
+        //    _logger.LogDebug("Getting Games from db");
+
+        //    int itemsToSkip = (page - 1) * pageSize;
+
+        //    var res = await _dbContext.Games
+        //        .OrderBy(g => g.OpponentName)
+        //        .Skip(itemsToSkip)
+        //        .Take(pageSize)
+        //        .Distinct()
+        //        .ToListAsync();
+
+        //    return res;
+        //}
 
         public Task<ICollection<Game>> GetByGameTimeAsync(DateTime gameTime)
         {

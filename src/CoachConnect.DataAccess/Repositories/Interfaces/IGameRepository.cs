@@ -1,4 +1,5 @@
 ﻿using CoachConnect.DataAccess.Entities;
+using CoachConnect.Shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ public interface IGameRepository
 {
     Task<Game?> GetByIdAsync(GameId id); // Hent en kamp ved hjelp av spillens ID
 
-    Task<ICollection<Game>> GetAllAsync(int page, int pageSize); // Hent alle kampene i systemet med paginering
+    Task<ICollection<Game>> GetAllAsync(GameQuery gameQuery); // Hent alle kampene i systemet med paginering
 
     Task<ICollection<Game>> GetByOpponentNameAsync(string opponentName); // Hent kamper basert på motstanderens navn
 

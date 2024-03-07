@@ -2,6 +2,7 @@
 using CoachConnect.BusinessLayer.Services;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.DataAccess.Entities;
+using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -24,19 +25,29 @@ public class GamesController : ControllerBase
     }
 
     [HttpGet(Name = "GetAllGames")]
-    public async Task<ActionResult<IEnumerable<GameDTO>>> GetAllGames(int page = 1, int pageSize = 10)
+    public async Task<ActionResult<IEnumerable<GameDTO>>> GetAllGames([FromQuery] GameQuery gameQuery)
     {
-        _logger.LogDebug("Getting all games");
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        if (page < 1 || pageSize < 1 || pageSize > 50)
-        {
-            _logger.LogWarning("Invalid pagination parameters Page: {page}, PageSize: {pageSize}", page, pageSize);
-            return BadRequest("Invalid pagination parameters - MIN page = 1, MAX pageSize = 50 ");
-        }
+        _logger.LogDebug("Getting Games");
 
-        var games = await _gameService.GetAllAsync(page, pageSize);
-        return Ok(games);
+        return Ok(await _gameService.GetAllAsync(gameQuery));
     }
+
+    //[HttpGet(Name = "GetAllGames")]
+    //public async Task<ActionResult<IEnumerable<GameDTO>>> GetAllGames(int page = 1, int pageSize = 10)
+    //{
+    //    _logger.LogDebug("Getting all games");
+
+    //    if (page < 1 || pageSize < 1 || pageSize > 50)
+    //    {
+    //        _logger.LogWarning("Invalid pagination parameters Page: {page}, PageSize: {pageSize}", page, pageSize);
+    //        return BadRequest("Invalid pagination parameters - MIN page = 1, MAX pageSize = 50 ");
+    //    }
+
+    //    var games = await _gameService.GetAllAsync(page, pageSize);
+    //    return Ok(games);
+    //}
 
     [HttpGet("{id}", Name = "GetGameById")]
     public async Task<ActionResult<GameDTO>> GetGameById(Guid id)

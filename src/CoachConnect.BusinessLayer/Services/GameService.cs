@@ -5,6 +5,7 @@ using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.DataAccess.Entities;
 using CoachConnect.DataAccess.Repositories;
 using CoachConnect.DataAccess.Repositories.Interfaces;
+using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Logging;
 using System;
@@ -49,13 +50,11 @@ namespace CoachConnect.BusinessLayer.Services
             return res != null ? _gameMapper.MapToDTO(res) : null;
         }
 
-        public async Task<ICollection<GameDTO>> GetAllAsync(int page, int pageSize)
+        public async Task<ICollection<GameDTO>> GetAllAsync(GameQuery gameQuery)
         {
             _logger.LogDebug("Getting all games");
-            var res = await _gameRepository.GetAllAsync(page, pageSize);
-            var dtos = res.Select(game => _gameMapper.MapToDTO(game)).ToList();
-            return dtos;
-
+            var res = await _gameRepository.GetAllAsync(gameQuery);
+            return res.Select(game => _gameMapper.MapToDTO(game)).ToList();
         }
 
         public Task<ICollection<GameDTO>> GetByGameTimeAsync(DateTime gameTime)

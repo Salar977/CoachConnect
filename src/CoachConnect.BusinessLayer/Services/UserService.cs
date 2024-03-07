@@ -27,10 +27,10 @@ public class UserService : IUserService
         _logger = logger;
     } 
 
-    public async Task<ICollection<UserDTO>> GetAllAsync(QueryObject query)
+    public async Task<ICollection<UserDTO>> GetAllAsync(UserQuery userQuery)
     {
         _logger.LogDebug("Getting all users");
-        var res = await _userRepository.GetAllAsync(query);
+        var res = await _userRepository.GetAllAsync(userQuery);
         return res.Select(user => _userMapper.MapToDTO(user)).ToList();
     }
 

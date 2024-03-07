@@ -21,13 +21,13 @@ public class UsersController : ControllerBase
 
     // GET: https://localhost:7036/api/v1/users
     [HttpGet(Name = "GetUsers")]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers([FromQuery] QueryObject query) 
+    public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers([FromQuery] UserQuery userQuery) 
     {
         if(!ModelState.IsValid) return BadRequest(ModelState);
 
         _logger.LogDebug("Getting users");
 
-        return Ok(await _userService.GetAllAsync(query));
+        return Ok(await _userService.GetAllAsync(userQuery));
     }
 
     // GET: https://localhost:7036/api/v1/users?page=1&pageSize=10

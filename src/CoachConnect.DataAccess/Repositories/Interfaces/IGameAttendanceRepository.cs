@@ -10,8 +10,8 @@ namespace CoachConnect.DataAccess.Repositories.Interfaces;
 public interface IGameAttendanceRepository
 {
     Task<ICollection<GameAttendance>> GetAllAsync(GameAttendanceQuery gameAttendanceQuery);
-    //Task<UserDTO?> GetByIdAsync(UserId id);
-    //Task<UserDTO?> UpdateAsync(UserId id, UserDTO dto);
-    //Task<UserDTO?> DeleteAsync(UserId id);
-    //Task<UserDTO?> RegisterGameAttendanceAsync(UserRegistrationDTO dto);
+    //Task<GameAttendance?> GetByIdAsync(UserId id);
+    //Task<GameAttendance?> UpdateAsync(UserId id, UserDTO dto);
+    //Task<GameAttendance?> DeleteAsync(UserId id);
+    Task<GameAttendance?> RegisterGameAttendanceAsync(GameAttendance gameAttendance);
 }

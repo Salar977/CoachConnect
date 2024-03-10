@@ -47,4 +47,14 @@ public class GameAttendanceRepository : IGameAttendanceRepository
             .Take(gameAttendanceQuery.PageSize)
             .ToListAsync();
     }
+
+    public async Task<GameAttendance?> RegisterGameAttendanceAsync(GameAttendance gameAttendance)
+    {
+        _logger.LogDebug("Adding Gameattendance to DB");
+
+        await _dbContext.Game_attendences.AddAsync(gameAttendance);
+        await _dbContext.SaveChangesAsync();
+
+        return gameAttendance;
+    }
 }

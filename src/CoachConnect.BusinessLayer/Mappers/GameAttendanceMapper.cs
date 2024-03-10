@@ -20,10 +20,13 @@ public class GameAttendanceMapper : IMapper<GameAttendance, GameAttendanceDTO>
 
     public GameAttendance MapToEntity(GameAttendanceDTO dto)
     {
+        var dtNow = DateTime.Now;
         return new GameAttendance()
         {
             GameId = dto.GameId,
-            PlayerId = dto.PlayerId
+            PlayerId = dto.PlayerId,
+            Created = dtNow,
+            Updated = dtNow,
         };
     }
 }

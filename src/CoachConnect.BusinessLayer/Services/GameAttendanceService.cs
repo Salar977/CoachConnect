@@ -3,6 +3,7 @@ using CoachConnect.BusinessLayer.Mappers;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.DataAccess.Entities;
+using CoachConnect.DataAccess.Repositories;
 using CoachConnect.DataAccess.Repositories.Interfaces;
 using CoachConnect.Shared.Helpers;
 using Microsoft.Extensions.Logging;
@@ -31,5 +32,18 @@ public class GameAttendanceService : IGameAttendanceService
         _logger.LogDebug("Getting all games");
         var res = await _gameAttendanceRepository.GetAllAsync(gameAttendanceQuery);
         return res.Select(game => _gameAttendanceMapper.MapToDTO(game)).ToList();
+    }
+
+    public async Task<GameAttendanceDTO?> RegisterGameAttendanceAsync(GameAttendanceDTO dto)
+    {
+        _logger.LogDebug("Create new Gameattendance");
+        //Husk legge til sjekke om kampen finnes fra før dersom ikke så legge til ny kamp
+
+        var gameAttendance = _gameAttendanceMapper.MapToEntity(dto);
+        gameAttendance.Id = GameAttendanceId.NewId;
+
+        var res = await _gameAttendanceRepository.RegisterGameAttendanceAsync(gameAttendance);
+
+        return res != null ? _gameAttendanceMapper.MapToDTO(res) : null;
     }
 }

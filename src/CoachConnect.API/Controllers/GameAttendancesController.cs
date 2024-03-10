@@ -1,4 +1,5 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
+using CoachConnect.BusinessLayer.Services;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,7 @@ public class GameAttendancesController : ControllerBase
         _logger = logger;
     }
     // GET: api/<GameAttendanceController>      // husk å sette på endepunkter her og gamescontroller
-    [HttpGet]
+    [HttpGet(Name = "GetAllGameAttendances")]
 
     public async Task<ActionResult<IEnumerable<GameAttendanceDTO>>> GetAllGameAttendances([FromQuery] GameAttendanceQuery gameAttendanceQuery)
     {
@@ -39,9 +40,13 @@ public class GameAttendancesController : ControllerBase
     }
 
     // POST api/<GameAttendanceController>
-    [HttpPost]
-    public void Post([FromBody] string value)
+    [HttpPost("register", Name = "registerGameAttendance")]
+    public async Task<ActionResult<GameAttendanceDTO>> RegisterGameAttendance([FromBody] GameAttendanceDTO gameAttendanceDTO)
     {
+        _logger.LogDebug("Create new Gameattendance");
+
+        var res = await _gameAttendanceService.RegisterGameAttendanceAsync(gameAttendanceDTO);
+        return res != null ? Ok(res) : BadRequest("Could not register gameAttendance");
     }
 
     // PUT api/<GameAttendanceController>/5

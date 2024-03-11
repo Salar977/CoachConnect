@@ -21,6 +21,18 @@ public class GameAttendanceRepository : IGameAttendanceRepository
         _dbContext = dbContext;
     }
 
+    public async Task<GameAttendance?> DeleteAsync(GameAttendanceId id)
+    {
+        _logger.LogDebug("Deleting gameAttendance: {id} from db", id);
+
+        var res = await _dbContext.Game_attendences.FindAsync(id);
+        if (res == null) return null;
+
+        _dbContext.Game_attendences.Remove(res);
+        await _dbContext.SaveChangesAsync();
+        return res;
+    }
+
     public async Task<ICollection<GameAttendance>> GetAllAsync(GameAttendanceQuery gameAttendanceQuery)
     {
         _logger.LogDebug("Getting GameAttendances from db");
@@ -53,6 +65,13 @@ public class GameAttendanceRepository : IGameAttendanceRepository
             .ToListAsync();
     }
 
+    public async Task<GameAttendance?> GetByIdAsync(GameAttendanceId id)
+    {
+        _logger.LogDebug("Getting gameAttendance by id: {id} from db", id);
+
+        return await _dbContext.Game_attendences.FindAsync(id);
+    }
+
     public async Task<GameAttendance?> RegisterGameAttendanceAsync(GameAttendance gameAttendance)
     {
         _logger.LogDebug("Adding Gameattendance to DB");
@@ -62,4 +81,21 @@ public class GameAttendanceRepository : IGameAttendanceRepository
 
         return gameAttendance;
     }
+
+    public async Task<GameAttendance?> UpdateAsync(GameAttendanceId id, GameAttendance gameAttendance)
+    {
+        _logger.LogDebug("Updating gameAttendance: {id} in db", id);
+
+        var gameAtt = await _dbContext.Game_attendences.FirstOrDefaultAsync(g => g.Id.Equals(id));
+        if (gameAtt == null) return null;
+
+        gameAtt.GameId = gameAttendance.GameId != GameId.Empty ? gameAttendance.GameId : gameAtt.GameId;
+        gameAtt.PlayerId = gameAttendance.PlayerId != PlayerId.Empty ? gameAttendance.PlayerId : gameAtt.PlayerId;
+        gameAtt.Updated = DateTime.Now;
+
+        await _dbContext.SaveChangesAsync();
+
+        return gameAtt;
+    }
+
 }

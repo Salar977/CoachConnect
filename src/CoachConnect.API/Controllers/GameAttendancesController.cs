@@ -1,6 +1,7 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
 using CoachConnect.BusinessLayer.Services;
 using CoachConnect.BusinessLayer.Services.Interfaces;
+using CoachConnect.DataAccess.Entities;
 using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -32,13 +33,6 @@ public class GameAttendancesController : ControllerBase
         return Ok(await _gameAttendanceService.GetAllAsync(gameAttendanceQuery));
     }
 
-    // GET api/<GameAttendanceController>/5
-    [HttpGet("{id}")]
-    public string Get(int id)
-    {
-        return "value";
-    }
-
     // POST api/<GameAttendanceController>
     [HttpPost("register", Name = "registerGameAttendance")]
     public async Task<ActionResult<GameAttendanceDTO>> RegisterGameAttendance([FromBody] GameAttendanceDTO gameAttendanceDTO)
@@ -50,14 +44,31 @@ public class GameAttendancesController : ControllerBase
     }
 
     // PUT api/<GameAttendanceController>/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
+    [HttpGet("{id}", Name = "GetGameAttendanceById")]
+    public async Task<ActionResult<GameAttendanceDTO>> GetGameAttendanceById([FromRoute] Guid id) // bruk Guid her pga modelbinding kjenner ikke igjen vår custom UserId, så bruk Guid her og vi må konvertere under isteden
     {
+        _logger.LogDebug("Getting gameattendance by id {id}", id);
+
+        var res = await _gameAttendanceService.GetByIdAsync(new GameAttendanceId(id)); 
+        return res != null ? Ok(res) : NotFound("Could not find any gameAttendance with this id");
     }
 
     // DELETE api/<GameAttendanceController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
+    [HttpDelete("{id}", Name = "DeleteGameAttendance")]
+    public async Task<ActionResult<GameAttendanceDTO>> DeleteGameAttendance([FromRoute] Guid id)
     {
+        _logger.LogDebug("Deleting Gameattendance: {id}", id);
+
+        var res = await _gameAttendanceService.DeleteAsync(new GameAttendanceId(id));
+        return res != null ? Ok(res) : BadRequest("Could not delete gameAttendance ID");
+    }
+
+    [HttpPut("{id}", Name = "UpdateGameAttendance")]
+    public async Task<ActionResult<GameAttendanceDTO>> UpdateGameAttendance([FromRoute] Guid id, [FromBody] GameAttendanceDTO dto)
+    {
+        _logger.LogDebug("Updating Game Attendance: {id}", id);
+
+        var res = await _gameAttendanceService.UpdateAsync(new GameAttendanceId(id), dto);
+        return res != null ? Ok(res) : BadRequest("Could not update gameAttendance");
     }
 }

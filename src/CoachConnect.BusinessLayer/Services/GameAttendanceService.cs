@@ -27,11 +27,27 @@ public class GameAttendanceService : IGameAttendanceService
         _gameAttendanceMapper = gameAttendanceMapper;
     }
 
+    public async Task<GameAttendanceDTO?> DeleteAsync(GameAttendanceId id)
+    {
+        _logger.LogDebug("Deleting GameAttendance: {id}", id);
+
+        var res = await _gameAttendanceRepository.DeleteAsync(id);
+        return res != null ? _gameAttendanceMapper.MapToDTO(res) : null;
+    }
+
     public async Task<ICollection<GameAttendanceDTO>> GetAllAsync(GameAttendanceQuery gameAttendanceQuery)
     {
         _logger.LogDebug("Getting all games");
         var res = await _gameAttendanceRepository.GetAllAsync(gameAttendanceQuery);
         return res.Select(game => _gameAttendanceMapper.MapToDTO(game)).ToList();
+    }
+
+    public async Task<GameAttendanceDTO?> GetByIdAsync(GameAttendanceId id)
+    {
+        _logger.LogDebug("Getting gameAttendance by id: {id}", id);
+
+        var res = await _gameAttendanceRepository.GetByIdAsync(id);
+        return res != null ? _gameAttendanceMapper.MapToDTO(res) : null;
     }
 
     public async Task<GameAttendanceDTO?> RegisterGameAttendanceAsync(GameAttendanceDTO dto)
@@ -45,5 +61,16 @@ public class GameAttendanceService : IGameAttendanceService
         var res = await _gameAttendanceRepository.RegisterGameAttendanceAsync(gameAttendance);
 
         return res != null ? _gameAttendanceMapper.MapToDTO(res) : null;
+    }
+
+    public async Task<GameAttendanceDTO?> UpdateAsync(GameAttendanceId id, GameAttendanceDTO dto)
+    {
+        _logger.LogDebug("Updating gameAttendance: {id}", id);
+
+        var gameAttendance = _gameAttendanceMapper.MapToEntity(dto);
+        gameAttendance.Id = id;
+
+        var res = await _gameAttendanceRepository.UpdateAsync(id, gameAttendance);
+        return res != null ? _gameAttendanceMapper.MapToDTO(gameAttendance) : null;
     }
 }

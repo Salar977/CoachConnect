@@ -29,8 +29,13 @@ public class GameAttendanceRepository : IGameAttendanceRepository
 
         if (!string.IsNullOrWhiteSpace(gameAttendanceQuery.PlayerLastName))
         {
-            gameAttendances = gameAttendances.Where(g => g.Player.LastName.Contains(gameAttendanceQuery.PlayerLastName));
+            gameAttendances = gameAttendances.Where(g => g.Player.LastName.StartsWith(gameAttendanceQuery.PlayerLastName));
         }
+
+        //if (gameAttendanceQuery.GameId != null) // denne får vi ikke til å funke, husk fiks.
+        //{
+        //    gameAttendances = gameAttendances.Where(g => g.GameId.gameId == gameAttendanceQuery.GameId);
+        //}
 
         if (!string.IsNullOrWhiteSpace(gameAttendanceQuery.SortBy))
         {

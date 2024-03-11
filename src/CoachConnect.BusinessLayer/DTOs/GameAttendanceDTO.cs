@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CoachConnect.BusinessLayer.DTOs;
-public record GameAttendanceDTO(
-
-    GameId GameId,
+public record GameAttendanceDTO(  
+    
+    // MÅ HA PLAYER NAME OGSÅ HER
+    GameId GameId,    
     PlayerId PlayerId);
-
 

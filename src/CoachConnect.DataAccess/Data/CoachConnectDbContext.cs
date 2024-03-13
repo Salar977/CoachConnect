@@ -9,7 +9,6 @@ public class CoachConnectDbContext : DbContext
     {
 
     }
-
     public DbSet<Coach> Coaches { get; set; }
     public DbSet<Game> Games { get; set; }
     public DbSet<GameAttendance> Game_attendences { get; set; }

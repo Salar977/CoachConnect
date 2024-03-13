@@ -44,10 +44,11 @@ public class GameAttendanceRepository : IGameAttendanceRepository
             gameAttendances = gameAttendances.Where(g => g.Player.LastName.StartsWith(gameAttendanceQuery.PlayerLastName));
         }
 
-        //if (gameAttendanceQuery.GameId != null) // denne får vi ikke til å funke, husk fiks.
-        //{
-        //    gameAttendances = gameAttendances.Where(g => g.GameId.gameId == gameAttendanceQuery.GameId);
-        //}
+        if (gameAttendanceQuery.GameId != null && gameAttendanceQuery.GameId != Guid.Empty)
+        {
+            var gameId = gameAttendanceQuery.GameId.Value; // Extract non-nullable Guid value
+            gameAttendances = gameAttendances.Where(g => g.GameId == new GameId(gameId));
+        }
 
         if (!string.IsNullOrWhiteSpace(gameAttendanceQuery.SortBy))
         {

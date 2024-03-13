@@ -1,0 +1,26 @@
+﻿@baseUrl=https://localhost:7036
+
+### GET ALL / Filtered
+
+GET {{baseUrl}}/api/v1/coaches
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9 Eksempel på JWT token, sett inn når JWT er implementert? Hvordan lage token for at disse skal fungere?
+
+### GET BY ID
+
+GET {{baseUrl}}/api/v1/coaches/9b5b194a-f273-4ab2-a87d-620b8898e473
+Authorization: Bearer inputTokenHere
+
+### REGISTER COACH
+
+POST {{baseUrl}}/api/v1/coaches/register
+Authorization: Bearer inputTokenHere
+
+### UPDATE COACH
+
+PUT {{baseUrl}}/api/v1/coaches/9b5b194a-f273-4ab2-a87d-620b8898e473
+Authorization: Bearer inputTokenHere
+
+### DELETE COACH
+DELETE {{baseUrl}}/api/v1/coaches/9b5b194a-f273-4ab2-a87d-620b8898e473
+Authorization: Bearer inputTokenHere
+

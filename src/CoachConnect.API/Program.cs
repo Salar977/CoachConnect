@@ -8,6 +8,8 @@ using CoachConnect.DataAccess.Repositories;
 using Microsoft.AspNetCore.RateLimiting;
 using Serilog;
 using CoachConnect.API.Extensions;
+using FluentValidation.AspNetCore;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 

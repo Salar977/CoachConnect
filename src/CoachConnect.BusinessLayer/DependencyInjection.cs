@@ -3,8 +3,8 @@ using CoachConnect.BusinessLayer.Services;
 using Microsoft.Extensions.DependencyInjection;
 using CoachConnect.DataAccess.Repositories.Interfaces;
 using CoachConnect.DataAccess.Repositories;
-using FluentValidation;
 using FluentValidation.AspNetCore;
+using FluentValidation;
 
 namespace CoachConnect.BusinessLayer;
 

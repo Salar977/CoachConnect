@@ -52,12 +52,12 @@ namespace CoachConnect.DataAccess.Repositories
 
             if (!string.IsNullOrWhiteSpace(gameQuery.Location))
             {
-                games = games.Where(g => g.Location.Contains(gameQuery.Location));
+                games = games.Where(g => g.Location.StartsWith(gameQuery.Location));
             }
 
             if (!string.IsNullOrWhiteSpace(gameQuery.OpponentName))
             {
-                games = games.Where(g => g.OpponentName.Contains(gameQuery.OpponentName));
+                games = games.Where(g => g.OpponentName.StartsWith(gameQuery.OpponentName));
             }
 
             if (gameQuery.GameTime != null && gameQuery.GameTime != DateTime.MinValue)

@@ -18,6 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Docker\MySQL\" />
+    <Folder Include="Docker\Nginx\" />
     <Folder Include="logs\" />
   </ItemGroup>
 

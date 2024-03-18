@@ -13,7 +13,7 @@ public interface ITeamService
     Task<TeamDTO?> GetByIdAsync(TeamId id);
     Task<TeamDTO?> GetByCoachIdAsync(CoachId coachid);
 
-    Task<ICollection<GameDTO>> GetAllAsync(TeamQuery teamQuery); 
+    Task<ICollection<TeamDTO>> GetAllAsync(TeamQuery teamQuery); 
 
     Task<TeamDTO?> CreateAsync(TeamDTO teamDTO); 
 

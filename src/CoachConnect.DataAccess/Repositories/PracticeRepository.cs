@@ -22,7 +22,7 @@ public class PracticeRepository : IPracticeRepository
 
     public async Task<IEnumerable<Practice>> GetAllAsync(PracticeQuery practiceQuery)
     {
-        var practices = _dbContext.Practices.AsQueryable();
+        var practices = _dbContext.Practices.Include(p => p.PracticeAttendances).AsQueryable();
         
         var skipNumber = (practiceQuery.PageNumber - 1) * practiceQuery.PageSize;
 
@@ -62,7 +62,8 @@ public class PracticeRepository : IPracticeRepository
         }
         
         updatePractice.Location = string.IsNullOrEmpty(practice.Location) ? updatePractice.Location : practice.Location;
-        //updatePractice.PracticeDate = string.IsNullOrEmpty(practice.PracticeDate) ? updatePractice.PracticeDate : practice.PracticeDate;
+        updatePractice.PracticeDate = string.IsNullOrEmpty(practice.PracticeDate.ToString()) ? updatePractice.PracticeDate : practice.PracticeDate;
+        updatePractice.Updated = DateTime.Now;
         
         await _dbContext.SaveChangesAsync();
         _logger.LogInformation("Updated practice in the database: {practice}", practice);

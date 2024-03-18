@@ -1,41 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CoachConnect.BusinessLayer.DTOs;
+using CoachConnect.Shared.Helpers;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CoachConnect.API.Controllers;
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
 [ApiController]
 public class TeamsController : ControllerBase
 {
-    // GET: api/<TeamsController>
-    [HttpGet]
-    public IEnumerable<string> Get()
+    private readonly ILogger<TeamsController> _logger;
+    public async Task<ActionResult<IEnumerable<TeamDTO>>> GetAllGames([FromQuery] TeamQuery teamQuery)
     {
-        return new string[] { "value1", "value2" };
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        _logger.LogDebug("Getting Games");
+
+        return Ok(await _teamService.GetAllAsync(teamQuery));
     }
 
-    // GET api/<TeamsController>/5
-    [HttpGet("{id}")]
-    public string Get(int id)
-    {
-        return "value";
-    }
 
-    // POST api/<TeamsController>
-    [HttpPost]
-    public void Post([FromBody] string value)
-    {
-    }
-
-    // PUT api/<TeamsController>/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
-    {
-    }
-
-    // DELETE api/<TeamsController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
-    {
-    }
 }

@@ -27,22 +27,22 @@ public class UserRepository : IUserRepository
 
         if(!string.IsNullOrWhiteSpace(userQuery.FirstName))
         {
-            users = users.Where(u => u.FirstName.Contains(userQuery.FirstName));
+            users = users.Where(u => u.FirstName.StartsWith(userQuery.FirstName));
         }
 
         if (!string.IsNullOrWhiteSpace(userQuery.LastName))
         {
-            users = users.Where(u => u.LastName.Contains(userQuery.LastName));
+            users = users.Where(u => u.LastName.StartsWith(userQuery.LastName));
         }
 
         if (!string.IsNullOrWhiteSpace(userQuery.PhoneNumber))
         {
-            users = users.Where(u => u.PhoneNumber.Contains(userQuery.PhoneNumber));
+            users = users.Where(u => u.PhoneNumber.StartsWith(userQuery.PhoneNumber));
         }
 
         if (!string.IsNullOrWhiteSpace(userQuery.Email))
         {
-            users = users.Where(u => u.Email.Contains(userQuery.Email));
+            users = users.Where(u => u.Email.StartsWith(userQuery.Email));
         }
 
         if (!string.IsNullOrWhiteSpace(userQuery.SortBy))

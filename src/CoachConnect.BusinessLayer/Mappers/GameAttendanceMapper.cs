@@ -13,6 +13,7 @@ public class GameAttendanceMapper : IMapper<GameAttendance, GameAttendanceDTO>
     public GameAttendanceDTO MapToDTO(GameAttendance entity)
     {
         return new GameAttendanceDTO(
+        entity.Id,
         entity.GameId,
         entity.PlayerId
         );

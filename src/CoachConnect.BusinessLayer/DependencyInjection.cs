@@ -17,6 +17,7 @@ public static class DependencyInjection
         services.AddScoped<IGameService, GameService>();
         services.AddScoped<IGameAttendanceService, GameAttendanceService>();
         services.AddScoped<ICoachService, CoachService>();
+        services.AddScoped<IPracticeService, PracticeService>();
         services.AddValidatorsFromAssemblyContaining<CoachService>();
         services.AddFluentValidationAutoValidation(config => config.DisableDataAnnotationsValidation = true);
 

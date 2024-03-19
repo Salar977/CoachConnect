@@ -16,11 +16,14 @@ public class Practice
     [Key]
     public PracticeId Id { get; set; }
 
+    [Required]
     public string Location { get; set; } = string.Empty;
 
-    public DateTime? PracticeDate { get; set; }
+    [Required]
+    public DateTime PracticeDate { get; set; }
 
-    public DateTime? Created { get; init; }
+    [Required]
+    public DateTime Created { get; init; }
 
     public DateTime? Updated { get; set; }
 

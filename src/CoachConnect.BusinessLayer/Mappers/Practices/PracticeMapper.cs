@@ -22,7 +22,7 @@ public class PracticeMapper : IMapper<Practice, PracticeResponse>
         return new Practice
         {
             Id = practiceResponse.PracticeId,
-            Location = practiceResponse.Location!,
+            Location = practiceResponse.Location,
             PracticeDate = practiceResponse.PracticeDate,
             Created = now,
             Updated = now,

@@ -1,14 +1,11 @@
 ﻿using CoachConnect.BusinessLayer.DTOs.Practice;
 using CoachConnect.BusinessLayer.DTOs.Practices;
-using CoachConnect.BusinessLayer.Mappers;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.DataAccess.Entities;
-using CoachConnect.DataAccess.Repositories;
 using CoachConnect.DataAccess.Repositories.Interfaces;
 using CoachConnect.Shared.Helpers;
 using Microsoft.Extensions.Logging;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CoachConnect.BusinessLayer.Services;
 
@@ -16,14 +13,20 @@ public class PracticeService : IPracticeService
 {
     private readonly IPracticeRepository _practiceRepository;
     private readonly IMapper<Practice, PracticeResponse> _practiceMapper;
+    private readonly IMapper<Practice, PracticeRequest> _practiceRequestMapper;
+    private readonly IMapper<Practice, PracticeUpdate> _practiceUpdateMapper;
     private readonly ILogger<PracticeService> _logger;
 
     public PracticeService(IPracticeRepository practiceRepository,
                            IMapper<Practice, PracticeResponse> practiceMapper,
+                           IMapper<Practice, PracticeRequest> practiceRequestMapper,
+                           IMapper<Practice, PracticeUpdate> practiceUpdateMapper,
                            ILogger<PracticeService> logger)
     {
         _practiceRepository = practiceRepository;
         _practiceMapper = practiceMapper;
+        _practiceRequestMapper = practiceRequestMapper;
+        _practiceUpdateMapper = practiceUpdateMapper;
         _logger = logger;
     }
 
@@ -50,13 +53,50 @@ public class PracticeService : IPracticeService
         return res != null ? _practiceMapper.MapToDTO(res) : null;
     }
 
-    public Task<PracticeResponse?> RegisterPracticeAsync(PracticeRequest practice)
+    public async Task<PracticeResponse?> RegisterPracticeAsync(PracticeRequest practice)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var practiceEntity = _practiceRequestMapper.MapToEntity(practice);
+            var res = await _practiceRepository.RegisterPracticeAsync(practiceEntity);
+
+            if(res is null) return null;
+
+            _logger.LogInformation("Registered practice - Service");
+            return _practiceMapper.MapToDTO(res);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Something went wrong with practice registration, {@ex}", ex);
+            return null;
+        }
     }
 
-    public Task<PracticeResponse?> UpdateAsync(PracticeId id, PracticeUpdate practice)
+    public async Task<PracticeResponse?> UpdateAsync(PracticeId id, PracticeUpdate practice)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var practiceToUpdate = await _practiceRepository.GetByIdAsync(id);
+            if(practiceToUpdate is null)
+            {
+                _logger.LogWarning("Practice by id {id} does not exist", id);
+            }
+            var updatedPractice = _practiceUpdateMapper.MapToEntity(practice);
+            updatedPractice.Id = id;
+            await _practiceRepository.UpdateAsync(id, updatedPractice);
+
+            var grabPractice = await _practiceRepository.GetByIdAsync(id);
+
+            if (grabPractice is null) return null;
+
+            _logger.LogInformation("Practice was updated - Service");
+
+            return _practiceMapper.MapToDTO(grabPractice);
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError($"{ex.Message}", ex);
+            return null;
+        }
     }
 }

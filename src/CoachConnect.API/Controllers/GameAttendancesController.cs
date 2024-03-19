@@ -21,7 +21,8 @@ public class GameAttendancesController : ControllerBase
         _gameAttendanceService = gameAttendanceService;
         _logger = logger;
     }
-    // GET: api/<GameAttendanceController>      // husk å sette på endepunkter her og gamescontroller
+
+    // https://localhost:7036/api/v1/gameattendances
     [HttpGet(Name = "GetAllGameAttendances")]
 
     public async Task<ActionResult<IEnumerable<GameAttendanceDTO>>> GetAllGameAttendances([FromQuery] GameAttendanceQuery gameAttendanceQuery)
@@ -33,7 +34,7 @@ public class GameAttendancesController : ControllerBase
         return Ok(await _gameAttendanceService.GetAllAsync(gameAttendanceQuery));
     }
 
-    // POST api/<GameAttendanceController>
+    // https://localhost:7036/api/v1/gameattendances/register
     [HttpPost("register", Name = "registerGameAttendance")]
     public async Task<ActionResult<GameAttendanceDTO>> RegisterGameAttendance([FromBody] GameAttendanceDTO gameAttendanceDTO)
     {
@@ -43,7 +44,7 @@ public class GameAttendancesController : ControllerBase
         return res != null ? Ok(res) : BadRequest("Could not register gameAttendance");
     }
 
-    // PUT api/<GameAttendanceController>/5
+    // https://localhost:7036/api/v1/gameattendances/8215514a-c2f8-46fd-a547-ab5c1fc76004
     [HttpGet("{id}", Name = "GetGameAttendanceById")]
     public async Task<ActionResult<GameAttendanceDTO>> GetGameAttendanceById([FromRoute] Guid id) // bruk Guid her pga modelbinding kjenner ikke igjen vår custom UserId, så bruk Guid her og vi må konvertere under isteden
     {
@@ -53,7 +54,8 @@ public class GameAttendancesController : ControllerBase
         return res != null ? Ok(res) : NotFound("Could not find any gameAttendance with this id");
     }
 
-    // DELETE api/<GameAttendanceController>/5
+
+    // https://localhost:7036/api/v1/gameattendances/aa15514a-c2f8-46fd-a547-ab5c1fc76e14
     [HttpDelete("{id}", Name = "DeleteGameAttendance")]
     public async Task<ActionResult<GameAttendanceDTO>> DeleteGameAttendance([FromRoute] Guid id)
     {
@@ -63,6 +65,7 @@ public class GameAttendancesController : ControllerBase
         return res != null ? Ok(res) : BadRequest("Could not delete gameAttendance ID");
     }
 
+    // https://localhost:7036/api/v1/gameattendances/3fa85f64-5717-4562-b3fc-2c963f66afa6
     [HttpPut("{id}", Name = "UpdateGameAttendance")]
     public async Task<ActionResult<GameAttendanceDTO>> UpdateGameAttendance([FromRoute] Guid id, [FromBody] GameAttendanceDTO dto)
     {

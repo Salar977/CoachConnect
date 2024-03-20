@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 namespace CoachConnect.DataAccess.Repositories.Interfaces;
 public interface ITeamRepository
 {
-    Task<ICollection<Team>> GetAllAsync(TeamQuery query);
+    Task<ICollection<Team>> GetAllAsync(TeamQuery teamquery);
     Task<Team?> GetByIdAsync(TeamId id);
     Task<Team?> GetByCoachIdAsync(CoachId coachid);
     Task<Team?> GetByTeamAsync(string team);
     Task<Team?> UpdateAsync(TeamId id, Team team);
     Task<Team?> DeleteAsync(TeamId id);
-    Task<Team?> RegisterTeamAsync(Team coach);
+    Task<Team?> RegisterTeamAsync(Team team);
 }

@@ -19,14 +19,35 @@ public class TeamService : ITeamService
     private readonly ITeamRepository _teamRepository;
     private readonly IMapper<Team, TeamDTO> _teamMapper;
     private readonly ILogger<TeamService> _logger;
-    public Task<TeamDTO?> CreateAsync(TeamDTO teamDTO)
+
+    public TeamService(ITeamRepository teamRepository,
+                       IMapper<Team, TeamDTO> teamMapper,
+                       ILogger<TeamService> logger)
     {
-        throw new NotImplementedException();
+        _teamRepository = teamRepository;
+        _teamMapper = teamMapper;
+        _logger = logger;
     }
 
-    public Task<TeamDTO?> DeleteAsync(TeamId id)
+    public async Task<TeamDTO?> CreateAsync(TeamDTO teamDTO)
     {
-        throw new NotImplementedException();
+        _logger.LogDebug("Create new Team");
+        
+
+        var team = _teamMapper.MapToEntity(teamDTO);
+        team.Id = TeamId.NewId;
+
+        var res = await _teamRepository.RegisterTeamAsync(team);
+
+        return res != null ? _teamMapper.MapToDTO(res) : null;
+    }
+
+    public async Task<TeamDTO?> DeleteAsync(TeamId id)
+    {
+        _logger.LogDebug("Deleting Team: {id}", id);
+
+        var res = await _teamRepository.DeleteAsync(id);
+        return res != null ? _teamMapper.MapToDTO(res) : null;
     }
 
     public async Task<ICollection<TeamDTO>> GetAllAsync(TeamQuery teamQuery)
@@ -41,7 +62,7 @@ public class TeamService : ITeamService
         throw new NotImplementedException();
     }
 
-    public Task<TeamDTO?> GetByIdAsync(TeamId id)
+    public async Task<TeamDTO?> GetByIdAsync(TeamId id)
     {
         _logger.LogDebug("Getting Team by id: {id}", id);
 
@@ -49,8 +70,17 @@ public class TeamService : ITeamService
         return res != null ? _teamMapper.MapToDTO(res) : null;
     }
 
-    public Task<TeamDTO?> UpdateAsync(TeamId id, TeamDTO teamDto)
+    public async Task<TeamDTO?> UpdateAsync(TeamId id, TeamDTO teamDto)
     {
-        throw new NotImplementedException();
+        _logger.LogDebug("Updating Team: {id}", id);
+
+        // husk at users (el admin) kun skal kunne eoppdatere sin egen user Dette må vel settes i JWT autorisering. Ikke glem må ha med dette viktig.
+        // kanksje noe som : throw new UnauthorizedAccessException($"User {loggedInUserId} has no access to delete user {id}");
+
+        var team = _teamMapper.MapToEntity(teamDto);
+        team.Id = id;
+
+        var res = await _teamRepository.UpdateAsync(id, team);
+        return res != null ? _teamMapper.MapToDTO(team) : null;
     }
 }

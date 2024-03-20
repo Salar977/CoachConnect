@@ -30,7 +30,7 @@ public class Player
     public TeamId TeamId { get; set; }
 
     [Required]
-    public DateTime Created { get; init; }
+    public DateTime Created { get; set; }
 
     [Required]
     public DateTime Updated { get; set; }

@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CoachConnect.Shared.Helpers;
-public class TeamQuery
+public class PlayerQuery
 {
-    public string TeamCity { get; set; } = string.Empty;
+    public string FirstName { get; set; } = string.Empty;
 
-    public string TeamName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
 
-    public DateTime TeamTime { get; init; }
+    public DateTime? Created { get; set; } = null;
 
     public DateTime Updated { get; set; }
     public string? SortBy { get; set; } = null;

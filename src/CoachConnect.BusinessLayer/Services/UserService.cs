@@ -34,30 +34,12 @@ public class UserService : IUserService
         return res.Select(user => _userMapper.MapToDTO(user)).ToList();
     }
 
-    //public async Task<ICollection<UserDTO>> GetAllAsync(string? lastName, int page, int pageSize)
-    //{
-    //    if (!string.IsNullOrEmpty(lastName))
-    //    {
-    //        _logger.LogDebug("Getting users by lastname: {lastName}", lastName);
-    //        var res = await _userRepository.GetByLastNameAsync(lastName);
-    //        var dtos = res.Select(user => _userMapper.MapToDTO(user)).ToList();
-    //        return dtos;
-    //    }
-    //    else
-    //    {
-    //        _logger.LogDebug("Getting all users");
-
-    //        var res = await _userRepository.GetAllAsync(page, pageSize);
-    //        var dtos = res.Select(user => _userMapper.MapToDTO(user)).ToList();
-    //        return dtos;
-    //    }
-    //}
-
-    public async Task<UserDTO?> GetByIdAsync(UserId id)
+    public async Task<UserDTO?> GetByIdAsync(Guid id)
     {
         _logger.LogDebug("Getting user by id: {id}", id);
 
-        var res = await _userRepository.GetByIdAsync(id);
+        var userId = new UserId(id);
+        var res = await _userRepository.GetByIdAsync(userId);
         return res != null ? _userMapper.MapToDTO(res) : null;     
     }
 
@@ -69,27 +51,29 @@ public class UserService : IUserService
         return res != null ? _userMapper.MapToDTO(res) : null;
     }  
     
-    public async Task<UserDTO?> UpdateAsync(UserId id, UserDTO dto)
+    public async Task<UserDTO?> UpdateAsync(Guid id, UserDTO dto)
     {
         _logger.LogDebug("Updating user: {id}", id);
 
-        // husk at users (el admin) kun skal kunne eoppdatere sin egen user Dette må vel settes i JWT autorisering. Ikke glem må ha med dette viktig.
+        // husk at users (el admin) kun skal kunne oppdatere sin egen user Dette må vel settes i JWT autorisering. Ikke glem må ha med dette viktig.
         // kanksje noe som : throw new UnauthorizedAccessException($"User {loggedInUserId} has no access to delete user {id}");
 
+        var userId = new UserId(id);
         var user = _userMapper.MapToEntity(dto);
-        user.Id = id;
+        user.Id = userId;
 
-        var res = await _userRepository.UpdateAsync(id, user);
+        var res = await _userRepository.UpdateAsync(userId, user);
         return res != null ? _userMapper.MapToDTO(user) : null;
     }
 
-    public async Task<UserDTO?> DeleteAsync(UserId id)
+    public async Task<UserDTO?> DeleteAsync(Guid id)
     {
         // husk at users (el admin) kun skal kunne slette sin egen user. Dette må vel settes i JWT autorisering. Ikke glem må ha med dette.
         // kanksje noe som : throw new UnauthorizedAccessException($"User {loggedInUserId} has no access to delete user {id}");
         _logger.LogDebug("Deleting user: {id}", id);
-        
-        var res = await _userRepository.DeleteAsync(id);
+
+        var userId = new UserId(id);
+        var res = await _userRepository.DeleteAsync(userId);
         return res != null ? _userMapper.MapToDTO(res) : null;
     }
 

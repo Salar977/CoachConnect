@@ -1,7 +1,6 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
 using CoachConnect.BusinessLayer.Services;
 using CoachConnect.BusinessLayer.Services.Interfaces;
-using CoachConnect.DataAccess.Entities;
 using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,7 +35,7 @@ public class CoachesController : ControllerBase
     {
         _logger.LogDebug("Getting coach by id {id}", id);
 
-        var res = await _coachService.GetByIdAsync(new CoachId(id)); // Convert Guid to CoachId her, da funker det
+        var res = await _coachService.GetByIdAsync(id); 
         return res != null ? Ok(res) : NotFound("Could not find any coach with this id");
     }
 
@@ -46,7 +45,7 @@ public class CoachesController : ControllerBase
     {
         _logger.LogDebug("Updating coach: {id}", id);
 
-        var res = await _coachService.UpdateAsync(new CoachId(id), dto);
+        var res = await _coachService.UpdateAsync(id, dto);
         return res != null ? Ok(res) : BadRequest("Could not update coach");
     }
 
@@ -56,7 +55,7 @@ public class CoachesController : ControllerBase
     {
         _logger.LogDebug("Deleting coach: {id}", id);
 
-        var res = await _coachService.DeleteAsync(new CoachId(id));
+        var res = await _coachService.DeleteAsync(id);
         return res != null ? Ok(res) : BadRequest("Could not delete coach");
     }
 

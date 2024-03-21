@@ -7,9 +7,9 @@ public interface IUserService
 {
     // Task<ICollection<UserDTO>> GetAllAsync(string? lastName, int page, int pageSize);
     Task<ICollection<UserDTO>> GetAllAsync(UserQuery userQuery);
-    Task<UserDTO?> GetByIdAsync(UserId id);
+    Task<UserDTO?> GetByIdAsync(Guid id);
     Task<UserDTO?> GetByEmailAsync(string email);
-    Task<UserDTO?> UpdateAsync(UserId id, UserDTO dto);
-    Task<UserDTO?> DeleteAsync(UserId id);     
+    Task<UserDTO?> UpdateAsync(Guid id, UserDTO dto);
+    Task<UserDTO?> DeleteAsync(Guid id);     
     Task<UserDTO?> RegisterUserAsync(UserRegistrationDTO dto);
 }

@@ -14,4 +14,4 @@ public record PlayerDTO
     DateTime Updated,
     UserId UserId,
     TeamId TeamId,
-    TeamId Id);
+    PlayerId Id);

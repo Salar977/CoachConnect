@@ -31,7 +31,7 @@ public class PlayerMapper : IMapper<Player, PlayerDTO>
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             Created = dto.Created,
-            Updated = dtnow,
+            Updated = dtnow
         };
     }
 }

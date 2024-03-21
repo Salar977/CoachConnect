@@ -4,13 +4,6 @@ using CoachConnect.DataAccess.Repositories.Interfaces;
 using CoachConnect.Shared.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Serilog;
-using Serilog.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoachConnect.DataAccess.Repositories;
 public class PlayerRepository : IPlayerRepository
@@ -53,7 +46,7 @@ public class PlayerRepository : IPlayerRepository
 
         if (playerQuery.Created != null && playerQuery.Created != DateTime.MinValue)
         {
-            players = players.Where(g => g.PlayerTime == playerQuery.Created);
+            players = players.Where(g => g.Created == playerQuery.Created);
         }
         if (!string.IsNullOrWhiteSpace(playerQuery.SortBy))
         {
@@ -83,19 +76,27 @@ public class PlayerRepository : IPlayerRepository
         return await _dbContext.Players.FindAsync(id);
     }
 
-    public Task<Player?> GetByPlayerNameAsync(string name)
+    public async Task<Player?> GetByPlayerFirstNameAsync(string player)
     {
-        throw new NotImplementedException();
+        _logger.LogDebug("Getting user by email: {email} from db", player);
+
+        var res = await _dbContext.Players.FirstOrDefaultAsync(u => u.FirstName.Equals(player));
+        return res;
     }
 
-    public Task<Player?> GetTeamByIdAsync(TeamId coachid)
+    public async Task<ICollection<Player?>> GetByTeamsIdAsync(TeamId teamId)
     {
-        throw new NotImplementedException();
+        return await _dbContext.Players
+            .Where(x => x.TeamId == teamId)
+            .ToListAsync();
     }
 
-    public Task<Player?> GetUserByIdAsync(UserId coachid)
+
+    public async Task<ICollection<Player?>> GetByUsersByIdAsync(UserId userId)
     {
-        throw new NotImplementedException();
+        return await _dbContext.Players
+            .Where(x => x.UserId == userId)
+            .ToListAsync();
     }
 
     public async Task<Player?> RegisterPlayerAsync(Player player)
@@ -117,7 +118,7 @@ public class PlayerRepository : IPlayerRepository
 
         playr.FirstName = string.IsNullOrEmpty(player.FirstName) ? playr.FirstName : player.FirstName;
         playr.LastName = string.IsNullOrEmpty(player.LastName) ? playr.LastName : player.LastName;
-        playr.PlayerTime = player.PlayerTime;
+        playr.Created = player.Created;
         playr.Updated = DateTime.Now;
 
         await _dbContext.SaveChangesAsync();

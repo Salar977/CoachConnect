@@ -4,11 +4,6 @@ using CoachConnect.DataAccess.Repositories.Interfaces;
 using CoachConnect.Shared.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoachConnect.DataAccess.Repositories;
 public class TeamRepository : ITeamRepository

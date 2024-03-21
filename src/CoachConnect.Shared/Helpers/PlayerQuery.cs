@@ -10,6 +10,7 @@ public class PlayerQuery
     public string FirstName { get; set; } = string.Empty;
 
     public string LastName { get; set; } = string.Empty;
+    public Guid? PlayerId { get; set; }
 
     public DateTime? Created { get; set; } = null;
 

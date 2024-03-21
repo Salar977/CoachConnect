@@ -27,11 +27,12 @@ public class GameAttendanceService : IGameAttendanceService
         _gameAttendanceMapper = gameAttendanceMapper;
     }
 
-    public async Task<GameAttendanceDTO?> DeleteAsync(GameAttendanceId id)
+    public async Task<GameAttendanceDTO?> DeleteAsync(Guid id)
     {
         _logger.LogDebug("Deleting GameAttendance: {id}", id);
 
-        var res = await _gameAttendanceRepository.DeleteAsync(id);
+        var gameAttendanceId = new GameAttendanceId(id);
+        var res = await _gameAttendanceRepository.DeleteAsync(gameAttendanceId);
         return res != null ? _gameAttendanceMapper.MapToDTO(res) : null;
     }
 
@@ -42,11 +43,12 @@ public class GameAttendanceService : IGameAttendanceService
         return res.Select(game => _gameAttendanceMapper.MapToDTO(game)).ToList();
     }
 
-    public async Task<GameAttendanceDTO?> GetByIdAsync(GameAttendanceId id)
+    public async Task<GameAttendanceDTO?> GetByIdAsync(Guid id)
     {
         _logger.LogDebug("Getting gameAttendance by id: {id}", id);
 
-        var res = await _gameAttendanceRepository.GetByIdAsync(id);
+        var gameAttendanceId = new GameAttendanceId(id);
+        var res = await _gameAttendanceRepository.GetByIdAsync(gameAttendanceId);
         return res != null ? _gameAttendanceMapper.MapToDTO(res) : null;
     }
 
@@ -63,14 +65,15 @@ public class GameAttendanceService : IGameAttendanceService
         return res != null ? _gameAttendanceMapper.MapToDTO(res) : null;
     }
 
-    public async Task<GameAttendanceDTO?> UpdateAsync(GameAttendanceId id, GameAttendanceDTO dto)
+    public async Task<GameAttendanceDTO?> UpdateAsync(Guid id, GameAttendanceDTO dto)
     {
         _logger.LogDebug("Updating gameAttendance: {id}", id);
 
+        var gameAttendanceId = new GameAttendanceId(id);
         var gameAttendance = _gameAttendanceMapper.MapToEntity(dto);
-        gameAttendance.Id = id;
+        gameAttendance.Id = gameAttendanceId;
 
-        var res = await _gameAttendanceRepository.UpdateAsync(id, gameAttendance);
+        var res = await _gameAttendanceRepository.UpdateAsync(gameAttendanceId, gameAttendance);
         return res != null ? _gameAttendanceMapper.MapToDTO(gameAttendance) : null;
     }
 }

@@ -42,11 +42,12 @@ namespace CoachConnect.BusinessLayer.Services
             return res != null ? _gameMapper.MapToDTO(res) : null;
         }
 
-        public async Task<GameDTO?> DeleteAsync(GameId id)
+        public async Task<GameDTO?> DeleteAsync(Guid id)
         {
             _logger.LogDebug("Deleting Game: {id}", id);
 
-            var res = await _gameRepository.DeleteAsync(id);
+            var gameId = new GameId(id);
+            var res = await _gameRepository.DeleteAsync(gameId);
             return res != null ? _gameMapper.MapToDTO(res) : null;
         }
 
@@ -62,11 +63,12 @@ namespace CoachConnect.BusinessLayer.Services
         //    throw new NotImplementedException();
         //}
 
-        public async Task<GameDTO?> GetByIdAsync(GameId id)
+        public async Task<GameDTO?> GetByIdAsync(Guid id)
         {
             _logger.LogDebug("Getting Game by id: {id}", id);
 
-            var res = await _gameRepository.GetByIdAsync(id);
+            var gameId = new GameId(id);
+            var res = await _gameRepository.GetByIdAsync(gameId);
             return res != null ? _gameMapper.MapToDTO(res) : null;
         }
 
@@ -84,17 +86,15 @@ namespace CoachConnect.BusinessLayer.Services
         //    return dtos;
         //}
 
-        public async Task<GameDTO?> UpdateAsync(GameId id, GameDTO gameDto)
+        public async Task<GameDTO?> UpdateAsync(Guid id, GameDTO gameDto)
         {
             _logger.LogDebug("Updating Game: {id}", id);
 
-            // husk at users (el admin) kun skal kunne eoppdatere sin egen user Dette må vel settes i JWT autorisering. Ikke glem må ha med dette viktig.
-            // kanksje noe som : throw new UnauthorizedAccessException($"User {loggedInUserId} has no access to delete user {id}");
-
+            var gameId = new GameId(id);
             var game = _gameMapper.MapToEntity(gameDto);
-            game.Id = id;
+            game.Id = gameId;
 
-            var res = await _gameRepository.UpdateAsync(id, game);
+            var res = await _gameRepository.UpdateAsync(gameId, game);
             return res != null ? _gameMapper.MapToDTO(game) : null;
         }
     }

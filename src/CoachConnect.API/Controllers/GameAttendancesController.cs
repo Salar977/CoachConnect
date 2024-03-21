@@ -1,10 +1,7 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
-using CoachConnect.BusinessLayer.Services;
 using CoachConnect.BusinessLayer.Services.Interfaces;
-using CoachConnect.DataAccess.Entities;
 using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -50,7 +47,7 @@ public class GameAttendancesController : ControllerBase
     {
         _logger.LogDebug("Getting gameattendance by id {id}", id);
 
-        var res = await _gameAttendanceService.GetByIdAsync(new GameAttendanceId(id)); 
+        var res = await _gameAttendanceService.GetByIdAsync(id); 
         return res != null ? Ok(res) : NotFound("Could not find any gameAttendance with this id");
     }
 
@@ -61,7 +58,7 @@ public class GameAttendancesController : ControllerBase
     {
         _logger.LogDebug("Deleting Gameattendance: {id}", id);
 
-        var res = await _gameAttendanceService.DeleteAsync(new GameAttendanceId(id));
+        var res = await _gameAttendanceService.DeleteAsync(id);
         return res != null ? Ok(res) : BadRequest("Could not delete gameAttendance ID");
     }
 
@@ -71,7 +68,7 @@ public class GameAttendancesController : ControllerBase
     {
         _logger.LogDebug("Updating Game Attendance: {id}", id);
 
-        var res = await _gameAttendanceService.UpdateAsync(new GameAttendanceId(id), dto);
+        var res = await _gameAttendanceService.UpdateAsync(id, dto);
         return res != null ? Ok(res) : BadRequest("Could not update gameAttendance");
     }
 }

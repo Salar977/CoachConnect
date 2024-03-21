@@ -1,13 +1,7 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
-using CoachConnect.BusinessLayer.Services;
 using CoachConnect.BusinessLayer.Services.Interfaces;
-using CoachConnect.DataAccess.Entities;
 using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace CoachConnect.API.Controllers;
 
@@ -54,9 +48,10 @@ public class GamesController : ControllerBase
     [HttpGet("{id}", Name = "GetGameById")]
     public async Task<ActionResult<GameDTO>> GetGameById(Guid id)
     {
+
         _logger.LogDebug("Getting game by ID: {id}", id);
 
-        var game = await _gameService.GetByIdAsync(new GameId(id));
+        var game = await _gameService.GetByIdAsync(id);
         return game != null ? Ok(game) : NotFound($"Game with ID '{id}' not found");
     }
 
@@ -85,7 +80,7 @@ public class GamesController : ControllerBase
     {
         _logger.LogDebug("Updating game with ID: {id}", id);
 
-        var res = await _gameService.UpdateAsync(new GameId(id), gameDTO);
+        var res = await _gameService.UpdateAsync(id, gameDTO);
         return res != null ? Ok(res) : BadRequest("Could not update Game");
     }
 
@@ -95,7 +90,7 @@ public class GamesController : ControllerBase
     {
         _logger.LogDebug("Deleting game with ID: {id}", id);
 
-        var res = await _gameService.DeleteAsync(new GameId(id));
+        var res = await _gameService.DeleteAsync(id);
         return res != null ? Ok(res) : BadRequest("Could not delete Game");
     }
 

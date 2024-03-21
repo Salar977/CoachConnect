@@ -25,7 +25,7 @@ public class GameMapper : IMapper<Game, GameDTO>
             OpponentName = dto.OpponentName,
             GameTime = dto.GameTime,
             Created = dtnow,
-            Updated = dtnow,
+            Updated = dtnow
         };
     }
 }

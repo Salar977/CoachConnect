@@ -23,6 +23,7 @@ public class Team
     public string TeamCity { get; set; } = string.Empty;
 
     public string TeamName { get; set; } = string.Empty;
+    public DateTime TeamTime { get; set; }
 
     public DateTime Created { get; init; }
 

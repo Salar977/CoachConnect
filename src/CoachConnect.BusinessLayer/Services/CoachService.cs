@@ -35,11 +35,12 @@ public class CoachService : ICoachService
         return res.Select(coach => _coachMapper.MapToDTO(coach)).ToList();
     }
 
-    public async Task<CoachDTO?> GetByIdAsync(CoachId id)
+    public async Task<CoachDTO?> GetByIdAsync(Guid id)
     {
+        var coachId = new CoachId(id);
         _logger.LogDebug("Getting coach by id: {id}", id);
 
-        var res = await _coachRepository.GetByIdAsync(id);
+        var res = await _coachRepository.GetByIdAsync(coachId);
         return res != null ? _coachMapper.MapToDTO(res) : null;
     }
 
@@ -51,27 +52,29 @@ public class CoachService : ICoachService
         return res != null ? _coachMapper.MapToDTO(res) : null;
     }     
 
-    public async Task<CoachDTO?> UpdateAsync(CoachId id, CoachDTO dto)
+    public async Task<CoachDTO?> UpdateAsync(Guid id, CoachDTO dto)
     {
         _logger.LogDebug("Updating coach: {id}", id);
 
         // husk at coaches (el admin) kun skal kunne eoppdatere sin egen user Dette må vel settes i JWT autorisering. Ikke glem må ha med dette viktig.
         // kanksje noe som : throw new UnauthorizedAccessException($"Coach {loggedInUserId} has no access to delete coach {id}");
 
+        var coachId = new CoachId(id);
         var coach = _coachMapper.MapToEntity(dto);
-        coach.Id = id;
+        coach.Id = coachId;
 
-        var res = await _coachRepository.UpdateAsync(id, coach);
+        var res = await _coachRepository.UpdateAsync(coachId, coach);
         return res != null ? _coachMapper.MapToDTO(coach) : null;
     }
 
-    public async Task<CoachDTO?> DeleteAsync(CoachId id)
+    public async Task<CoachDTO?> DeleteAsync(Guid id)
     {
         // husk at coaches (el admin) kun skal kunne slette sin egen user. Dette må vel settes i JWT autorisering. Ikke glem må ha med dette.
         // kanksje noe som : throw new UnauthorizedAccessException($"Coach {loggedInUserId} has no access to delete coach {id}");
         _logger.LogDebug("Deleting coach: {id}", id);
 
-        var res = await _coachRepository.DeleteAsync(id);
+        var coachId = new CoachId(id);
+        var res = await _coachRepository.DeleteAsync(coachId);
         return res != null ? _coachMapper.MapToDTO(res) : null;
     }
 

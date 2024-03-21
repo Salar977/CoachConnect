@@ -1,13 +1,7 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
-using CoachConnect.BusinessLayer.Services;
 using CoachConnect.BusinessLayer.Services.Interfaces;
-using CoachConnect.DataAccess.Entities;
 using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace CoachConnect.API.Controllers;
 
@@ -24,6 +18,7 @@ public class GamesController : ControllerBase
         _logger = logger;
     }
 
+    // https://localhost:7036/api/v1/games
     [HttpGet(Name = "GetAllGames")]
     public async Task<ActionResult<IEnumerable<GameDTO>>> GetAllGames([FromQuery] GameQuery gameQuery)
     {
@@ -49,12 +44,14 @@ public class GamesController : ControllerBase
     //    return Ok(games);
     //}
 
+    // https://localhost:7036/api/v1/games/2f042e86-d75e-4591-a810-aca808725555
     [HttpGet("{id}", Name = "GetGameById")]
     public async Task<ActionResult<GameDTO>> GetGameById(Guid id)
     {
+
         _logger.LogDebug("Getting game by ID: {id}", id);
 
-        var game = await _gameService.GetByIdAsync(new GameId(id));
+        var game = await _gameService.GetByIdAsync(id);
         return game != null ? Ok(game) : NotFound($"Game with ID '{id}' not found");
     }
 
@@ -67,6 +64,7 @@ public class GamesController : ControllerBase
     //    return games != null ? Ok(games) : NotFound($"No games found with opponent name '{opponentName}'");
     //}
 
+    // https://localhost:7036/api/v1/games/register
     [HttpPost("register", Name = "CreateGame")]
     public async Task<ActionResult<GameDTO>> CreateGame([FromBody] GameDTO gameDTO)
     {
@@ -76,21 +74,23 @@ public class GamesController : ControllerBase
         return res != null ? Ok(res) : BadRequest("Could not Create new game");
     }
 
+    // https://localhost:7036/api/v1/games/2f042e86-d75e-4591-a810-aca80812cde3
     [HttpPut("{id}", Name = "UpdateGame")]
     public async Task<ActionResult<GameDTO>> UpdateGame(Guid id, [FromBody] GameDTO gameDTO)
     {
         _logger.LogDebug("Updating game with ID: {id}", id);
 
-        var res = await _gameService.UpdateAsync(new GameId(id), gameDTO);
+        var res = await _gameService.UpdateAsync(id, gameDTO);
         return res != null ? Ok(res) : BadRequest("Could not update Game");
     }
 
+    // https://localhost:7036/api/v1/games/2f042e86-d75e-4591-a810-aca80812cde3
     [HttpDelete("{id}", Name = "DeleteGame")]
     public async Task<ActionResult<GameDTO>> DeleteGame(Guid id)
     {
         _logger.LogDebug("Deleting game with ID: {id}", id);
 
-        var res = await _gameService.DeleteAsync(new GameId(id));
+        var res = await _gameService.DeleteAsync(id);
         return res != null ? Ok(res) : BadRequest("Could not delete Game");
     }
 

@@ -24,8 +24,6 @@ public class PracticeMapper : IMapper<Practice, PracticeResponse>
             Id = practiceResponse.PracticeId,
             Location = practiceResponse.Location,
             PracticeDate = practiceResponse.PracticeDate,
-            Created = now,
-            Updated = now,
             PracticeAttendances = practiceResponse.PracticeAttendances!
         };
     }

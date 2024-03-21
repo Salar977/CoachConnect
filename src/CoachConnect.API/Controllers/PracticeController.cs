@@ -60,8 +60,15 @@ public class PracticeController : ControllerBase
     }
 
     // DELETE api/<PracticeController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
+    [HttpDelete]
+    public async Task<ActionResult<PracticeResponse>> DeleteById([FromQuery] Guid id)
     {
+        var practice = await _practiceService.GetByIdAsync(new PracticeId(id));
+
+        if(practice is null) return NotFound();
+
+        await _practiceService.DeleteAsync(new PracticeId(id));
+
+        return Ok(practice);
     }
 }

@@ -58,6 +58,7 @@ public class PracticeService : IPracticeService
         try
         {
             var practiceEntity = _practiceRequestMapper.MapToEntity(practice);
+            practiceEntity.Id = PracticeId.NewId;
             var res = await _practiceRepository.RegisterPracticeAsync(practiceEntity);
 
             if(res is null) return null;

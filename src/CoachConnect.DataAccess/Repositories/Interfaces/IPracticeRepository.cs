@@ -1,9 +1,6 @@
 ﻿using CoachConnect.DataAccess.Entities;
 using CoachConnect.Shared.Helpers;
 
-/*
- * Author: Salar Amir
- */
 
 namespace CoachConnect.DataAccess.Repositories.Interfaces;
 

@@ -5,10 +5,6 @@ using CoachConnect.Shared.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-/*
- * Author: Salar Amir
- */
-
 namespace CoachConnect.DataAccess.Repositories;
 
 public class PracticeRepository : IPracticeRepository

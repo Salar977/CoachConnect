@@ -113,6 +113,19 @@ public class GameRepository : IGameRepository
         return await _dbContext.Games.FindAsync(id);
     }
 
+    public async Task<Game?> GetByGameTimeAsync(DateTime dateTime)
+    {
+        _logger.LogDebug("Getting Game by time: {dateTime} from db", dateTime);
+
+        // Get the start and end of the specified date
+        DateTime startDate = dateTime.Date;
+        DateTime endDate = startDate.AddDays(1);
+
+        return await _dbContext.Games
+            .Where(d => d.GameTime >= startDate && d.GameTime < endDate)
+            .FirstOrDefaultAsync();
+    }
+
     //public Task<ICollection<Game>> GetByLocationAsync(string location)
     //{
     //    throw new NotImplementedException();

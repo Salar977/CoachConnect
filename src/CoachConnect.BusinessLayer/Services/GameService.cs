@@ -18,30 +18,33 @@ namespace CoachConnect.BusinessLayer.Services
     {
         private readonly IGameRepository _gameRepository;
         private readonly IMapper<Game, GameDTO> _gameMapper;
+        private readonly IMapper<Game, GameRegistrationDTO> _gameRegistrationMapper;
         private readonly ILogger<GameService> _logger;
 
         public GameService(IGameRepository gameRepository,
                            IMapper<Game, GameDTO> gameMapper,
+                           IMapper<Game, GameRegistrationDTO> gameRegistrationMapper,
                            ILogger<GameService> logger)
         {
             _gameRepository = gameRepository;
             _gameMapper = gameMapper;
+            _gameRegistrationMapper = gameRegistrationMapper;
             _logger = logger;
         }
 
-        public async Task<GameDTO?> CreateAsync(GameDTO gameDTO)
+        public async Task<GameRegistrationDTO?> CreateAsync(GameRegistrationDTO gameRegistrationDTO)
         {
             _logger.LogDebug("Create new Game");
             //Husk legge til sjekke om kampen finnes fra før dersom ikke så legge til ny kamp
 
-            //var gameExists = _
+            //var gameExists = await _gameRepository.ExistsAsync(gameDTO.Id)
 
-            var game = _gameMapper.MapToEntity(gameDTO);
+            var game = _gameRegistrationMapper.MapToEntity(gameRegistrationDTO);
             game.Id = GameId.NewId;
 
             var res = await _gameRepository.CreateAsync(game);
 
-            return res != null ? _gameMapper.MapToDTO(res) : null;
+            return res != null ? _gameRegistrationMapper.MapToDTO(res) : null;
         }
 
         public async Task<GameDTO?> DeleteAsync(Guid id)

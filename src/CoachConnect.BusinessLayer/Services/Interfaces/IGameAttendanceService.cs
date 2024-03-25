@@ -14,5 +14,5 @@ public interface IGameAttendanceService
     Task<GameAttendanceDTO?> GetByIdAsync(Guid id);
     Task<GameAttendanceDTO?> UpdateAsync(Guid id, GameAttendanceDTO dto);
     Task<GameAttendanceDTO?> DeleteAsync(Guid id);
-    Task<GameAttendanceDTO?> RegisterGameAttendanceAsync(GameAttendanceDTO dto);
+    Task<GameAttendanceRegistrationDTO?> RegisterGameAttendanceAsync(GameAttendanceRegistrationDTO dto);
 }

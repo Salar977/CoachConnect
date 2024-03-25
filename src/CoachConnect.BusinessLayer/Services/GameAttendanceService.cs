@@ -19,12 +19,17 @@ public class GameAttendanceService : IGameAttendanceService
     private readonly ILogger<GameAttendanceService> _logger;
     private readonly IGameAttendanceRepository _gameAttendanceRepository;
     private readonly IMapper<GameAttendance, GameAttendanceDTO> _gameAttendanceMapper;
+    private readonly IMapper<GameAttendance, GameAttendanceRegistrationDTO> _gameAttendanceRegistrationMapper;
 
-    public GameAttendanceService(ILogger<GameAttendanceService> logger, IGameAttendanceRepository gameAttendanceRepository, IMapper<GameAttendance, GameAttendanceDTO> gameAttendanceMapper)
+    public GameAttendanceService(ILogger<GameAttendanceService> logger,
+                                IGameAttendanceRepository gameAttendanceRepository,
+                                IMapper<GameAttendance, GameAttendanceDTO> gameAttendanceMapper,
+                                IMapper<GameAttendance, GameAttendanceRegistrationDTO> gameAttendanceRegistrationMapper)
     {
         _logger = logger;
         _gameAttendanceRepository = gameAttendanceRepository;
         _gameAttendanceMapper = gameAttendanceMapper;
+        _gameAttendanceRegistrationMapper = gameAttendanceRegistrationMapper;
     }
 
     public async Task<GameAttendanceDTO?> DeleteAsync(Guid id)
@@ -52,17 +57,17 @@ public class GameAttendanceService : IGameAttendanceService
         return res != null ? _gameAttendanceMapper.MapToDTO(res) : null;
     }
 
-    public async Task<GameAttendanceDTO?> RegisterGameAttendanceAsync(GameAttendanceDTO dto)
+    public async Task<GameAttendanceRegistrationDTO?> RegisterGameAttendanceAsync(GameAttendanceRegistrationDTO dto)
     {
         _logger.LogDebug("Create new Gameattendance");
         //Husk legge til sjekke om kampen finnes fra før dersom ikke så legge til ny kamp
 
-        var gameAttendance = _gameAttendanceMapper.MapToEntity(dto);
-        gameAttendance.Id = GameAttendanceId.NewId;
+        var gameAttendanceRegistration = _gameAttendanceRegistrationMapper.MapToEntity(dto);
+        gameAttendanceRegistration.Id = GameAttendanceId.NewId;
 
-        var res = await _gameAttendanceRepository.RegisterGameAttendanceAsync(gameAttendance);
+        var res = await _gameAttendanceRepository.RegisterGameAttendanceAsync(gameAttendanceRegistration);
 
-        return res != null ? _gameAttendanceMapper.MapToDTO(res) : null;
+        return res != null ? _gameAttendanceRegistrationMapper.MapToDTO(res) : null;
     }
 
     public async Task<GameAttendanceDTO?> UpdateAsync(Guid id, GameAttendanceDTO dto)

@@ -33,11 +33,11 @@ public class GameAttendancesController : ControllerBase
 
     // https://localhost:7036/api/v1/gameattendances/register
     [HttpPost("register", Name = "registerGameAttendance")]
-    public async Task<ActionResult<GameAttendanceDTO>> RegisterGameAttendance([FromBody] GameAttendanceDTO gameAttendanceDTO)
+    public async Task<ActionResult<GameAttendanceRegistrationDTO>> RegisterGameAttendance([FromBody] GameAttendanceRegistrationDTO gameAttendanceRegistrationDTO)
     {
         _logger.LogDebug("Create new Gameattendance");
 
-        var res = await _gameAttendanceService.RegisterGameAttendanceAsync(gameAttendanceDTO);
+        var res = await _gameAttendanceService.RegisterGameAttendanceAsync(gameAttendanceRegistrationDTO);
         return res != null ? Ok(res) : BadRequest("Could not register gameAttendance");
     }
 

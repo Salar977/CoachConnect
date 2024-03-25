@@ -66,11 +66,11 @@ public class GamesController : ControllerBase
 
     // https://localhost:7036/api/v1/games/register
     [HttpPost("register", Name = "CreateGame")]
-    public async Task<ActionResult<GameDTO>> CreateGame([FromBody] GameDTO gameDTO)
+    public async Task<ActionResult<GameRegistrationDTO>> CreateGame([FromBody] GameRegistrationDTO gameRegistrationDTO)
     {
         _logger.LogDebug("Create new Game");
 
-        var res = await _gameService.CreateAsync(gameDTO);
+        var res = await _gameService.CreateAsync(gameRegistrationDTO);
         return res != null ? Ok(res) : BadRequest("Could not Create new game");
     }
 

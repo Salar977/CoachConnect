@@ -34,6 +34,8 @@ namespace CoachConnect.BusinessLayer.Services
             _logger.LogDebug("Create new Game");
             //Husk legge til sjekke om kampen finnes fra før dersom ikke så legge til ny kamp
 
+            //var gameExists = _
+
             var game = _gameMapper.MapToEntity(gameDTO);
             game.Id = GameId.NewId;
 

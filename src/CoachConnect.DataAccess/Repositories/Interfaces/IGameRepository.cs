@@ -17,7 +17,7 @@ public interface IGameRepository
 
     //Task<ICollection<Game>> GetByLocationAsync(string location); // Hent kamp basert på plasseringen
 
-    //Task<ICollection<Game>> GetByGameTimeAsync(DateTime gameTime); // Hent kamp basert på spilltidspunktet
+    Task<Game?> GetByExactGameTimeAsync(DateTime gameTime); // Hent kamp basert på spilltidspunktet
 
     Task<Game?> CreateAsync(Game game); // Opprette en ny kamp
 

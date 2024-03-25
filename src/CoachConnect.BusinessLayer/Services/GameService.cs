@@ -37,14 +37,20 @@ namespace CoachConnect.BusinessLayer.Services
             _logger.LogDebug("Create new Game");
             //Husk legge til sjekke om kampen finnes fra før dersom ikke så legge til ny kamp
 
-            //var gameExists = await _gameRepository.ExistsAsync(gameDTO.Id)
+            var gameExists = await _gameRepository.GetByExactGameTimeAsync(gameRegistrationDTO.GameTime);
+            if (gameExists != null)
+            {
+                return null;
+            }
+            else
+            {
+                var game = _gameRegistrationMapper.MapToEntity(gameRegistrationDTO);
+                game.Id = GameId.NewId;
 
-            var game = _gameRegistrationMapper.MapToEntity(gameRegistrationDTO);
-            game.Id = GameId.NewId;
+                var res = await _gameRepository.CreateAsync(game);
 
-            var res = await _gameRepository.CreateAsync(game);
-
-            return res != null ? _gameRegistrationMapper.MapToDTO(res) : null;
+                return res != null ? _gameRegistrationMapper.MapToDTO(res) : null;
+            }
         }
 
         public async Task<GameDTO?> DeleteAsync(Guid id)

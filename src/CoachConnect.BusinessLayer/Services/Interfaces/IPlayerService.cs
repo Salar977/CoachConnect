@@ -10,15 +10,16 @@ using System.Threading.Tasks;
 namespace CoachConnect.BusinessLayer.Services.Interfaces;
 public interface IPlayerService
 {
-    Task<TeamDTO?> GetByIdAsync(TeamId id);
-    Task<TeamDTO?> GetByCoachIdAsync(CoachId coachid);
+    Task<PlayerDTO?> GetByIdAsync(PlayerId id);
+    Task<ICollection<PlayerDTO?>> GetPlayersByUserIdAsync(UserId userId);
+    Task<ICollection<PlayerDTO?>> GetPlayersByTeamIdAsync(TeamId teamId);
 
-    Task<ICollection<TeamDTO>> GetAllAsync(TeamQuery teamQuery);
+    Task<ICollection<PlayerDTO>> GetAllAsync(PlayerQuery playerQuery);
 
-    Task<TeamDTO?> CreateAsync(TeamDTO teamDTO);
+    Task<PlayerDTO?> CreateAsync(PlayerDTO playerDTO);
 
-    Task<TeamDTO?> UpdateAsync(TeamId id, TeamDTO teamDto);
+    Task<PlayerDTO?> UpdateAsync(PlayerId id, PlayerDTO playerDto);
 
-    Task<TeamDTO?> DeleteAsync(TeamId id);
+    Task<PlayerDTO?> DeleteAsync(PlayerId id);
 }
 

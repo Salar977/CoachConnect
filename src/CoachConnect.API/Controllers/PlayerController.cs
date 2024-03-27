@@ -12,7 +12,7 @@ namespace CoachConnect.API.Controllers;
 [ApiController]
 public class PlayerController : ControllerBase
 {
-    /*
+    
     private readonly IPlayerService _playerService;
     private readonly ILogger<PlayerController> _logger;
 
@@ -22,6 +22,7 @@ public class PlayerController : ControllerBase
         _logger = logger;
     }
 
+    [HttpGet(Name = "GetAllPlayers")]
     public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetAllPlayers([FromQuery] PlayerQuery playerQuery)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -65,6 +66,6 @@ public class PlayerController : ControllerBase
         var res = await _playerService.DeleteAsync(new PlayerId(id));
         return res != null ? Ok(res) : BadRequest("Could not delete Player");
     }
-    */
+    
 
 }

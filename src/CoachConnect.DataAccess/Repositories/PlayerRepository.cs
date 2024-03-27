@@ -84,7 +84,7 @@ public class PlayerRepository : IPlayerRepository
         return res;
     }
 
-    public async Task<ICollection<Player?>> GetByTeamsIdAsync(TeamId teamId)
+    public async Task<ICollection<Player?>> GetPlayersByTeamIdAsync(TeamId teamId)
     {
         return await _dbContext.Players
             .Where(x => x.TeamId == teamId)
@@ -92,7 +92,7 @@ public class PlayerRepository : IPlayerRepository
     }
 
 
-    public async Task<ICollection<Player?>> GetByUsersByIdAsync(UserId userId)
+    public async Task<ICollection<Player?>> GetPlayersByUserIdAsync(UserId userId)
     {
         return await _dbContext.Players
             .Where(x => x.UserId == userId)

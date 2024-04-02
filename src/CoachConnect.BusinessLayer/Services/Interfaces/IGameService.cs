@@ -12,7 +12,7 @@ public interface IGameService
 {
     Task<GameDTO?> GetByIdAsync(Guid id); // Hent en kamp ved hjelp av spillens ID
     Task<ICollection<GameDTO>> GetAllAsync(GameQuery gameQuery); // Hent alle kampene i systemet med paginering
-    Task<GameDTO?> CreateAsync(GameDTO gameDTO); // Opprette en ny kamp
+    Task<GameRegistrationDTO?> CreateAsync(GameRegistrationDTO gameRegistrationDTO); // Opprette en ny kamp
     Task<GameDTO?> UpdateAsync(Guid id, GameDTO gameDto); // Oppdater et eksisterende kamp
     Task<GameDTO?> DeleteAsync(Guid id); // Slett en kamp basert på ID
 }

@@ -46,6 +46,7 @@ public class PracticeAttendanceService : IPracticeAttendanceService
     {
         var res = await _practiceAttendance.GetByIdAsync(new PracticeAttendanceId(id));
 
+
         if (res is null)
         {
             _logger.LogError("Cannot find Practice Attendance");
@@ -62,6 +63,7 @@ public class PracticeAttendanceService : IPracticeAttendanceService
             var newAttendance = _requestMapper.MapToEntity(practiceAttendanceRequest);
             newAttendance.Id = PracticeAttendanceId.NewId;
             var addedAttendance = await _practiceAttendance.RegisterAsync(newAttendance);
+
             if(addedAttendance is null) return null;
 
             return _mapper.MapToDTO(addedAttendance);

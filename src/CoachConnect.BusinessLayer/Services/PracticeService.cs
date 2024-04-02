@@ -13,6 +13,7 @@ public class PracticeService : IPracticeService
 {
     private readonly IPracticeRepository _practiceRepository;
     private readonly IGameRepository _gameRepository;
+
     private readonly IMapper<Practice, PracticeResponse> _practiceMapper;
     private readonly IMapper<Practice, PracticeRequest> _practiceRequestMapper;
     private readonly IMapper<Practice, PracticeUpdate> _practiceUpdateMapper;
@@ -20,6 +21,7 @@ public class PracticeService : IPracticeService
 
     public PracticeService(IPracticeRepository practiceRepository,
                            IGameRepository gameRepository,
+
                            IMapper<Practice, PracticeResponse> practiceMapper,
                            IMapper<Practice, PracticeRequest> practiceRequestMapper,
                            IMapper<Practice, PracticeUpdate> practiceUpdateMapper,
@@ -27,6 +29,7 @@ public class PracticeService : IPracticeService
     {
         _practiceRepository = practiceRepository;
         _gameRepository = gameRepository;
+
         _practiceMapper = practiceMapper;
         _practiceRequestMapper = practiceRequestMapper;
         _practiceUpdateMapper = practiceUpdateMapper;
@@ -53,14 +56,14 @@ public class PracticeService : IPracticeService
         _logger.LogDebug("Get practice by id: {id}", id);
 
         var res = await _practiceRepository.GetByIdAsync(new PracticeId(id));
+
         return res != null ? _practiceMapper.MapToDTO(res) : null;
     }
 
     public async Task<PracticeResponse?> RegisterPracticeAsync(PracticeRequest practice)
     {
         try
-        {
-            
+        {    
 
             DateTime startDate = practice.PracticeDate.Date;
 
@@ -79,6 +82,7 @@ public class PracticeService : IPracticeService
                 return _practiceMapper.MapToDTO(res);
             }
             return null;
+
         }
         catch (Exception ex)
         {

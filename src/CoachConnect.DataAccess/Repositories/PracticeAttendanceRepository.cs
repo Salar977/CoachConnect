@@ -44,6 +44,7 @@ public class PracticeAttendanceRepository : IPracticeAttendanceRepository
     //    }
     //}
 
+
     public async Task<PracticeAttendance?> GetByIdAsync(PracticeAttendanceId id)
     {
         var practiceAttendance = await _dbContext.Practice_attendences.FirstOrDefaultAsync(x => x.Id == id);
@@ -51,12 +52,14 @@ public class PracticeAttendanceRepository : IPracticeAttendanceRepository
         if(practiceAttendance is null)
         {
             _logger.LogError("Cannot find Practice Attendance in the database");
+
             return null;
         }
         return practiceAttendance;
     }
 
     public async Task<PracticeAttendance?> RegisterAsync(PracticeAttendance practiceAttendance)
+
     {
         var newPracticeAttendance = await _dbContext.Practices.FirstOrDefaultAsync(x => x.Id == practiceAttendance.PracticeId);
         if (newPracticeAttendance is null)

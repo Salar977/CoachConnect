@@ -17,29 +17,46 @@ namespace CoachConnect.BusinessLayer.Services
     public class GameService : IGameService
     {
         private readonly IGameRepository _gameRepository;
+        private readonly IPracticeRepository _practiceRepository;
         private readonly IMapper<Game, GameDTO> _gameMapper;
+        private readonly IMapper<Game, GameRegistrationDTO> _gameRegistrationMapper;
         private readonly ILogger<GameService> _logger;
 
         public GameService(IGameRepository gameRepository,
+                           IPracticeRepository practiceRepository,
                            IMapper<Game, GameDTO> gameMapper,
+                           IMapper<Game, GameRegistrationDTO> gameRegistrationMapper,
                            ILogger<GameService> logger)
         {
             _gameRepository = gameRepository;
+            _practiceRepository = practiceRepository;
             _gameMapper = gameMapper;
+            _gameRegistrationMapper = gameRegistrationMapper;
             _logger = logger;
         }
 
-        public async Task<GameDTO?> CreateAsync(GameDTO gameDTO)
+        public async Task<GameRegistrationDTO?> CreateAsync(GameRegistrationDTO gameRegistrationDTO)
         {
             _logger.LogDebug("Create new Game");
-            //Husk legge til sjekke om kampen finnes fra før dersom ikke så legge til ny kamp
 
-            var game = _gameMapper.MapToEntity(gameDTO);
-            game.Id = GameId.NewId;
+            // Get the start and end of the specified date
+            DateTime startDate = gameRegistrationDTO.GameTime.Date;
 
-            var res = await _gameRepository.CreateAsync(game);
+            var gameExists = await _gameRepository.GetByGameTimeAsync(startDate);
+            // var practiceExists = await _practiceRepository.GetByPracticeTimeAsync(startDate); // Kan Salar legge til GetByPracticeTimeAsync(startDate) i IPracticeRepository og PracticeRepository pls 
+            if (gameExists != null)
+            {
+                return null;
+            }
+            else
+            {
+                var game = _gameRegistrationMapper.MapToEntity(gameRegistrationDTO);
+                game.Id = GameId.NewId;
 
-            return res != null ? _gameMapper.MapToDTO(res) : null;
+                var res = await _gameRepository.CreateAsync(game);
+
+                return res != null ? _gameRegistrationMapper.MapToDTO(res) : null;
+            }
         }
 
         public async Task<GameDTO?> DeleteAsync(Guid id)

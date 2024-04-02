@@ -9,6 +9,7 @@ using CoachConnect.BusinessLayer.DTOs.Practices;
 
 namespace CoachConnect.API.Controllers;
 [Route("api/v1/practices")]
+
 [ApiController]
 public class PracticeController : ControllerBase
 {
@@ -34,6 +35,7 @@ public class PracticeController : ControllerBase
     {
         var practice = await _practiceService.GetByIdAsync(id);
 
+
         if(practice is null)
         {
             _logger.LogWarning("Practice not found");
@@ -43,6 +45,7 @@ public class PracticeController : ControllerBase
         _logger.LogInformation("Retrieving practice.");
         return Ok(practice);
     }
+
 
     [HttpPost]
     public async Task<ActionResult<PracticeResponse>> CreatePractice([FromBody] PracticeRequest practice)
@@ -60,6 +63,7 @@ public class PracticeController : ControllerBase
     public async Task<ActionResult<PracticeResponse>> DeleteById([FromQuery] Guid id)
     {
         var practice = await _practiceService.GetByIdAsync(id);
+
 
         if(practice is null) return NotFound();
 

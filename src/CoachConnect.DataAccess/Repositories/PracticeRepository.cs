@@ -84,6 +84,7 @@ public class PracticeRepository : IPracticeRepository
     }
 
 
+
     public async Task<Practice?> DeleteAsync(PracticeId practiceId)
     {
         var deletePractice = await _dbContext.Practices.FirstOrDefaultAsync(x => x.Id == practiceId);

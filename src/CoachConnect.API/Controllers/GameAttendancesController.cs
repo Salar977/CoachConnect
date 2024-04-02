@@ -3,8 +3,6 @@ using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace CoachConnect.API.Controllers;
 [Route("api/v1/gameattendances")]
 [ApiController]
@@ -43,7 +41,7 @@ public class GameAttendancesController : ControllerBase
 
     // https://localhost:7036/api/v1/gameattendances/8215514a-c2f8-46fd-a547-ab5c1fc76004
     [HttpGet("{id}", Name = "GetGameAttendanceById")]
-    public async Task<ActionResult<GameAttendanceDTO>> GetGameAttendanceById([FromRoute] Guid id) // bruk Guid her pga modelbinding kjenner ikke igjen vår custom UserId, så bruk Guid her og vi må konvertere under isteden
+    public async Task<ActionResult<GameAttendanceDTO>> GetGameAttendanceById([FromRoute] Guid id) 
     {
         _logger.LogDebug("Getting gameattendance by id {id}", id);
 

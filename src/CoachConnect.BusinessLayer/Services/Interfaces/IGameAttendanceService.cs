@@ -11,8 +11,8 @@ namespace CoachConnect.BusinessLayer.Services.Interfaces;
 public interface IGameAttendanceService
 {
     Task<ICollection<GameAttendanceDTO>> GetAllAsync(GameAttendanceQuery gameAttendanceQuery);
-    Task<GameAttendanceDTO?> GetByIdAsync(GameAttendanceId id);
-    Task<GameAttendanceDTO?> UpdateAsync(GameAttendanceId id, GameAttendanceDTO dto);
-    Task<GameAttendanceDTO?> DeleteAsync(GameAttendanceId id);
-    Task<GameAttendanceDTO?> RegisterGameAttendanceAsync(GameAttendanceDTO dto);
+    Task<GameAttendanceDTO?> GetByIdAsync(Guid id);
+    Task<GameAttendanceDTO?> UpdateAsync(Guid id, GameAttendanceDTO dto);
+    Task<GameAttendanceDTO?> DeleteAsync(Guid id);
+    Task<GameAttendanceRegistrationDTO?> RegisterGameAttendanceAsync(GameAttendanceRegistrationDTO dto);
 }

@@ -25,8 +25,7 @@ public class Practice
     [Required]
     public DateTime Created { get; init; }
 
-    [Required]
-    public DateTime Updated { get; set; }
+    public DateTime? Updated { get; set; }
 
-    public virtual ICollection<PracticeAttendance> PracticeAttendances { get; set; } = new List<PracticeAttendance>();
+    public virtual IEnumerable<PracticeAttendance> PracticeAttendances { get; set; } = new List<PracticeAttendance>();
 }

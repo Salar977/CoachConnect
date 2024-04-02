@@ -45,11 +45,11 @@ public class PracticeService : IPracticeService
         return res.Select(_practiceMapper.MapToDTO).ToList();
     }
 
-    public async Task<PracticeResponse?> GetByIdAsync(PracticeId id)
+    public async Task<PracticeResponse?> GetByIdAsync(Guid id)
     {
         _logger.LogDebug("Get practice by id: {id}", id);
 
-        var res = await _practiceRepository.GetByIdAsync(id);
+        var res = await _practiceRepository.GetByIdAsync(new PracticeId(id));
         return res != null ? _practiceMapper.MapToDTO(res) : null;
     }
 

@@ -1,6 +1,7 @@
 ﻿using CoachConnect.DataAccess.Data;
 using CoachConnect.DataAccess.Entities;
 using CoachConnect.DataAccess.Repositories.Interfaces;
+using CoachConnect.Shared.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -31,19 +32,31 @@ public class PracticeAttendanceRepository : IPracticeAttendanceRepository
         return deleteAttendance;
     }
 
+    public async Task<IEnumerable<PracticeAttendance>> GetAllAsync(PracticeAttendanceQuery practiceAttendanceQuery)
+    {
+        _logger.LogInformation("Getting practice attendances.");
+
+        var practiceAttendances = _dbContext.Practice_attendences.AsQueryable();
+
+        if(practiceAttendanceQuery.PracticeId is not null)
+        {
+            practiceAttendances.Where(x => x.PracticeId == practiceAttendanceQuery.PracticeId);
+        }
+    }
+
     public async Task<PracticeAttendance?> GetByIdAsync(PracticeAttendanceId id)
     {
         var practiceAttendance = await _dbContext.Practice_attendences.FirstOrDefaultAsync(x => x.Id == id);
 
         if(practiceAttendance is null)
         {
-            _logger.LogError("Cannot find Practice Attendance");
+            _logger.LogError("Cannot find Practice Attendance in the database");
             return null;
         }
         return practiceAttendance;
     }
 
-    public async Task<PracticeAttendance?> RegisterPracticeAttendanceAsync(PracticeAttendance practiceAttendance)
+    public async Task<PracticeAttendance?> RegisterAsync(PracticeAttendance practiceAttendance)
     {
         var newPracticeAttendance = await _dbContext.Practices.FirstOrDefaultAsync(x => x.Id == practiceAttendance.PracticeId);
         if (newPracticeAttendance is null)

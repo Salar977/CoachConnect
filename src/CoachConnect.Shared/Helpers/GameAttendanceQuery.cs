@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CoachConnect.Shared.Helpers;
-public class GameAttendanceQuery  // hente alle kamper spilt for en spiller
+public class GameAttendanceQuery 
 {
     public string? PlayerLastName { get; set; } = null;
     public Guid? GameId { get; set; } = null;

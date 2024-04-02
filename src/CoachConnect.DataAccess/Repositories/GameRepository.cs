@@ -13,10 +13,9 @@ namespace CoachConnect.DataAccess.Repositories;
 
 public class GameRepository : IGameRepository
 {
-    private readonly CoachConnectDbContext _dbContext; // Deklarerer et privat medlemsfelt som holder referansen til databasetilgangskonteksten.
-    private readonly ILogger<GameRepository> _logger; // Deklarerer et privat medlemsfelt som holder referansen til en logger for denne klassen.
-
-    public GameRepository(CoachConnectDbContext dbContext, ILogger<GameRepository> logger) // Konstruktør som tar en databasekontekst og en logger som argumenter og tilordner dem til de tilsvarende medlemsfeltene.
+    private readonly CoachConnectDbContext _dbContext; 
+    private readonly ILogger<GameRepository> _logger; 
+    public GameRepository(CoachConnectDbContext dbContext, ILogger<GameRepository> logger) 
     {
         _dbContext = dbContext;
         _logger = logger;
@@ -85,26 +84,6 @@ public class GameRepository : IGameRepository
             .Take(gameQuery.PageSize)
             .ToListAsync();
     }
-    //public async Task<ICollection<Game>> GetAllAsync(int page, int pageSize)
-    //{
-    //    _logger.LogDebug("Getting Games from db");
-
-    //    int itemsToSkip = (page - 1) * pageSize;
-
-    //    var res = await _dbContext.Games
-    //        .OrderBy(g => g.OpponentName)
-    //        .Skip(itemsToSkip)
-    //        .Take(pageSize)
-    //        .Distinct()
-    //        .ToListAsync();
-
-    //    return res;
-    //}
-
-    //public Task<ICollection<Game>> GetByGameTimeAsync(DateTime gameTime)
-    //{
-    //    throw new NotImplementedException();
-    //}
 
     public async Task<Game?> GetByIdAsync(GameId id)
     {
@@ -117,7 +96,6 @@ public class GameRepository : IGameRepository
     {
         _logger.LogDebug("Getting Game by time: {dateTime} from db", dateTime);
 
-        // Get the start and end of the specified date
         DateTime startDate = dateTime.Date;
         DateTime endDate = startDate.AddDays(1);
 
@@ -125,25 +103,6 @@ public class GameRepository : IGameRepository
             .Where(d => d.GameTime >= startDate && d.GameTime < endDate)
             .FirstOrDefaultAsync();
     }
-
-    //public Task<ICollection<Game>> GetByLocationAsync(string location)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //public async Task<ICollection<Game>> GetByOpponentNameAsync(string opponentName)
-    //{
-    //    _logger.LogDebug("Getting Game by opponent name: {opponentName} from db", opponentName);
-
-    //    var res = await _dbContext.Games
-    //        .Where(g => g.OpponentName
-    //        .StartsWith(opponentName))
-    //        .OrderBy(g => g.OpponentName) 
-    //        .ToListAsync();
-
-    //    return res;
-    //}
-
     public async Task<Game?> UpdateAsync(GameId id, Game game)
     {
         _logger.LogDebug("Updating Game: {id} in db", id);

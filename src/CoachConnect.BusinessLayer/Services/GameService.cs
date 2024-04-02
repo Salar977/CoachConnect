@@ -46,7 +46,7 @@ namespace CoachConnect.BusinessLayer.Services
             // var practiceExists = await _practiceRepository.GetByPracticeTimeAsync(startDate); // Kan Salar legge til GetByPracticeTimeAsync(startDate) i IPracticeRepository og PracticeRepository pls 
             if (gameExists != null)
             {
-                return null;
+                return null; // denne returnerer bare null, bør returnere mld om at det allerede finnes game eller practice på denne dato, hm vanskelig
             }
             else
             {
@@ -75,11 +75,6 @@ namespace CoachConnect.BusinessLayer.Services
             return res.Select(game => _gameMapper.MapToDTO(game)).ToList();
         }
 
-        //public Task<ICollection<GameDTO>> GetByGameTimeAsync(DateTime gameTime)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         public async Task<GameDTO?> GetByIdAsync(Guid id)
         {
             _logger.LogDebug("Getting Game by id: {id}", id);
@@ -88,20 +83,6 @@ namespace CoachConnect.BusinessLayer.Services
             var res = await _gameRepository.GetByIdAsync(gameId);
             return res != null ? _gameMapper.MapToDTO(res) : null;
         }
-
-        //public Task<ICollection<GameDTO>> GetByLocationAsync(string location)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public async Task<ICollection<GameDTO>> GetByOpponentNameAsync(string opponentName)
-        //{
-        //    _logger.LogDebug("Getting Game by opponent name: {opponentName}", opponentName);
-
-        //    var res = await _gameRepository.GetByOpponentNameAsync(opponentName);
-        //    var dtos = res.Select(game => _gameMapper.MapToDTO(game)).ToList();
-        //    return dtos;
-        //}
 
         public async Task<GameDTO?> UpdateAsync(Guid id, GameDTO gameDto)
         {

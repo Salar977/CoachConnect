@@ -60,7 +60,6 @@ public class GameAttendanceService : IGameAttendanceService
     public async Task<GameAttendanceRegistrationDTO?> RegisterGameAttendanceAsync(GameAttendanceRegistrationDTO dto)
     {
         _logger.LogDebug("Create new Gameattendance");
-        //Husk legge til sjekke om kampen finnes fra før dersom ikke så legge til ny kamp
 
         var gameAttendanceRegistration = _gameAttendanceRegistrationMapper.MapToEntity(dto);
         gameAttendanceRegistration.Id = GameAttendanceId.NewId;

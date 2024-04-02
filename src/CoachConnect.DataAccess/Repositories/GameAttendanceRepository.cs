@@ -46,7 +46,7 @@ public class GameAttendanceRepository : IGameAttendanceRepository
 
         if (gameAttendanceQuery.GameId != null && gameAttendanceQuery.GameId != Guid.Empty)
         {
-            var gameId = gameAttendanceQuery.GameId.Value; // Extract non-nullable Guid value
+            var gameId = gameAttendanceQuery.GameId.Value; 
             gameAttendances = gameAttendances.Where(g => g.GameId == new GameId(gameId));
         }
 

@@ -12,7 +12,6 @@ namespace CoachConnect.API.Controllers;
 [ApiController]
 public class PlayerController : ControllerBase
 {
-    /*
     private readonly IPlayerService _playerService;
     private readonly ILogger<PlayerController> _logger;
 
@@ -36,7 +35,7 @@ public class PlayerController : ControllerBase
     {
         _logger.LogDebug("Getting player by ID: {id}", id);
 
-        var player = await _playerService.GetByIdAsync(new PlayerId(id));
+        var player = await _playerService.GetByIdAsync(id);
         return player != null ? Ok(player) : NotFound($"Player with ID '{id}' not found");
     }
 
@@ -65,6 +64,6 @@ public class PlayerController : ControllerBase
         var res = await _playerService.DeleteAsync(new PlayerId(id));
         return res != null ? Ok(res) : BadRequest("Could not delete Player");
     }
-    */
+    
 
 }

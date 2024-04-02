@@ -22,6 +22,8 @@ public class Player
     [Required]
     [MinLength(2), MaxLength(50)]
     public string LastName { get; set; } = string.Empty;
+    public int TotalGames { get; set; } 
+    public int TotalPractices { get; set; } 
 
     [ForeignKey(nameof(UserId))]
     public UserId UserId { get; set; }

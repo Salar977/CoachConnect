@@ -11,9 +11,10 @@ public class PlayerRepository : IPlayerRepository
     private readonly CoachConnectDbContext _dbContext;
     private readonly ILogger <PlayerRepository> _logger;
 
-    public PlayerRepository(ILogger<PlayerRepository> logger)
+    public PlayerRepository(ILogger<PlayerRepository> logger, CoachConnectDbContext dbContext)
     {
         _logger = logger;
+        _dbContext = dbContext;
     }
 
     public async Task<Player?> DeleteAsync(PlayerId id)

@@ -70,6 +70,20 @@ public class PracticeRepository : IPracticeRepository
         return updatePractice;
     }
 
+    public async Task<Practice?> GetByPracticeTimeAsync(DateTime dateTime)
+    {
+        _logger.LogDebug("Getting Game by time: {dateTime} from db", dateTime);
+
+        // Get the start and end of the specified date
+        DateTime startDate = dateTime.Date;
+        DateTime endDate = startDate.AddDays(1);
+
+        return await _dbContext.Practices
+            .Where(d => d.PracticeDate >= startDate && d.PracticeDate < endDate)
+            .FirstOrDefaultAsync();
+    }
+
+
     public async Task<Practice?> DeleteAsync(PracticeId practiceId)
     {
         var deletePractice = await _dbContext.Practices.FirstOrDefaultAsync(x => x.Id == practiceId);

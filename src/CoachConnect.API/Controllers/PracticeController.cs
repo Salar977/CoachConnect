@@ -59,7 +59,7 @@ public class PracticeController : ControllerBase
     [HttpDelete]
     public async Task<ActionResult<PracticeResponse>> DeleteById([FromQuery] Guid id)
     {
-        var practice = await _practiceService.GetByIdAsync(new PracticeId(id));
+        var practice = await _practiceService.GetByIdAsync(id);
 
         if(practice is null) return NotFound();
 

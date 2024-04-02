@@ -5,7 +5,7 @@ namespace CoachConnect.DataAccess.Repositories.Interfaces;
 
 public interface IPracticeAttendanceRepository
 {
-    Task<IEnumerable<PracticeAttendance>> GetAllAsync(PracticeAttendanceQuery practiceAttendanceQuery);
+    //Task<IEnumerable<PracticeAttendance>> GetAllAsync(PracticeAttendanceQuery practiceAttendanceQuery);
     Task<PracticeAttendance?> RegisterAsync(PracticeAttendance practiceAttendance);
     Task<PracticeAttendance?> DeleteByIdAsync(PracticeAttendanceId id);
     Task<PracticeAttendance?> GetByIdAsync(PracticeAttendanceId id);

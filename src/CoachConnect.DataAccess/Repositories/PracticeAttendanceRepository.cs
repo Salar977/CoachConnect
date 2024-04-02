@@ -32,17 +32,17 @@ public class PracticeAttendanceRepository : IPracticeAttendanceRepository
         return deleteAttendance;
     }
 
-    public async Task<IEnumerable<PracticeAttendance>> GetAllAsync(PracticeAttendanceQuery practiceAttendanceQuery)
-    {
-        _logger.LogInformation("Getting practice attendances.");
+    //public Task<IEnumerable<PracticeAttendance>> GetAllAsync(PracticeAttendanceQuery practiceAttendanceQuery)
+    //{
+    //    _logger.LogInformation("Getting practice attendances.");
 
-        var practiceAttendances = _dbContext.Practice_attendences.AsQueryable();
+    //    var practiceAttendances = _dbContext.Practice_attendences.AsQueryable();
 
-        if(practiceAttendanceQuery.PracticeId is not null)
-        {
-            practiceAttendances.Where(x => x.PracticeId == practiceAttendanceQuery.PracticeId);
-        }
-    }
+    //    if (practiceAttendanceQuery.PracticeId is not null)
+    //    {
+    //        practiceAttendances.Where(x => x.PracticeId == practiceAttendanceQuery.PracticeId);
+    //    }
+    //}
 
     public async Task<PracticeAttendance?> GetByIdAsync(PracticeAttendanceId id)
     {

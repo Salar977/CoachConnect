@@ -59,9 +59,9 @@ public class GameRepository : IGameRepository
                 games = games.Where(g => g.OpponentName.StartsWith(gameQuery.OpponentName));
             }
 
-        if (gameQuery.GameTime != null && gameQuery.GameTime != DateTime.MinValue)
+        if (gameQuery.GameDate != null && gameQuery.GameDate != DateTime.MinValue)
         {
-            games = games.Where(g => g.GameTime == gameQuery.GameTime);
+            games = games.Where(g => g.GameTime.Date == gameQuery.GameDate.Value.Date); // salar: gjort endring for å få dato get by date. Endret også navn til GameDate i GameQuery.cs
         }
 
         if (!string.IsNullOrWhiteSpace(gameQuery.SortBy))

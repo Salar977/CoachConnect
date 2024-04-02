@@ -43,8 +43,8 @@ namespace CoachConnect.BusinessLayer.Services
             DateTime startDate = gameRegistrationDTO.GameTime.Date;
 
             var gameExists = await _gameRepository.GetByGameTimeAsync(startDate);
-            // var practiceExists = await _practiceRepository.GetByPracticeTimeAsync(startDate); // Kan Salar legge til GetByPracticeTimeAsync(startDate) i IPracticeRepository og PracticeRepository pls 
-            if (gameExists != null)
+            var practiceExists = await _practiceRepository.GetByPracticeTimeAsync(startDate);  
+            if (gameExists != null || practiceExists != null)
             {
                 return null; // denne returnerer bare null, bør returnere mld om at det allerede finnes game eller practice på denne dato, hm vanskelig
             }

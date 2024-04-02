@@ -46,7 +46,7 @@ public class GamesController : ControllerBase
         _logger.LogDebug("Create new Game");
 
         var res = await _gameService.CreateAsync(gameRegistrationDTO);
-        return res != null ? Ok(res) : BadRequest("Could not Create new game");
+        return res != null ? Ok(res) : BadRequest("Could not create new game");
     }
 
     // https://localhost:7036/api/v1/games/2f042e86-d75e-4591-a810-aca80812cde3
@@ -56,7 +56,7 @@ public class GamesController : ControllerBase
         _logger.LogDebug("Updating game with ID: {id}", id);
 
         var res = await _gameService.UpdateAsync(id, gameDTO);
-        return res != null ? Ok(res) : BadRequest("Could not update Game");
+        return res != null ? Ok(res) : BadRequest("Could not update game");
     }
 
     // https://localhost:7036/api/v1/games/2f042e86-d75e-4591-a810-aca80812cde3
@@ -66,7 +66,7 @@ public class GamesController : ControllerBase
         _logger.LogDebug("Deleting game with ID: {id}", id);
 
         var res = await _gameService.DeleteAsync(id);
-        return res != null ? Ok(res) : BadRequest("Could not delete Game");
+        return res != null ? Ok(res) : BadRequest("Could not delete game");
     }
 
 }

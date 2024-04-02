@@ -44,8 +44,8 @@ public class PracticeAttendanceService : IPracticeAttendanceService
 
     public async Task<PracticeAttendanceResponse?> GetByIdAsync(Guid id)
     {
-        var practiceId = new PracticeAttendanceId(id);
-        var res = await _practiceAttendance.GetByIdAsync(practiceId);
+        var res = await _practiceAttendance.GetByIdAsync(new PracticeAttendanceId(id));
+
 
         if (res is null)
         {
@@ -62,7 +62,8 @@ public class PracticeAttendanceService : IPracticeAttendanceService
         {
             var newAttendance = _requestMapper.MapToEntity(practiceAttendanceRequest);
             newAttendance.Id = PracticeAttendanceId.NewId;
-            var addedAttendance = await _practiceAttendance.RegisterPracticeAttendanceAsync(newAttendance);
+            var addedAttendance = await _practiceAttendance.RegisterAsync(newAttendance);
+
             if(addedAttendance is null) return null;
 
             return _mapper.MapToDTO(addedAttendance);

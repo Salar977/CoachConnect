@@ -8,7 +8,8 @@ using CoachConnect.BusinessLayer.DTOs.Practices;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CoachConnect.API.Controllers;
-[Route("api/v1/practice")]
+[Route("api/v1/practices")]
+
 [ApiController]
 public class PracticeController : ControllerBase
 {
@@ -21,27 +22,31 @@ public class PracticeController : ControllerBase
         _practiceService = practiceService;
         _logger = logger;
     }
-    // GET: api/<PracticeController>
+
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<PracticeResponse>>> GetAll([FromQuery] PracticeQuery practiceQuery)
+    public async Task<ActionResult<IEnumerable<PracticeResponse>>> GetAllPractice([FromQuery] PracticeQuery practiceQuery)
     {
+        _logger.LogInformation("Retrieving all practices.");
         return Ok(await _practiceService.GetAllAsync(practiceQuery));
     }
 
-    // GET api/<PracticeController>/5
     [HttpGet("{id}")]
     public async Task<ActionResult<PracticeResponse>> GetById([FromRoute] Guid id)
     {
-        var practice = await _practiceService.GetByIdAsync(new PracticeId(id));
+        var practice = await _practiceService.GetByIdAsync(id);
+
+
         if(practice is null)
         {
             _logger.LogWarning("Practice not found");
             return NotFound("Practice not found");
         }
+
+        _logger.LogInformation("Retrieving practice.");
         return Ok(practice);
     }
 
-    // POST api/<PracticeController>
+
     [HttpPost]
     public async Task<ActionResult<PracticeResponse>> CreatePractice([FromBody] PracticeRequest practice)
     {
@@ -50,20 +55,15 @@ public class PracticeController : ControllerBase
         var createPractice = await _practiceService.RegisterPracticeAsync(practice);
         if (createPractice is null) { return BadRequest(); }
 
+        _logger.LogInformation("Practice is created - Controller");
         return Ok(createPractice);
     }
 
-    // PUT api/<PracticeController>/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
-    {
-    }
-
-    // DELETE api/<PracticeController>/5
     [HttpDelete]
     public async Task<ActionResult<PracticeResponse>> DeleteById([FromQuery] Guid id)
     {
-        var practice = await _practiceService.GetByIdAsync(new PracticeId(id));
+        var practice = await _practiceService.GetByIdAsync(id);
+
 
         if(practice is null) return NotFound();
 

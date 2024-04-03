@@ -66,23 +66,6 @@ public class UserRepository : IUserRepository
             .ToListAsync();
     }
 
-    //public async Task<ICollection<User>> GetAllAsync(int page, int pageSize)
-    //{
-    //    _logger.LogDebug("Getting users from db");
-
-    //    int itemsToSkip = (page - 1) * pageSize;
-
-    //    var res = await _dbContext.Users
-    //        .OrderBy(u => u.LastName)
-    //        .Skip(itemsToSkip)
-    //        .Take(pageSize)
-    //        .Distinct()
-    //        .ToListAsync();
-
-    //    return res;
-    //}
-
-
     public async Task<User?> GetByIdAsync(UserId id)
     {
         _logger.LogDebug("Getting user by id: {id} from db", id);
@@ -96,20 +79,7 @@ public class UserRepository : IUserRepository
 
         var res = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
         return res;
-    }
-
-    //public async Task<ICollection<User>> GetByLastNameAsync(string userLastName)
-    //{
-    //    _logger.LogDebug("Getting user by lastname: {userLastName} from db", userLastName);
-
-    //    var res = await _dbContext.Users
-    //        .Where(u => u.LastName
-    //        .StartsWith(userLastName))
-    //        .OrderBy(u => u.LastName) // husk legge til sortere alfabetisk også på Coach
-    //        .ToListAsync();     
-
-    //    return res;
-    //}  
+    } 
 
     public async Task<User?> UpdateAsync(UserId id, User user)
     {

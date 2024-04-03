@@ -6,7 +6,7 @@ public record UserDTO(
     
     string FirstName,
     string LastName,
-    //IEnumerable<PlayerDTO> Players,
+    IEnumerable<Player> Players,
     string PhoneNumber,
     string Email,
     UserId Id);

@@ -8,7 +8,7 @@ public class UserMapper : IMapper<User, UserDTO>
 {
     public UserDTO MapToDTO(User entity)
     {
-        return new UserDTO(entity.FirstName, entity.LastName, entity.PhoneNumber, entity.Email, entity.Id); // PLayers??
+        return new UserDTO(entity.FirstName, entity.LastName, entity.Players, entity.PhoneNumber, entity.Email, entity.Id); // PLayers??
     }
 
     public User MapToEntity(UserDTO dto) // Players??

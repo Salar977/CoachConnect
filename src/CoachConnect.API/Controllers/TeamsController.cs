@@ -15,8 +15,14 @@ public class TeamsController : ControllerBase
     private readonly ITeamService _teamService;
     private readonly ILogger<TeamsController> _logger;
 
+    public TeamsController(ITeamService teamService, ILogger<TeamsController> logger)
+    {
+        _teamService = teamService;
+        _logger = logger;
+    }
+
     [HttpGet(Name = "GetAllTeams")]
-    public async Task<ActionResult<IEnumerable<TeamDTO>>> GetAllGames([FromQuery] TeamQuery teamQuery)
+    public async Task<ActionResult<IEnumerable<TeamDTO>>> GetAllTeams([FromQuery] TeamQuery teamQuery)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -24,8 +30,9 @@ public class TeamsController : ControllerBase
 
         return Ok(await _teamService.GetAllAsync(teamQuery));
     }
+    
     [HttpGet("{id}", Name = "GetTeamById")]
-
+    
     public async Task<ActionResult<TeamDTO>> GetTeamById(Guid id)
     {
         _logger.LogDebug("Getting team by ID: {id}", id);
@@ -33,6 +40,7 @@ public class TeamsController : ControllerBase
         var team = await _teamService.GetByIdAsync(new TeamId(id));
         return team != null ? Ok(team) : NotFound($"Team with ID '{id}' not found");
     }
+    
     [HttpPost("register", Name = "CreateTeam")]
     public async Task<ActionResult<TeamDTO>> CreateTeam([FromBody] TeamDTO teamDTO)
     {

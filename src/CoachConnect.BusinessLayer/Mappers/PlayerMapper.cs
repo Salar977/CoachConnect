@@ -30,6 +30,8 @@ public class PlayerMapper : IMapper<Player, PlayerDTO>
         {
             FirstName = dto.FirstName,
             LastName = dto.LastName,
+            UserId = dto.UserId,
+            TeamId = dto.TeamId,
             Created = dto.Created,
             Updated = dtnow
         };

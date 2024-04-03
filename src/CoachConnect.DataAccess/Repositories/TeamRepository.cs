@@ -11,8 +11,9 @@ public class TeamRepository : ITeamRepository
     private readonly CoachConnectDbContext _dbContext;
     private readonly ILogger<TeamRepository> _logger;
 
-    public TeamRepository(ILogger<TeamRepository> logger)
+    public TeamRepository(CoachConnectDbContext dbContext, ILogger<TeamRepository> logger)
     {
+        _dbContext = dbContext;
         _logger = logger;
     }
 
@@ -43,11 +44,7 @@ public class TeamRepository : ITeamRepository
         {
             teams = teams.Where(g => g.TeamName.Contains(teamQuery.TeamName));
         }
-
-        if (teamQuery.TeamTime != null && teamQuery.TeamTime != DateTime.MinValue)
-        {
-            teams = teams.Where(g => g.Created == teamQuery.TeamTime);
-        }
+        /*
         if (!string.IsNullOrWhiteSpace(teamQuery.SortBy))
         {
             if (teamQuery.SortBy.Equals("Location", StringComparison.OrdinalIgnoreCase))
@@ -60,6 +57,7 @@ public class TeamRepository : ITeamRepository
                 teams = teamQuery.IsDescending ? teams.OrderByDescending(x => x.TeamName) : teams.OrderBy(x => x.TeamName);
             }
         }
+        */
 
         var skipNumber = (teamQuery.PageNumber - 1) * teamQuery.PageSize;
 

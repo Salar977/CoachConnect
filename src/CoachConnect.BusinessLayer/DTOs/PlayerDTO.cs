@@ -10,6 +10,7 @@ public record PlayerDTO
 (
     string FirstName,
     string LastName,
+
     DateTime Created,
     DateTime Updated,
     UserId UserId,

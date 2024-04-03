@@ -11,9 +11,10 @@ public class PlayerRepository : IPlayerRepository
     private readonly CoachConnectDbContext _dbContext;
     private readonly ILogger <PlayerRepository> _logger;
 
-    public PlayerRepository(ILogger<PlayerRepository> logger)
+    public PlayerRepository(ILogger<PlayerRepository> logger, CoachConnectDbContext dbContext)
     {
         _logger = logger;
+        _dbContext = dbContext;
     }
 
     public async Task<Player?> DeleteAsync(PlayerId id)
@@ -101,7 +102,7 @@ public class PlayerRepository : IPlayerRepository
 
     public async Task<Player?> RegisterPlayerAsync(Player player)
     {
-        _logger.LogDebug("Adding Game to DB");
+        _logger.LogDebug("Adding Players to DB");
 
         await _dbContext.Players.AddAsync(player);
         await _dbContext.SaveChangesAsync();

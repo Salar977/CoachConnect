@@ -23,6 +23,8 @@ public static class DependencyInjection
         services.AddScoped<ICoachRepository, CoachRepository>();
         services.AddScoped<IPracticeRepository, PracticeRepository>();
         services.AddScoped<IPracticeAttendanceRepository, PracticeAttendanceRepository>();
+        services.AddScoped<ITeamRepository, TeamRepository>();
+        services.AddScoped<IPlayerRepository, PlayerRepository>();
 
         return services;
     }

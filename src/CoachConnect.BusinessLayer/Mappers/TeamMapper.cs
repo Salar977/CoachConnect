@@ -29,6 +29,7 @@ public class TeamMapper : IMapper<Team, TeamDTO>
         {
             TeamCity = dto.TeamCity,
             TeamName = dto.TeamName,
+           
             Created = dtnow,
             Updated = dtnow,
         };

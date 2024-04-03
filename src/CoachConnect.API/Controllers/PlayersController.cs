@@ -8,19 +8,20 @@ using Microsoft.AspNetCore.Mvc;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CoachConnect.API.Controllers;
-[Route("api/v1/[controller]")]
+[Route("api/v1/players")]
 [ApiController]
-public class PlayerController : ControllerBase
+public class PlayersController : ControllerBase
 {
     private readonly IPlayerService _playerService;
-    private readonly ILogger<PlayerController> _logger;
+    private readonly ILogger<PlayersController> _logger;
 
-    public PlayerController(IPlayerService playerService, ILogger<PlayerController> logger)
+    public PlayersController(IPlayerService playerService, ILogger<PlayersController> logger)
     {
         _playerService = playerService;
         _logger = logger;
     }
 
+    [HttpGet(Name = "GetAllPlayers")]
     public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetAllPlayers([FromQuery] PlayerQuery playerQuery)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -40,7 +41,7 @@ public class PlayerController : ControllerBase
     }
 
     [HttpPost("register", Name = "CreatePlayer")]
-    public async Task<ActionResult<GameDTO>> CreatePlayer([FromBody] PlayerDTO playerDTO)
+    public async Task<ActionResult<PlayerDTO>> CreatePlayer([FromBody] PlayerDTO playerDTO)
     {
         _logger.LogDebug("Create new Player");
 

@@ -102,7 +102,7 @@ public class PlayerRepository : IPlayerRepository
 
     public async Task<Player?> RegisterPlayerAsync(Player player)
     {
-        _logger.LogDebug("Adding Game to DB");
+        _logger.LogDebug("Adding Players to DB");
 
         await _dbContext.Players.AddAsync(player);
         await _dbContext.SaveChangesAsync();

@@ -34,7 +34,7 @@ public class PlayerService : IPlayerService
     }
     public async Task<PlayerDTO?> CreateAsync(PlayerDTO playerDTO)
     {
-        _logger.LogDebug("Create new Team");
+        _logger.LogDebug("Create new Player");
 
 
         var player = _playerMapper.MapToEntity(playerDTO);

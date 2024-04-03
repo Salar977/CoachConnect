@@ -9,7 +9,7 @@ public class GameQuery
 {
     public string? Location { get; set; } = null;
     public string? OpponentName { get; set; } = null;
-    public DateTime? GameTime { get; set; } = null;
+    public DateTime? GameDate { get; set; } = null;
     public string? SortBy { get; set; } = null;
     public bool IsDescending { get; set; } = false;
     public int PageNumber { get; set; } = 1;

@@ -60,7 +60,7 @@ public class PlayersController : ControllerBase
     [HttpDelete("{id}", Name = "DeletePlayer")]
     public async Task<ActionResult<PlayerDTO>> DeletePlayer(Guid id)
     {
-        _logger.LogDebug("Deleting game with ID: {id}", id);
+        _logger.LogDebug("Deleting player with ID: {id}", id);
 
         var res = await _playerService.DeleteAsync(new PlayerId(id));
         return res != null ? Ok(res) : BadRequest("Could not delete Player");

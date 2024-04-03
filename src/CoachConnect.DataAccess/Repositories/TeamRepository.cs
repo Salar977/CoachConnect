@@ -37,27 +37,26 @@ public class TeamRepository : ITeamRepository
 
         if (!string.IsNullOrWhiteSpace(teamQuery.TeamCity))
         {
-            teams = teams.Where(g => g.TeamCity.Contains(teamQuery.TeamCity));
+            teams = teams.Where(g => g.TeamCity.StartsWith(teamQuery.TeamCity));
         }
 
         if (!string.IsNullOrWhiteSpace(teamQuery.TeamName))
         {
-            teams = teams.Where(g => g.TeamName.Contains(teamQuery.TeamName));
+            teams = teams.Where(g => g.TeamName.StartsWith(teamQuery.TeamName));
         }
-        /*
+
         if (!string.IsNullOrWhiteSpace(teamQuery.SortBy))
         {
-            if (teamQuery.SortBy.Equals("Location", StringComparison.OrdinalIgnoreCase))
+            if (teamQuery.SortBy.Equals("TeamCity", StringComparison.OrdinalIgnoreCase))
             {
                 teams = teamQuery.IsDescending ? teams.OrderByDescending(x => x.TeamCity) : teams.OrderBy(x => x.TeamCity);
             }
 
-            if (teamQuery.SortBy.Equals("Opponent name", StringComparison.OrdinalIgnoreCase))
+            if (teamQuery.SortBy.Equals("TeamName", StringComparison.OrdinalIgnoreCase))
             {
                 teams = teamQuery.IsDescending ? teams.OrderByDescending(x => x.TeamName) : teams.OrderBy(x => x.TeamName);
             }
         }
-        */
 
         var skipNumber = (teamQuery.PageNumber - 1) * teamQuery.PageSize;
 
@@ -79,10 +78,6 @@ public class TeamRepository : ITeamRepository
         return await _dbContext.Teams.FindAsync(id);
     }
 
-    public Task<Team?> GetByTeamAsync(string team)
-    {
-        throw new NotImplementedException();
-    }
 
     public async Task<Team?> RegisterTeamAsync(Team team)
     {

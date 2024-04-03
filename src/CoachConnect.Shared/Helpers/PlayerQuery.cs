@@ -10,11 +10,7 @@ public class PlayerQuery
     public string FirstName { get; set; } = string.Empty;
 
     public string LastName { get; set; } = string.Empty;
-    public Guid? PlayerId { get; set; }
 
-    public DateTime? Created { get; set; } = null;
-
-    public DateTime Updated { get; set; }
     public string? SortBy { get; set; } = null;
     public bool IsDescending { get; set; } = false;
     public int PageNumber { get; set; } = 1;

@@ -42,13 +42,14 @@ public class UserService : IUserService
         _logger.LogDebug("Getting user by id: {id}", id);
 
         var userId = new UserId(id);
-        var res = await _userRepository.GetByIdAsync(userId);
-        var userDto = _userMapper.MapToDTO(res);
+        var user = await _userRepository.GetByIdAsync(userId);
+       
 
         var players = await _userRepository.GetPlayersByUserIdAsync(userId);
         var playerDtos = players.Select(player => _playerMapper.MapToDTO(player)).ToList();
 
-        // Update the Players property of the existing userDto object
+       // user.Players.Add(players);
+        var userDto = _userMapper.MapToDTO(user);
         userDto = userDto with { Players = userDto.Players.Concat(playerDtos).ToList() };
 
         return userDto;

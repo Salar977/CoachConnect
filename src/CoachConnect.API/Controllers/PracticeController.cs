@@ -67,7 +67,7 @@ public class PracticeController : ControllerBase
 
         if(practice is null) return NotFound();
 
-        await _practiceService.DeleteAsync(new PracticeId(id));
+        await _practiceService.DeleteAsync(id);
 
         return Ok(practice);
     }

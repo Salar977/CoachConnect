@@ -66,12 +66,12 @@ public class UserRepository : IUserRepository
             .ToListAsync();
     }
 
-    public async Task<User?> GetByIdAsync(UserId id)
-    {
-        _logger.LogDebug("Getting user by id: {id} from db", id);
+    //public async Task<User?> GetByIdAsync(UserId id)
+    //{
+    //    _logger.LogDebug("Getting user by id: {id} from db", id);
 
-        return await _dbContext.Users.FindAsync(id);
-    }
+    //    return await _dbContext.Users.FindAsync(id);
+    //}
 
     //public async Task<User?> GetByIdAsync(UserId id)
     //{
@@ -90,14 +90,14 @@ public class UserRepository : IUserRepository
     //    return user;
     //}
 
-    //public async Task<User?> GetByIdAsync(UserId id)
-    //{
-    //    _logger.LogDebug("Getting user by id: {id} from db", id);
+    public async Task<User?> GetByIdAsync(UserId id)
+    {
+        _logger.LogDebug("Getting user by id: {id} from db", id);
 
-    //    return await _dbContext.Users
-    //                            .Include(u => u.Players)  // Eagerly load the Players collection
-    //                            .FirstOrDefaultAsync(u => u.Id == id);
-    //}
+        return await _dbContext.Users
+                                .Include(u => u.Players)  // Eagerly load the Players collection
+                                .FirstOrDefaultAsync(u => u.Id == id);
+    }
 
     public async Task<User?> GetByEmailAsync(string email)
     {
@@ -145,10 +145,5 @@ public class UserRepository : IUserRepository
 
         return user;
     }
-
-    //public async Task<ICollection<Player>> GetPlayersByUserIdAsync(UserId id) 
-    //{
-    //    var players = await _dbContext.Players.Where(x => x.UserId.Equals(id)).ToListAsync();
-    //    return players;    
-    //}
+     
 }

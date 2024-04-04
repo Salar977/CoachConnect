@@ -44,19 +44,16 @@ public class UserService : IUserService
 
         var userId = new UserId(id);
         var user = await _userRepository.GetByIdAsync(userId);
+        if (user == null) return null;
 
-        var userDto = _userMapper.MapToDTO(user);
-
-        // Map the Players collection to PlayerDTOs
         var playerDtos = user.Players.Select(player => _playerMapper.MapToDTO(player)).ToList();
 
-        // Update the Players property of the UserDTO
-        userDto = userDto with { Players = playerDtos };
+        var userDto = _userMapper.MapToDTO(user);
+        //userDto = userDto with { Players = userDto.Players.Concat(playerDtos).ToList() };
+        userDto.Players = playerDtos;
 
         return userDto;
     }
-
-
 
 
     public async Task<UserDTO?> GetByEmailAsync(string email)

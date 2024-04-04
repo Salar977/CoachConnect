@@ -70,18 +70,34 @@ public class UserRepository : IUserRepository
     {
         _logger.LogDebug("Getting user by id: {id} from db", id);
 
-        var user = await _dbContext.Users.FindAsync(id);
-
-        // Explicitly trigger lazy loading for the Players collection
-        if (user != null)
-        {
-            await _dbContext.Entry(user)
-                .Collection(u => u.Players)
-                .LoadAsync();
-        }
-
-        return user;
+        return await _dbContext.Users.FindAsync(id);
     }
+
+    //public async Task<User?> GetByIdAsync(UserId id)
+    //{
+    //    _logger.LogDebug("Getting user by id: {id} from db", id);
+
+    //    var user = await _dbContext.Users.FindAsync(id);
+
+    //    //Explicitly trigger lazy loading
+    //    if (user != null)
+    //    {
+    //        await _dbContext.Entry(user)
+    //            .Collection(u => u.Players)
+    //            .LoadAsync();
+    //    }
+
+    //    return user;
+    //}
+
+    //public async Task<User?> GetByIdAsync(UserId id)
+    //{
+    //    _logger.LogDebug("Getting user by id: {id} from db", id);
+
+    //    return await _dbContext.Users
+    //                            .Include(u => u.Players)  // Eagerly load the Players collection
+    //                            .FirstOrDefaultAsync(u => u.Id == id);
+    //}
 
     public async Task<User?> GetByEmailAsync(string email)
     {

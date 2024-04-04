@@ -70,7 +70,17 @@ public class UserRepository : IUserRepository
     {
         _logger.LogDebug("Getting user by id: {id} from db", id);
 
-        return await _dbContext.Users.FindAsync(id);
+        var user = await _dbContext.Users.FindAsync(id);
+
+        // Explicitly trigger lazy loading for the Players collection
+        if (user != null)
+        {
+            await _dbContext.Entry(user)
+                .Collection(u => u.Players)
+                .LoadAsync();
+        }
+
+        return user;
     }
 
     public async Task<User?> GetByEmailAsync(string email)
@@ -120,9 +130,9 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public async Task<ICollection<Player>> GetPlayersByUserIdAsync(UserId id) 
-    {
-        var players = await _dbContext.Players.Where(x => x.UserId.Equals(id)).ToListAsync();
-        return players;    
-    }
+    //public async Task<ICollection<Player>> GetPlayersByUserIdAsync(UserId id) 
+    //{
+    //    var players = await _dbContext.Players.Where(x => x.UserId.Equals(id)).ToListAsync();
+    //    return players;    
+    //}
 }

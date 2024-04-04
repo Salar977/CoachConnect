@@ -4,6 +4,7 @@ using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.DataAccess.Entities;
 using CoachConnect.DataAccess.Repositories.Interfaces;
 using CoachConnect.Shared.Helpers;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Serilog.Core;
 
@@ -43,17 +44,19 @@ public class UserService : IUserService
 
         var userId = new UserId(id);
         var user = await _userRepository.GetByIdAsync(userId);
-       
 
-        var players = await _userRepository.GetPlayersByUserIdAsync(userId);
-        var playerDtos = players.Select(player => _playerMapper.MapToDTO(player)).ToList();
-
-       // user.Players.Add(players);
         var userDto = _userMapper.MapToDTO(user);
-        userDto = userDto with { Players = userDto.Players.Concat(playerDtos).ToList() };
+
+        // Map the Players collection to PlayerDTOs
+        var playerDtos = user.Players.Select(player => _playerMapper.MapToDTO(player)).ToList();
+
+        // Update the Players property of the UserDTO
+        userDto = userDto with { Players = playerDtos };
 
         return userDto;
     }
+
+
 
 
     public async Task<UserDTO?> GetByEmailAsync(string email)

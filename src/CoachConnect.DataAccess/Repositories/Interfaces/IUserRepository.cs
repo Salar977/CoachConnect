@@ -10,5 +10,5 @@ public interface IUserRepository
     Task<User?> UpdateAsync(UserId id, User user);
     Task<User?> DeleteAsync(UserId id);
     Task<User?> RegisterUserAsync(User user);
-    Task<ICollection<Player>> GetPlayersByUserIdAsync(UserId id);
+    // Task<ICollection<Player>> GetPlayersByUserIdAsync(UserId id);
 }

@@ -4,11 +4,11 @@ namespace CoachConnect.BusinessLayer.DTOs;
 
 public class UserDTO
 {
-    public string? FirstName { get; set; }
-    public string? LastName { get; set; }
-    public string? PhoneNumber { get; set; }
-    public string? Email { get; set; }
-    public UserId Id { get; set; }
+    public string FirstName { get; init; } = string.Empty;
+    public string LastName { get; init; } = string.Empty;
+    public string PhoneNumber { get; init; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public UserId Id { get; init; }
     public IEnumerable<PlayerDTO>? Players { get; set; }
 }
 

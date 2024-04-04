@@ -46,10 +46,10 @@ public class UserService : IUserService
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null) return null;
 
-        var playerDtos = user.Players.Select(player => _playerMapper.MapToDTO(player)).ToList();
+        var playerDtos = user.Players.Select(player => _playerMapper.MapToDTO(player)).ToList(); // De fordømte playerDTo loades kun når jeg bruker eager loading eller eksplisitt trigger lazy i repolayer!!!!
 
         var userDto = _userMapper.MapToDTO(user);
-        //userDto = userDto with { Players = userDto.Players.Concat(playerDtos).ToList() };
+        //userDto = userDto with { Players = userDto.Players.Concat(playerDtos).ToList() }; // brukte når userDTO var record
         userDto.Players = playerDtos;
 
         return userDto;

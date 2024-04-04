@@ -36,11 +36,11 @@ public class PracticeService : IPracticeService
         _logger = logger;
     }
 
-    public async Task<PracticeResponse?> DeleteAsync(PracticeId practiceId)
+    public async Task<PracticeResponse?> DeleteAsync(Guid practiceId)
     {
         _logger.LogDebug("Deleting Practice: {id}", practiceId);
 
-        var res = await _practiceRepository.DeleteAsync(practiceId);
+        var res = await _practiceRepository.DeleteAsync(new PracticeId(practiceId));
         return res != null ? _practiceMapper.MapToDTO(res) : null;
     }
 
@@ -91,20 +91,21 @@ public class PracticeService : IPracticeService
         }
     }
 
-    public async Task<PracticeResponse?> UpdateAsync(PracticeId id, PracticeUpdate practice)
+    public async Task<PracticeResponse?> UpdateAsync(Guid id, PracticeUpdate practice)
     {
         try
         {
-            var practiceToUpdate = await _practiceRepository.GetByIdAsync(id);
+            var practiceId = new PracticeId(id);
+            var practiceToUpdate = await _practiceRepository.GetByIdAsync(practiceId);
             if(practiceToUpdate is null)
             {
                 _logger.LogWarning("Practice by id {id} does not exist", id);
             }
             var updatedPractice = _practiceUpdateMapper.MapToEntity(practice);
-            updatedPractice.Id = id;
-            await _practiceRepository.UpdateAsync(id, updatedPractice);
+            updatedPractice.Id = practiceId;
+            await _practiceRepository.UpdateAsync(practiceId, updatedPractice);
 
-            var grabPractice = await _practiceRepository.GetByIdAsync(id);
+            var grabPractice = await _practiceRepository.GetByIdAsync(practiceId);
 
             if (grabPractice is null) return null;
 
@@ -114,7 +115,7 @@ public class PracticeService : IPracticeService
         }
         catch(Exception ex)
         {
-            _logger.LogError($"{ex.Message}", ex);
+            _logger.LogError("{ex}", ex.Message);
             return null;
         }
     }

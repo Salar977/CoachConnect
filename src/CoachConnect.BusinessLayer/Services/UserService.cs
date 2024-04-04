@@ -13,16 +13,19 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IMapper<User, UserDTO> _userMapper;
+    private readonly IMapper<Player, PlayerDTO> _playerMapper;
     private readonly IMapper<User, UserRegistrationDTO> _userRegistrationMapper;
     private readonly ILogger<UserService> _logger;
 
     public UserService(IUserRepository userRepository, 
                        IMapper<User, UserDTO> userMapper,
+                       IMapper<Player, PlayerDTO> playerMapper,
                        IMapper<User, UserRegistrationDTO> userRegistrationMapper,
                        ILogger<UserService> logger)
     {   
         _userRepository = userRepository;
         _userMapper = userMapper;
+        _playerMapper = playerMapper;
         _userRegistrationMapper = userRegistrationMapper;
         _logger = logger;
     } 
@@ -40,8 +43,17 @@ public class UserService : IUserService
 
         var userId = new UserId(id);
         var res = await _userRepository.GetByIdAsync(userId);
-        return res != null ? _userMapper.MapToDTO(res) : null;     
+        var userDto = _userMapper.MapToDTO(res);
+
+        var players = await _userRepository.GetPlayersByUserIdAsync(userId);
+        var playerDtos = players.Select(player => _playerMapper.MapToDTO(player)).ToList();
+
+        // Update the Players property of the existing userDto object
+        userDto = userDto with { Players = userDto.Players.Concat(playerDtos).ToList() };
+
+        return userDto;
     }
+
 
     public async Task<UserDTO?> GetByEmailAsync(string email)
     {

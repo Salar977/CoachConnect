@@ -25,7 +25,7 @@ public class UserRepository : IUserRepository
 
         var users = _dbContext.Users.AsQueryable();
 
-        if(!string.IsNullOrWhiteSpace(userQuery.FirstName))
+        if (!string.IsNullOrWhiteSpace(userQuery.FirstName))
         {
             users = users.Where(u => u.FirstName.StartsWith(userQuery.FirstName));
         }
@@ -79,7 +79,7 @@ public class UserRepository : IUserRepository
 
         var res = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
         return res;
-    } 
+    }
 
     public async Task<User?> UpdateAsync(UserId id, User user)
     {
@@ -104,10 +104,10 @@ public class UserRepository : IUserRepository
 
         var res = await _dbContext.Users.FindAsync(id);
         if (res == null) return null;
-        
+
         _dbContext.Users.Remove(res);
         await _dbContext.SaveChangesAsync();
-        return res;               
+        return res;
     }
 
     public async Task<User?> RegisterUserAsync(User user)
@@ -118,5 +118,11 @@ public class UserRepository : IUserRepository
         await _dbContext.SaveChangesAsync();
 
         return user;
+    }
+
+    public async Task<ICollection<Player>> GetPlayersByUserIdAsync(UserId id) 
+    {
+        var players = await _dbContext.Players.Where(x => x.UserId.Equals(id)).ToListAsync();
+        return players;    
     }
 }

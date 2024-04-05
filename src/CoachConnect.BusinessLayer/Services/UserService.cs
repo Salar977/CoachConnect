@@ -46,7 +46,9 @@ public class UserService : IUserService
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null) return null;
 
-        var playerDtos = user.Players.Select(player => _playerMapper.MapToDTO(player)).ToList(); // De fordømte playerDTo loades kun når jeg bruker eager loading eller eksplisitt trigger lazy i repolayer!!!!
+        // var playerDtos = user.Players.Select(player => _playerMapper.MapToDTO(player)).ToList(); // De fordømte playerDTo loades kun når jeg bruker eager loading eller eksplisitt trigger lazy i repolayer!!!!
+        var players = user.Players;
+        var playerDtos = players.Select(player => _playerMapper.MapToDTO(player)).ToList(); // De fordømte playerDTo loades kun når jeg bruker eager loading eller eksplisitt trigger lazy i repolayer!!!!
 
         var userDto = _userMapper.MapToDTO(user);
         //userDto = userDto with { Players = userDto.Players.Concat(playerDtos).ToList() }; // brukte når userDTO var record
@@ -54,7 +56,6 @@ public class UserService : IUserService
 
         return userDto;
     }
-
 
     public async Task<UserDTO?> GetByEmailAsync(string email)
     {

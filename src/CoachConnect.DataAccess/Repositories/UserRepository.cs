@@ -61,6 +61,7 @@ public class UserRepository : IUserRepository
         var skipNumber = (userQuery.PageNumber - 1) * userQuery.PageSize;
 
         return await users
+           // .Include(u => u.Players) // funker kun med eager loading og sikkert også med explicit loadoing som med getbyid..
             .Skip(skipNumber)
             .Take(userQuery.PageSize)
             .ToListAsync();

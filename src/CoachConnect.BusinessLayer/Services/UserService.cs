@@ -29,14 +29,25 @@ public class UserService : IUserService
         _playerMapper = playerMapper;
         _userRegistrationMapper = userRegistrationMapper;
         _logger = logger;
-    } 
+    }
 
     public async Task<ICollection<UserDTO>> GetAllAsync(UserQuery userQuery)
     {
         _logger.LogDebug("Getting all users");
-        var res = await _userRepository.GetAllAsync(userQuery);
-        return res.Select(user => _userMapper.MapToDTO(user)).ToList();
+        var users = await _userRepository.GetAllAsync(userQuery);
+
+        var userDtos = users.Select(user =>
+        {
+            var playerDtos = user.Players.Select(player => _playerMapper.MapToDTO(player)).ToList();
+            var userDto = _userMapper.MapToDTO(user);
+            userDto.Players = playerDtos; // Assign mapped player DTOs to the UserDTO
+            return userDto;
+        }).ToList();
+
+        return userDtos;
     }
+
+
 
     public async Task<UserDTO?> GetByIdAsync(Guid id)
     {

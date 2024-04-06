@@ -61,18 +61,18 @@ public class UserRepository : IUserRepository
         var skipNumber = (userQuery.PageNumber - 1) * userQuery.PageSize;
 
         return await users
-           // .Include(u => u.Players) // funker kun med eager loading og sikkert også med explicit loadoing som med getbyid..
+            .Include(u => u.Players) // funker kun med eager loading og sikkert også med explicit loadoing som med getbyid
             .Skip(skipNumber)
             .Take(userQuery.PageSize)
             .ToListAsync();
     }
 
-    public async Task<User?> GetByIdAsync(UserId id)
-    {
-        _logger.LogDebug("Getting user by id: {id} from db", id);
+    //public async Task<User?> GetByIdAsync(UserId id)
+    //{
+    //    _logger.LogDebug("Getting user by id: {id} from db", id);
 
-        return await _dbContext.Users.FindAsync(id);
-    }
+    //    return await _dbContext.Users.FindAsync(id);
+    //}
 
     //public async Task<User?> GetByIdAsync(UserId id)
     //{
@@ -91,14 +91,14 @@ public class UserRepository : IUserRepository
     //    return user;
     //}
 
-    //public async Task<User?> GetByIdAsync(UserId id)
-    //{
-    //    _logger.LogDebug("Getting user by id: {id} from db", id);
+    public async Task<User?> GetByIdAsync(UserId id)
+    {
+        _logger.LogDebug("Getting user by id: {id} from db", id);
 
-    //    return await _dbContext.Users
-    //                            .Include(u => u.Players)  // Eagerly load the Players collection
-    //                            .FirstOrDefaultAsync(u => u.Id == id);
-    //}
+        return await _dbContext.Users
+                                .Include(u => u.Players)  // Eagerly load the Players collection
+                                .FirstOrDefaultAsync(u => u.Id == id);
+    }
 
     public async Task<User?> GetByEmailAsync(string email)
     {

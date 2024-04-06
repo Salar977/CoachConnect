@@ -14,16 +14,19 @@ public class CoachService : ICoachService
 {
     private readonly ICoachRepository _coachRepository;
     private readonly IMapper<Coach, CoachDTO> _coachMapper;
+    private readonly IMapper<Team, TeamDTO> _teamMapper;
     private readonly IMapper<Coach, CoachRegistrationDTO> _coachRegistartionMapper;
     private readonly ILogger<CoachService> _logger;
 
     public CoachService(ICoachRepository coachRepository,
                         IMapper<Coach, CoachDTO> coachMapper,
+                        IMapper<Team, TeamDTO> teamMapper,
                         IMapper<Coach, CoachRegistrationDTO> coachRegistrationMapper,
                         ILogger<CoachService> logger)
     {
         _coachRepository = coachRepository;
         _coachMapper = coachMapper;
+        _teamMapper = teamMapper;
         _coachRegistartionMapper = coachRegistrationMapper;
         _logger = logger;
     }
@@ -31,17 +34,36 @@ public class CoachService : ICoachService
     public async Task<ICollection<CoachDTO>> GetAllAsync(CoachQuery query)
     {
         _logger.LogDebug("Getting all coaches");
-        var res = await _coachRepository.GetAllAsync(query);
-        return res.Select(coach => _coachMapper.MapToDTO(coach)).ToList();
+        var coaches = await _coachRepository.GetAllAsync(query);
+
+        var coachDtos = coaches.Select(coach =>
+        {
+            var teamDtos = coach.Teams.Select(team => _teamMapper.MapToDTO(team)).ToList();
+            var coachDto = _coachMapper.MapToDTO(coach);
+            coachDto = coachDto with { Teams = coachDto.Teams.Concat(teamDtos).ToList() };
+            return coachDto;
+        }).ToList();
+
+        return coachDtos;
     }
 
     public async Task<CoachDTO?> GetByIdAsync(Guid id)
     {
-        var coachId = new CoachId(id);
         _logger.LogDebug("Getting coach by id: {id}", id);
 
-        var res = await _coachRepository.GetByIdAsync(coachId);
-        return res != null ? _coachMapper.MapToDTO(res) : null;
+        var coachId = new CoachId(id);
+        var coach = await _coachRepository.GetByIdAsync(coachId);
+        if (coach == null) return null;
+
+        var teams = coach.Teams.ToList();
+        var teamDtos = teams.Select(team => _teamMapper.MapToDTO(team)).ToList();
+
+        var coachDto = _coachMapper.MapToDTO(coach);
+        //coachDto.Teams = teamDtos; // dersom dto er regular class og ikke record
+
+        coachDto = coachDto with { Teams = coachDto.Teams.Concat(teamDtos).ToList() };
+
+        return coachDto;
     }
 
     public async Task<CoachDTO?> GetByEmailAsync(string email)

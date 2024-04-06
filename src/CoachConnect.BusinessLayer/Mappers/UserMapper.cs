@@ -11,11 +11,11 @@ public class UserMapper : IMapper<User, UserDTO>
         return new UserDTO()
         {
             FirstName = entity.FirstName,
-            LastName = entity.LastName,
-            Players = new List<PlayerDTO>(),
+            LastName = entity.LastName,            
             PhoneNumber = entity.PhoneNumber, 
             Email = entity.Email, 
             Id = entity.Id,
+            Players = new List<PlayerDTO>(),
         };
     }
 

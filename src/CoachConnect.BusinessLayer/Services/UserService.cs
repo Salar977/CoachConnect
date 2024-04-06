@@ -47,8 +47,6 @@ public class UserService : IUserService
         return userDtos;
     }
 
-
-
     public async Task<UserDTO?> GetByIdAsync(Guid id)
     {
         _logger.LogDebug("Getting user by id: {id}", id);

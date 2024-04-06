@@ -60,16 +60,25 @@ public class CoachRepository : ICoachRepository
         var skipNumber = (query.PageNumber - 1) * query.PageSize;
 
         return await coaches
+            .Include(c => c.Teams)
             .Skip(skipNumber)
             .Take(query.PageSize)
             .ToListAsync();
     }
 
+    //public async Task<Coach?> GetByIdAsync(CoachId id)
+    //{
+    //    _logger.LogDebug("Getting coach by id: {id} from db", id);
+
+    //    return await _dbContext.Coaches.FindAsync(id);
+    //}
+
     public async Task<Coach?> GetByIdAsync(CoachId id)
     {
         _logger.LogDebug("Getting coach by id: {id} from db", id);
 
-        return await _dbContext.Coaches.FindAsync(id);
+        return await _dbContext.Coaches.Include(t => t.Teams)
+                                        .FirstOrDefaultAsync(c => c.Id == id);
     }
 
     public async Task<Coach?> GetByEmailAsync(string email)

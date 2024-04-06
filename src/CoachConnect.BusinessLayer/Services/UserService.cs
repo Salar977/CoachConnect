@@ -4,6 +4,7 @@ using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.DataAccess.Entities;
 using CoachConnect.DataAccess.Repositories.Interfaces;
 using CoachConnect.Shared.Helpers;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Serilog.Core;
 
@@ -13,25 +14,37 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IMapper<User, UserDTO> _userMapper;
+    private readonly IMapper<Player, PlayerDTO> _playerMapper;
     private readonly IMapper<User, UserRegistrationDTO> _userRegistrationMapper;
     private readonly ILogger<UserService> _logger;
 
     public UserService(IUserRepository userRepository, 
                        IMapper<User, UserDTO> userMapper,
+                       IMapper<Player, PlayerDTO> playerMapper,
                        IMapper<User, UserRegistrationDTO> userRegistrationMapper,
                        ILogger<UserService> logger)
     {   
         _userRepository = userRepository;
         _userMapper = userMapper;
+        _playerMapper = playerMapper;
         _userRegistrationMapper = userRegistrationMapper;
         _logger = logger;
-    } 
+    }
 
     public async Task<ICollection<UserDTO>> GetAllAsync(UserQuery userQuery)
     {
         _logger.LogDebug("Getting all users");
-        var res = await _userRepository.GetAllAsync(userQuery);
-        return res.Select(user => _userMapper.MapToDTO(user)).ToList();
+        var users = await _userRepository.GetAllAsync(userQuery);
+
+        var userDtos = users.Select(user =>
+        {
+            var playerDtos = user.Players.Select(player => _playerMapper.MapToDTO(player)).ToList();
+            var userDto = _userMapper.MapToDTO(user);
+            userDto.Players = playerDtos; // Assign mapped player DTOs to the UserDTO
+            return userDto;
+        }).ToList();
+
+        return userDtos;
     }
 
     public async Task<UserDTO?> GetByIdAsync(Guid id)
@@ -39,8 +52,18 @@ public class UserService : IUserService
         _logger.LogDebug("Getting user by id: {id}", id);
 
         var userId = new UserId(id);
-        var res = await _userRepository.GetByIdAsync(userId);
-        return res != null ? _userMapper.MapToDTO(res) : null;     
+        var user = await _userRepository.GetByIdAsync(userId);
+        if (user == null) return null;
+
+        // var playerDtos = user.Players.Select(player => _playerMapper.MapToDTO(player)).ToList(); // De fordømte playerDTo loades kun når jeg bruker eager loading eller eksplisitt trigger lazy i repolayer!!!!
+        var players = user.Players;
+        var playerDtos = players.Select(player => _playerMapper.MapToDTO(player)).ToList(); // De fordømte playerDTo loades kun når jeg bruker eager loading eller eksplisitt trigger lazy i repolayer!!!!
+
+        var userDto = _userMapper.MapToDTO(user);
+        //userDto = userDto with { Players = userDto.Players.Concat(playerDtos).ToList() }; // brukte når userDTO var record
+        userDto.Players = playerDtos;
+
+        return userDto;
     }
 
     public async Task<UserDTO?> GetByEmailAsync(string email)

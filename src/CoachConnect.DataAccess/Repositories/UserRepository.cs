@@ -25,7 +25,7 @@ public class UserRepository : IUserRepository
 
         var users = _dbContext.Users.AsQueryable();
 
-        if(!string.IsNullOrWhiteSpace(userQuery.FirstName))
+        if (!string.IsNullOrWhiteSpace(userQuery.FirstName))
         {
             users = users.Where(u => u.FirstName.StartsWith(userQuery.FirstName));
         }
@@ -61,33 +61,43 @@ public class UserRepository : IUserRepository
         var skipNumber = (userQuery.PageNumber - 1) * userQuery.PageSize;
 
         return await users
+            .Include(u => u.Players) // funker kun med eager loading og sikkert også med explicit loadoing som med getbyid
             .Skip(skipNumber)
             .Take(userQuery.PageSize)
             .ToListAsync();
     }
 
-    //public async Task<ICollection<User>> GetAllAsync(int page, int pageSize)
+    //public async Task<User?> GetByIdAsync(UserId id)
     //{
-    //    _logger.LogDebug("Getting users from db");
+    //    _logger.LogDebug("Getting user by id: {id} from db", id);
 
-    //    int itemsToSkip = (page - 1) * pageSize;
-
-    //    var res = await _dbContext.Users
-    //        .OrderBy(u => u.LastName)
-    //        .Skip(itemsToSkip)
-    //        .Take(pageSize)
-    //        .Distinct()
-    //        .ToListAsync();
-
-    //    return res;
+    //    return await _dbContext.Users.FindAsync(id);
     //}
 
+    //public async Task<User?> GetByIdAsync(UserId id)
+    //{
+    //    _logger.LogDebug("Getting user by id: {id} from db", id);
+
+    //    var user = await _dbContext.Users.FindAsync(id);
+
+    //    //Explicitly trigger lazy loading
+    //    if (user != null)
+    //    {
+    //        await _dbContext.Entry(user)
+    //            .Collection(u => u.Players)
+    //            .LoadAsync();
+    //    }
+
+    //    return user;
+    //}
 
     public async Task<User?> GetByIdAsync(UserId id)
     {
         _logger.LogDebug("Getting user by id: {id} from db", id);
 
-        return await _dbContext.Users.FindAsync(id);
+        return await _dbContext.Users
+                                .Include(u => u.Players)  // Eagerly load the Players collection
+                                .FirstOrDefaultAsync(u => u.Id == id);
     }
 
     public async Task<User?> GetByEmailAsync(string email)
@@ -97,19 +107,6 @@ public class UserRepository : IUserRepository
         var res = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
         return res;
     }
-
-    //public async Task<ICollection<User>> GetByLastNameAsync(string userLastName)
-    //{
-    //    _logger.LogDebug("Getting user by lastname: {userLastName} from db", userLastName);
-
-    //    var res = await _dbContext.Users
-    //        .Where(u => u.LastName
-    //        .StartsWith(userLastName))
-    //        .OrderBy(u => u.LastName) // husk legge til sortere alfabetisk også på Coach
-    //        .ToListAsync();     
-
-    //    return res;
-    //}  
 
     public async Task<User?> UpdateAsync(UserId id, User user)
     {
@@ -134,10 +131,10 @@ public class UserRepository : IUserRepository
 
         var res = await _dbContext.Users.FindAsync(id);
         if (res == null) return null;
-        
+
         _dbContext.Users.Remove(res);
         await _dbContext.SaveChangesAsync();
-        return res;               
+        return res;
     }
 
     public async Task<User?> RegisterUserAsync(User user)
@@ -149,4 +146,5 @@ public class UserRepository : IUserRepository
 
         return user;
     }
+     
 }

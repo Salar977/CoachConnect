@@ -48,12 +48,13 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
             ValidateIssuerSigningKey = true,
             ValidIssuer = configuration["Jwt:Issuer"],
             ValidAudience = configuration["Jwt:Issuer"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!))
         };
     });
     services.AddMvc(); 
 }
 
+ConfigureServices(builder.Services, builder.Configuration);
 
 builder.Services.AddBusinessLayer();
 builder.Services.AddDataAccess(builder.Configuration);
@@ -80,15 +81,9 @@ app.UseRateLimiter();
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
 // app.UseMvc();
-
 app.UseRouting();
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-});
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<GlobalExceptionMiddleware>();

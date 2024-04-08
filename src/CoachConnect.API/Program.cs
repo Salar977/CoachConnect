@@ -10,6 +10,9 @@ using Serilog;
 using CoachConnect.API.Extensions;
 using FluentValidation.AspNetCore;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +23,7 @@ builder.Services.AddSwaggerGen();
 
 builder.RegisterMappers();
 
-// Rate Limiter - Simple rate limiter with fixed 5 seconds for each request otherwise 429: Too Many Requests
+// Rate Limiter - Simple rate limiter with fixed 5 seconds for each request otherwise 429: Too Many Requests // Husk denne må flyttes til appsettings
 builder.Services.AddRateLimiter(rateLimiterOptions =>
 {
     rateLimiterOptions.AddFixedWindowLimiter("fixed", options =>
@@ -31,6 +34,26 @@ builder.Services.AddRateLimiter(rateLimiterOptions =>
         rateLimiterOptions.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
     });
 });
+
+void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+{
+    services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = configuration["Jwt:Issuer"],
+            ValidAudience = configuration["Jwt:Issuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
+        };
+    });
+    services.AddMvc(); 
+}
+
 
 builder.Services.AddBusinessLayer();
 builder.Services.AddDataAccess(builder.Configuration);
@@ -56,6 +79,15 @@ app.UseSerilogRequestLogging();
 app.UseRateLimiter();
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+// app.UseMvc();
+
+app.UseRouting();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.UseAuthorization();
 

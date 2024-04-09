@@ -10,19 +10,16 @@ namespace CoachConnect.BusinessLayer.Services;
 public class PracticeAttendanceService : IPracticeAttendanceService
 {
     private readonly IPracticeAttendanceRepository _practiceAttendance;
-    private readonly IPracticeRepository _practiceRepository;
     private readonly IMapper<PracticeAttendance, PracticeAttendanceResponse> _mapper;
     private readonly IMapper<PracticeAttendance, PracticeAttendanceRequest> _requestMapper;
     private readonly ILogger<PracticeAttendanceService> _logger;
 
     public PracticeAttendanceService(IPracticeAttendanceRepository practiceAttendance,
-                                     IPracticeRepository practiceRepository,
                                      IMapper<PracticeAttendance, PracticeAttendanceResponse> mapper,
                                      IMapper<PracticeAttendance, PracticeAttendanceRequest> requestMapper,
                                      ILogger<PracticeAttendanceService> logger)
     {
         _practiceAttendance = practiceAttendance;
-        _practiceRepository = practiceRepository;
         _mapper = mapper;
         _requestMapper = requestMapper;
         _logger = logger;

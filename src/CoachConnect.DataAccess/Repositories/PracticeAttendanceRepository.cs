@@ -46,7 +46,7 @@ public class PracticeAttendanceRepository : IPracticeAttendanceRepository
 
         if(!string.IsNullOrWhiteSpace(practiceAttendanceQuery.LastName))
         {
-            practiceAttendances = practiceAttendances.Where(x => x.Player.LastName.Contains(practiceAttendanceQuery.LastName));
+            practiceAttendances = practiceAttendances.Where(x => x.Player!.LastName.Contains(practiceAttendanceQuery.LastName));
         }
 
         var skipNumber = (practiceAttendanceQuery.PageNumber - 1) * practiceAttendanceQuery.PageSize;
@@ -80,15 +80,30 @@ public class PracticeAttendanceRepository : IPracticeAttendanceRepository
     public async Task<PracticeAttendance?> RegisterAsync(PracticeAttendance practiceAttendance)
 
     {
-        var newPracticeAttendance = await _dbContext.Practices.FirstOrDefaultAsync(x => x.Id == practiceAttendance.PracticeId);
-        if (newPracticeAttendance is null)
+        var existingPractice = await _dbContext.Practices.FirstOrDefaultAsync(x => x.Id == practiceAttendance.PracticeId);
+        if (existingPractice is null)
         {
             _logger.LogWarning("Failed to register practice attendance in the database: {practice}", practiceAttendance);
             return null;
         }
+
+        var attendance = _dbContext.Practice_attendences.FirstOrDefault(x => x.PlayerId == practiceAttendance.PlayerId);
+        if (attendance is not null)
+        {
+            _logger.LogWarning("Practice attendance already exists: {practice}", practiceAttendance);
+            return null;
+        }
+
         var entry = await _dbContext.Practice_attendences.AddAsync(practiceAttendance);
+
+        var player = await _dbContext.Players.FirstOrDefaultAsync(x => x.Id == practiceAttendance.PlayerId);
+        player!.TotalPractices++;
+
         await _dbContext.SaveChangesAsync();
-        _logger.LogInformation("Registered practice in the database: {practice}", newPracticeAttendance);
+
+        
+        
+        _logger.LogInformation("Registered practice in the database: {practice}", existingPractice);
         return entry.Entity;
     }
 }

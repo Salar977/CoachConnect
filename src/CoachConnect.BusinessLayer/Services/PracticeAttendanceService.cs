@@ -56,6 +56,13 @@ public class PracticeAttendanceService : IPracticeAttendanceService
         return _mapper.MapToDTO(res);
     }
 
+    public async Task<IEnumerable<PracticeAttendanceResponse>> GetByPracticeAsync(Guid id)
+    {
+        var res = await _practiceAttendance.GetByPracticeAsync(new PracticeId(id));
+
+        return res.Select(_mapper.MapToDTO).ToList();
+    }
+
     public async Task<PracticeAttendanceResponse?> RegisterPracticeAttendanceAsync(PracticeAttendanceRequest practiceAttendanceRequest)
     {
         try

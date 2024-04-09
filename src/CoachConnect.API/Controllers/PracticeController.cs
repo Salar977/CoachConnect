@@ -2,7 +2,6 @@
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
-using CoachConnect.DataAccess.Entities;
 using CoachConnect.BusinessLayer.DTOs.Practices;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -26,7 +25,9 @@ public class PracticeController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PracticeResponse>>> GetAllPractice([FromQuery] PracticeQuery practiceQuery)
     {
-        _logger.LogInformation("Retrieving all practices.");
+        practiceQuery.PageNumber = 1;
+        practiceQuery.PageSize = 10;
+        _logger.LogInformation("Get all practices - Controller");
         return Ok(await _practiceService.GetAllAsync(practiceQuery));
     }
 
@@ -67,7 +68,7 @@ public class PracticeController : ControllerBase
 
         if(practice is null) return NotFound();
 
-        await _practiceService.DeleteAsync(new PracticeId(id));
+        await _practiceService.DeleteAsync(id);
 
         return Ok(practice);
     }

@@ -20,7 +20,14 @@ public class PracticeAttendancesController : ControllerBase
         _logger = logger;
     }
 
-    // GET api/<PracticeAttendancesController>/5
+    [HttpGet("{practiceId:guid}", Name = "GetAllByPracticeAsync")]
+    public async Task<ActionResult<PracticeAttendanceResponse>> GetAllByPractice([FromRoute] Guid practiceId)
+    {
+        _logger.LogInformation("Getting all attendences for the practice");
+        return Ok(await _practiceAttendanceService.GetByPracticeAsync(practiceId));
+    }
+
+
     [HttpGet("{id}")]
     public async Task<ActionResult<PracticeAttendanceResponse>> GetById([FromQuery] Guid id)
     {
@@ -32,7 +39,7 @@ public class PracticeAttendancesController : ControllerBase
         return Ok(attendance);
     }
 
-    // POST api/<PracticeAttendancesController>
+
     [HttpPost]
     public async Task<ActionResult<PracticeAttendanceResponse>> AddAttendance(PracticeAttendanceRequest practiceAttendanceRequest)
     {

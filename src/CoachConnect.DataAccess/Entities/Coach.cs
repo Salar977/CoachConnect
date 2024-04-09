@@ -9,7 +9,7 @@ public readonly record struct CoachId(Guid coachId)
 
 };
 
-public class Coach
+public class Coach : Login
 {
     [Key]
     public CoachId Id { get; set; }

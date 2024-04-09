@@ -57,6 +57,7 @@ public class TeamRepository : ITeamRepository
                 teams = teamQuery.IsDescending ? teams.OrderByDescending(x => x.TeamName) : teams.OrderBy(x => x.TeamName);
             }
         }
+        */
 
         var skipNumber = (teamQuery.PageNumber - 1) * teamQuery.PageSize;
 

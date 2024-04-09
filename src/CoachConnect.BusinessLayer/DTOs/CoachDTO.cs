@@ -4,9 +4,10 @@ namespace CoachConnect.BusinessLayer.DTOs;
 
 public record CoachDTO(
     string FirstName,
-    string LastName,
-    //IEnumerable<TeamDTO> Teams,
+    string LastName,    
     string PhoneNumber,    
     string Email,
-    CoachId Id);
+    CoachId Id,
+    IEnumerable<TeamDTO> Teams);
+
 

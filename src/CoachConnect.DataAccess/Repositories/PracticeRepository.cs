@@ -22,11 +22,12 @@ public class PracticeRepository : IPracticeRepository
 
     public async Task<IEnumerable<Practice>> GetAllAsync(PracticeQuery practiceQuery)
     {
-        var practices = _dbContext.Practices.Include(p => p.PracticeAttendances).AsQueryable();
+        var practices = _dbContext.Practices.AsQueryable();
         
         var skipNumber = (practiceQuery.PageNumber - 1) * practiceQuery.PageSize;
-
+        _logger.LogInformation("Get all practices - Repository");
         return await practices
+            .OrderBy(p => p.Created)
             .Skip(skipNumber)
             .Take(practiceQuery.PageSize)
             .ToListAsync();

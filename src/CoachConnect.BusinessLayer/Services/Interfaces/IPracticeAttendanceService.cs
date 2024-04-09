@@ -8,4 +8,6 @@ public interface IPracticeAttendanceService
     Task<PracticeAttendanceResponse?> RegisterPracticeAttendanceAsync(PracticeAttendanceRequest practiceAttendanceRequest);
     Task<PracticeAttendanceResponse?> DeleteByIdAsync(Guid id);
     Task<PracticeAttendanceResponse?> GetByIdAsync(Guid id);
+
+    Task<IEnumerable<PracticeAttendanceResponse>> GetByPracticeAsync(Guid id);
 }

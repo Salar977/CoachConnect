@@ -70,6 +70,11 @@ public class TeamService : ITeamService
         return res != null ? _teamMapper.MapToDTO(res) : null;
     }
 
+    public Task<TeamDTO?> GetTeamsByCoachId(CoachId coachid)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<TeamDTO?> UpdateAsync(TeamId id, TeamDTO teamDto)
     {
         _logger.LogDebug("Updating Team: {id}", id);

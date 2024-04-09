@@ -40,7 +40,18 @@ public class TeamsController : ControllerBase
         var team = await _teamService.GetByIdAsync(new TeamId(id));
         return team != null ? Ok(team) : NotFound($"Team with ID '{id}' not found");
     }
-    
+
+    [HttpGet("teams/{CoachId}", Name = "GetTeamsByCoachId")]
+
+    public async Task<ActionResult<IEnumerable<TeamDTO>>> GetTeamsByCoachId(CoachId id)
+    {
+        _logger.LogTrace("Getting arrangementRegisters by memberid");
+        var res = await _teamService.GetTeamsByCoachId(id);
+        return res != null
+            ? Ok(res)
+            : NotFound("Could not any find any teams with this coachid");
+    }
+
     [HttpPost("register", Name = "CreateTeam")]
     public async Task<ActionResult<TeamDTO>> CreateTeam([FromBody] TeamDTO teamDTO)
     {

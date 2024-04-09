@@ -37,28 +37,23 @@ public class PlayerRepository : IPlayerRepository
 
         if (!string.IsNullOrWhiteSpace(playerQuery.FirstName))
         {
-            players = players.Where(g => g.FirstName.Contains(playerQuery.FirstName));
+            players = players.Where(g => g.FirstName.StartsWith(playerQuery.FirstName));
         }
 
         if (!string.IsNullOrWhiteSpace(playerQuery.LastName))
         {
-            players = players.Where(g => g.LastName.Contains(playerQuery.LastName));
-        }
-
-        if (playerQuery.Created != null && playerQuery.Created != DateTime.MinValue)
-        {
-            players = players.Where(g => g.Created == playerQuery.Created);
+            players = players.Where(g => g.LastName.StartsWith(playerQuery.LastName));
         }
         if (!string.IsNullOrWhiteSpace(playerQuery.SortBy))
         {
-            if (playerQuery.SortBy.Equals("Location", StringComparison.OrdinalIgnoreCase))
+            if (playerQuery.SortBy.Equals("FirstName", StringComparison.OrdinalIgnoreCase))
             {
                 players = playerQuery.IsDescending ? players.OrderByDescending(x => x.FirstName) : players.OrderBy(x => x.FirstName);
             }
 
-            if (playerQuery.SortBy.Equals("Opponent name", StringComparison.OrdinalIgnoreCase))
+            if (playerQuery.SortBy.Equals("LastName", StringComparison.OrdinalIgnoreCase))
             {
-                players = playerQuery.IsDescending ? players.OrderByDescending(x => x.FirstName) : players.OrderBy(x => x.LastName);
+                players = playerQuery.IsDescending ? players.OrderByDescending(x => x.LastName) : players.OrderBy(x => x.LastName);
             }
         }
 
@@ -72,20 +67,12 @@ public class PlayerRepository : IPlayerRepository
 
     public async Task<Player?> GetByIdAsync(PlayerId id)
     {
-        _logger.LogDebug("Getting team by id: {id} from db", id);
+        _logger.LogDebug("Getting player by id: {id} from db", id);
 
         return await _dbContext.Players.FindAsync(id);
     }
 
-    public async Task<Player?> GetByPlayerFirstNameAsync(string player)
-    {
-        _logger.LogDebug("Getting user by email: {email} from db", player);
-
-        var res = await _dbContext.Players.FirstOrDefaultAsync(u => u.FirstName.Equals(player));
-        return res;
-    }
-
-    public async Task<ICollection<Player?>> GetByTeamsIdAsync(TeamId teamId)
+    public async Task<ICollection<Player>> GetPlayersByTeamsIdAsync(TeamId teamId)
     {
         return await _dbContext.Players
             .Where(x => x.TeamId == teamId)
@@ -93,7 +80,7 @@ public class PlayerRepository : IPlayerRepository
     }
 
 
-    public async Task<ICollection<Player?>> GetByUsersByIdAsync(UserId userId)
+    public async Task<ICollection<Player>> GetPlayersByUserIdAsync(UserId userId)
     {
         return await _dbContext.Players
             .Where(x => x.UserId == userId)

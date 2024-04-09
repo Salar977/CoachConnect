@@ -51,6 +51,7 @@ public class PracticeAttendanceRepository : IPracticeAttendanceRepository
 
         var skipNumber = (practiceAttendanceQuery.PageNumber - 1) * practiceAttendanceQuery.PageSize;
 
+
         return await practiceAttendances
             .Skip(skipNumber)
             .Take(practiceAttendanceQuery.PageSize)
@@ -70,12 +71,14 @@ public class PracticeAttendanceRepository : IPracticeAttendanceRepository
         }
         return practiceAttendance;
     }
+    
 
     public async Task<IEnumerable<PracticeAttendance>> GetByPracticeAsync(PracticeId id)
     {
         _logger.LogInformation("Return all practice attendences from practice");
         return await _dbContext.Practice_attendences.Where(x => x.PracticeId == id).ToListAsync();
     }
+    
 
     public async Task<PracticeAttendance?> RegisterAsync(PracticeAttendance practiceAttendance)
 
@@ -99,9 +102,7 @@ public class PracticeAttendanceRepository : IPracticeAttendanceRepository
         var player = await _dbContext.Players.FirstOrDefaultAsync(x => x.Id == practiceAttendance.PlayerId);
         player!.TotalPractices++;
 
-        await _dbContext.SaveChangesAsync();
-
-        
+        await _dbContext.SaveChangesAsync();  
         
         _logger.LogInformation("Registered practice in the database: {practice}", existingPractice);
         return entry.Entity;

@@ -5,6 +5,7 @@ using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
@@ -40,7 +41,7 @@ public class LoginController : Controller
         return response;
     }
 
-    private string GenerateJSONWebToken(User userInfo)
+    private string GenerateJSONWebToken(Login userOrCoachInfo)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -54,19 +55,21 @@ public class LoginController : Controller
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    private User? AuthenticateUser(LoginDTO loginDto)
+    private Login? AuthenticateUser(LoginDTO loginDto)
     {
-        var user = _dbContext.Users.FirstOrDefault(u => u.Email == loginDto.Username);
-
-        if (user != null)
+        var user = _dbContext.Users.FirstOrDefault(u => u.Email.Equals(loginDto.Username));
+        if (user != null && BCrypt.Net.BCrypt.Verify(loginDto.Password, user.HashedPassword))
         {
-            if (BCrypt.Net.BCrypt.Verify(loginDto.Password, user.HashedPassword))
-            {
-                return user;
-            }
+            return user; 
+        }
+        
+        var coach = _dbContext.Coaches.FirstOrDefault(c => c.Email.Equals(loginDto.Username));
+        if (coach != null && BCrypt.Net.BCrypt.Verify(loginDto.Password, coach.HashedPassword))
+        {
+            return coach; 
         }
 
-        // Authentication fail return null
+        // Authentication failed
         return null;
     }
 }

@@ -9,7 +9,7 @@ public readonly record struct UserId(Guid userId)
     public static UserId Empty => new UserId(Guid.Empty);
 };
 
-public class User 
+public class User : Login
 {
     [Key]
     public UserId Id { get; set; }

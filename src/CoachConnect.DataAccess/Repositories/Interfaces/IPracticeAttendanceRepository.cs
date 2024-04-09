@@ -11,4 +11,6 @@ public interface IPracticeAttendanceRepository
 
     Task<PracticeAttendance?> DeleteByIdAsync(PracticeAttendanceId id);
     Task<PracticeAttendance?> GetByIdAsync(PracticeAttendanceId id);
+
+    Task<IEnumerable<PracticeAttendance>> GetByPracticeAsync(PracticeId id);
 }

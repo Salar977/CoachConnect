@@ -32,17 +32,30 @@ public class PracticeAttendanceRepository : IPracticeAttendanceRepository
         return deleteAttendance;
     }
 
-    //public Task<IEnumerable<PracticeAttendance>> GetAllAsync(PracticeAttendanceQuery practiceAttendanceQuery)
-    //{
-    //    _logger.LogInformation("Getting practice attendances.");
+    public async Task<IEnumerable<PracticeAttendance>> GetAllAsync(PracticeAttendanceQuery practiceAttendanceQuery)
+    {
+        _logger.LogInformation("Getting practice attendances.");
 
-    //    var practiceAttendances = _dbContext.Practice_attendences.AsQueryable();
+        var practiceAttendances = _dbContext.Practice_attendences.AsQueryable();
 
-    //    if (practiceAttendanceQuery.PracticeId is not null)
-    //    {
-    //        practiceAttendances.Where(x => x.PracticeId == practiceAttendanceQuery.PracticeId);
-    //    }
-    //}
+        if(practiceAttendanceQuery.PracticeId is not null && practiceAttendanceQuery.PracticeId != Guid.Empty)
+        {
+            var gameId = practiceAttendanceQuery.PracticeId.Value;
+            practiceAttendances = practiceAttendances.Where(x => x.PracticeId == new PracticeId(gameId));
+        }
+
+        if(!string.IsNullOrWhiteSpace(practiceAttendanceQuery.LastName))
+        {
+            practiceAttendances = practiceAttendances.Where(x => x.Player.LastName.Contains(practiceAttendanceQuery.LastName));
+        }
+
+        var skipNumber = (practiceAttendanceQuery.PageNumber - 1) * practiceAttendanceQuery.PageSize;
+
+        return await practiceAttendances
+            .Skip(skipNumber)
+            .Take(practiceAttendanceQuery.PageSize)
+            .ToListAsync();
+    }
 
 
     public async Task<PracticeAttendance?> GetByIdAsync(PracticeAttendanceId id)
@@ -56,6 +69,12 @@ public class PracticeAttendanceRepository : IPracticeAttendanceRepository
             return null;
         }
         return practiceAttendance;
+    }
+
+    public async Task<IEnumerable<PracticeAttendance>> GetByPracticeAsync(PracticeId id)
+    {
+        _logger.LogInformation("Return all practice attendences from practice");
+        return await _dbContext.Practice_attendences.Where(x => x.PracticeId == id).ToListAsync();
     }
 
     public async Task<PracticeAttendance?> RegisterAsync(PracticeAttendance practiceAttendance)

@@ -17,6 +17,7 @@ public class CoachConnectDbContext : DbContext
     public DbSet<PracticeAttendance> Practice_attendences { get; set; }
     public DbSet<Team> Teams { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<JwtRole> Roles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

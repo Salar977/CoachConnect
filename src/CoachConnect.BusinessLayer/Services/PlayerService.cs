@@ -1,4 +1,5 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
+using CoachConnect.BusinessLayer.DTOs.Players;
 using CoachConnect.BusinessLayer.Mappers;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.BusinessLayer.Mappers.Practices;
@@ -44,7 +45,29 @@ public class PlayerService : IPlayerService
 
         return res != null ? _playerMapper.MapToDTO(res) : null;
     }
+    public async Task<ICollection<PlayerDTO?>> GetByTeamIdAsync(int teamId)
+    {
+        _logger?.LogDebug("Get player by team id");
+        // Check for null before using the repository and mapper
+        if (_playerRepository == null || _playerMapper == null)
+        {
+            throw new ApplicationException("Player register repository or mapper is null.");
+        }
 
+        // Retrieve arrangement registers by member ID
+        var teamRegisters = await _playerRepository.GetByTeamIdAsync(teamId);
+
+        // Check if the member ID exists
+        if (teamRegisters == null)
+        {
+            return new List<TeamRegisterDTO?>();
+        }
+
+        // Map the result to DTOs
+        var dtos = arrangementRegisters.Select(register => _arrangementRegisterMapper.MapToDTO(register)).ToList();
+        return dtos;
+
+    }
     public async Task<PlayerDTO?> DeleteAsync(PlayerId id)
     {
         _logger.LogDebug("Deleting Team: {id}", id);

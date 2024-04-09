@@ -11,6 +11,8 @@ public interface IPlayerRepository
 {
     Task<ICollection<Player>> GetAllAsync(PlayerQuery playerQuery);
     Task<Player?> GetByIdAsync(PlayerId id);
+    Task<Player?> GetByTeamIdAsync(TeamId id);
+    Task<Player?> GetByUserIdAsync(UserId id);
     Task<ICollection<Player>> GetPlayersByUserIdAsync(UserId userId);
     Task<ICollection<Player>> GetPlayersByTeamsIdAsync(TeamId teamId);
     Task<Player?> UpdateAsync(PlayerId id, Player player);

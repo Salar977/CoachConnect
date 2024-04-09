@@ -18,13 +18,6 @@ public class PracticeMapper : IMapper<Practice, PracticeResponse>
 
     public Practice MapToEntity(PracticeResponse practiceResponse)
     {
-        var now = DateTime.Now;
-        return new Practice
-        {
-            Id = practiceResponse.PracticeId,
-            Location = practiceResponse.Location,
-            PracticeDate = practiceResponse.PracticeDate,
-            PracticeAttendances = practiceResponse.PracticeAttendances!
-        };
+        throw new NotImplementedException();
     }
 }

@@ -71,6 +71,12 @@ public class PracticeAttendanceRepository : IPracticeAttendanceRepository
         return practiceAttendance;
     }
 
+    public async Task<IEnumerable<PracticeAttendance>> GetByPracticeAsync(PracticeId id)
+    {
+        _logger.LogInformation("Return all practice attendences from practice");
+        return await _dbContext.Practice_attendences.Where(x => x.PracticeId == id).ToListAsync();
+    }
+
     public async Task<PracticeAttendance?> RegisterAsync(PracticeAttendance practiceAttendance)
 
     {

@@ -46,7 +46,7 @@ public class PracticeService : IPracticeService
 
     public async Task<IEnumerable<PracticeResponse>> GetAllAsync(PracticeQuery practiceQuery)
     {
-        _logger.LogDebug("Get all practices - PracticeService");
+        _logger.LogDebug("Get all practices - Service");
         var res = await _practiceRepository.GetAllAsync(practiceQuery);
         return res.Select(_practiceMapper.MapToDTO).ToList();
     }

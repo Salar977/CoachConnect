@@ -40,6 +40,27 @@ public class PlayersController : ControllerBase
         return player != null ? Ok(player) : NotFound($"Player with ID '{id}' not found");
     }
 
+    //userid og teamid
+    /*
+    [HttpGet("user/{userId}", Name = "GetPlayersByUserId")]
+    public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetPlayersByUserId(int userId)
+    {
+        _logger.LogTrace("Getting players by userid");
+        var res = await _playerService.GetPlayersByUserId(userId);
+        return res != null
+            ? Ok(res) : NotFound("Could not find any players with this userid");
+    }
+    
+    [HttpGet("team/{teamId}", Name = "GetPlayersByTeamId")]
+    public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetPlayersByTeamId(int teamId)
+    {
+        _logger.LogTrace("Getting players by userid");
+        var res = await _playerService.GetPlayersByTeamId(teamId);
+        return res != null
+            ? Ok(res) : NotFound("Could not find any players with this teamid");
+    }
+    */
+
     [HttpPost("register", Name = "CreatePlayer")]
     public async Task<ActionResult<PlayerDTO>> CreatePlayer([FromBody] PlayerDTO playerDTO)
     {
@@ -60,7 +81,7 @@ public class PlayersController : ControllerBase
     [HttpDelete("{id}", Name = "DeletePlayer")]
     public async Task<ActionResult<PlayerDTO>> DeletePlayer(Guid id)
     {
-        _logger.LogDebug("Deleting game with ID: {id}", id);
+        _logger.LogDebug("Deleting player with ID: {id}", id);
 
         var res = await _playerService.DeleteAsync(new PlayerId(id));
         return res != null ? Ok(res) : BadRequest("Could not delete Player");

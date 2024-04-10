@@ -62,7 +62,7 @@ public class UserRepository : IUserRepository
         var skipNumber = (userQuery.PageNumber - 1) * userQuery.PageSize;
 
         return await users
-            .Include(u => u.Players) // funker kun med eager loading og sikkert også med explicit loadoing som med getbyid
+            .Include(u => u.Players) // valgt eager loading her 
             .Skip(skipNumber)
             .Take(userQuery.PageSize)
             .ToListAsync();
@@ -144,16 +144,16 @@ public class UserRepository : IUserRepository
 
         await _dbContext.Users.AddAsync(user);
 
-        var existingRoleAssignment = await _dbContext.Jwt_user_roles.FirstOrDefaultAsync(r => r.UserName == user.Email);
+        var existingRoleAssignment = await _dbContext.Jwt_user_roles.FirstOrDefaultAsync(r => r.UserName == user.Email && r.RoleId == 3);
         if (existingRoleAssignment != null)
         {
-            throw new Exception($"User with email {user.Email} already has a role assignment, please use a different email."); // workaround..
+            return null; // workaround..
         }
 
         JwtUserRole roleAssignment = new() // lager objekt og kjører inn
         {
             UserName = user.Email,
-            JwtRoleId = 3
+            RoleId = 3
         };
 
         _dbContext.Jwt_user_roles.Add(roleAssignment);

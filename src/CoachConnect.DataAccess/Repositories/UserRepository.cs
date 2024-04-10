@@ -153,7 +153,7 @@ public class UserRepository : IUserRepository
         JwtUserRole roleAssignment = new() // lager objekt og kjører inn
         {
             UserName = user.Email,
-            JwtRoleId = 3
+            RoleId = 3
         };
 
         _dbContext.Jwt_user_roles.Add(roleAssignment);

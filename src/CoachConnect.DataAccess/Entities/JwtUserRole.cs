@@ -6,11 +6,6 @@ namespace CoachConnect.DataAccess.Entities;
 
 public class JwtUserRole
 {
-    [Key]
-    public string UserName { get; set; } = string.Empty;
-
-    [ForeignKey(nameof(Role))]
-    public int JwtRoleId { get; set; }
-
-    public JwtRole? Role { get; set; }  // Navigation property for JwtRole  
+    public string UserName { get; set; } = string.Empty; // brukt username istedenfor id pga vbi har både type userid og coachid, vi skulle egentlig bare hatt userid på alt men det har vi ikke
+    public int RoleId { get; set; }   
 }

@@ -123,6 +123,21 @@ public class CoachRepository : ICoachRepository
         _logger.LogDebug("Adding coach: {coach} to db", coach.Email);
 
         await _dbContext.Coaches.AddAsync(coach);
+
+        var existingRoleAssignment = await _dbContext.Jwt_user_roles.FirstOrDefaultAsync(r => r.UserName == coach.Email);
+        if (existingRoleAssignment != null)
+        {
+            throw new Exception($"User with email {coach.Email} already has a role assignment, please use a different email."); // workaround..
+        }
+
+        JwtUserRole roleAssignment = new() // lager objekt og kjører inn
+        {
+            UserName = coach.Email,
+            JwtRoleId = 2
+        };
+
+        _dbContext.Jwt_user_roles.Add(roleAssignment);
+
         await _dbContext.SaveChangesAsync();
 
         return coach;

@@ -147,7 +147,8 @@ public class UserRepository : IUserRepository
         var existingRoleAssignment = await _dbContext.Jwt_user_roles.FirstOrDefaultAsync(r => r.UserName == user.Email && r.RoleId == 3);
         if (existingRoleAssignment != null)
         {
-            return null; // workaround..
+            _logger.LogDebug("Could not add user: {user} already has this role", user.Email);
+            return null;
         }
 
         JwtUserRole roleAssignment = new() // lager objekt og kjører inn

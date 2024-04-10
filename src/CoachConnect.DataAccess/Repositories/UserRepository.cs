@@ -144,6 +144,7 @@ public class UserRepository : IUserRepository
 
         await _dbContext.Users.AddAsync(user);
 
+
         //var existingRoleAssignment = await _dbContext.Jwt_user_roles.FirstOrDefaultAsync(r => r.UserId.Equals(user.Id.userId) && r.RoleId == 3);
         //if (existingRoleAssignment != null)
         //{
@@ -154,6 +155,7 @@ public class UserRepository : IUserRepository
         JwtUserRole roleAssignment = new() // lager objekt og kjører inn
         {
             UserId = user.Id.userId,
+
             RoleId = 3
         };
 

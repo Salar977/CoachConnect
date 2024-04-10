@@ -14,4 +14,3 @@ public class JwtUserRole
     [Column(Order = 2)]
     public int RoleId { get; set; }
 }
-

@@ -27,6 +27,7 @@ public class CoachConnectDbContext : DbContext
         modelBuilder.Entity<JwtUserRole>()
                 .HasKey(e => new { e.UserId, e.RoleId });
 
+
         modelBuilder.Entity<User>()
             .Property(x => x.Id)
             .HasConversion(

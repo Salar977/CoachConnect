@@ -124,12 +124,12 @@ public class CoachRepository : ICoachRepository
 
         await _dbContext.Coaches.AddAsync(coach);
 
-        var existingRoleAssignment = await _dbContext.Jwt_user_roles.FirstOrDefaultAsync(r => r.UserId.Equals(coach.Id.coachId) && r.RoleId == 2);
-        if (existingRoleAssignment != null)
-        {
-            _logger.LogDebug("Could not add coach: {coach} already has this role", coach.Email);
-            return null; 
-        }
+        //var existingRoleAssignment = await _dbContext.Jwt_user_roles.FirstOrDefaultAsync(r => r.UserId.Equals(coach.Id.coachId) && r.RoleId == 2);
+        //if (existingRoleAssignment != null)
+        //{
+        //    _logger.LogDebug("Could not add coach: {coach} already has this role", coach.Email);
+        //    return null; 
+        //}
 
         JwtUserRole roleAssignment = new() // lager objekt og kjører inn i db
         {

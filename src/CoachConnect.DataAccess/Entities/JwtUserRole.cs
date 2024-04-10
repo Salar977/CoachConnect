@@ -1,8 +1,13 @@
-﻿namespace CoachConnect.DataAccess.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace CoachConnect.DataAccess.Entities;
 
 public class JwtUserRole
 {
-    // public string UserName { get; set; } = string.Empty;
-    public Guid UserId { get; set; }
-    public int RoleId { get; set; }
+    [Key]
+    public string UserName { get; set; } = string.Empty;
+
+    [ForeignKey(nameof(JwtRoleId))]
+    public int JwtRoleId { get; set; }
 }

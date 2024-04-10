@@ -5,6 +5,7 @@ using CoachConnect.Shared.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Asn1.Esf;
+using Org.BouncyCastle.Crypto.Macs;
 
 namespace CoachConnect.DataAccess.Repositories;
 
@@ -142,9 +143,23 @@ public class UserRepository : IUserRepository
         _logger.LogDebug("Adding user: {user} to db", user.Email);
 
         await _dbContext.Users.AddAsync(user);
+
+        var existingRoleAssignment = await _dbContext.Jwt_user_roles.FirstOrDefaultAsync(r => r.UserName == user.Email);
+        if (existingRoleAssignment != null)
+        {
+            throw new Exception($"User with email {user.Email} already has a role assignment, please use a different email."); // workaround..
+        }
+
+        JwtUserRole roleAssignment = new() // lager objekt og kjører inn
+        {
+            UserName = user.Email,
+            JwtRoleId = 3
+        };
+
+        _dbContext.Jwt_user_roles.Add(roleAssignment);
+
         await _dbContext.SaveChangesAsync();
 
         return user;
-    }
-     
+    }     
 }

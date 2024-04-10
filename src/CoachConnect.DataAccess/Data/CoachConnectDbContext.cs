@@ -24,7 +24,8 @@ public class CoachConnectDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<JwtUserRole>().HasNoKey(); // pga har ikke primary key, pga blir kluss pga distinct username.. pga databasedesign vårt.. workaround..
+        modelBuilder.Entity<JwtUserRole>()
+                .HasKey(e => new { e.UserName, e.RoleId });
 
         modelBuilder.Entity<User>()
             .Property(x => x.Id)

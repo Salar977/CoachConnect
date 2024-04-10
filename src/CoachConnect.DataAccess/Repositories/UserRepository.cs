@@ -144,7 +144,7 @@ public class UserRepository : IUserRepository
 
         await _dbContext.Users.AddAsync(user);
 
-        var existingRoleAssignment = await _dbContext.Jwt_user_roles.FirstOrDefaultAsync(r => r.UserName == user.Email);
+        var existingRoleAssignment = await _dbContext.Jwt_user_roles.FirstOrDefaultAsync(r => r.UserName == user.Email && r.RoleId == 3);
         if (existingRoleAssignment != null)
         {
             return null; // workaround..

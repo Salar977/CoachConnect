@@ -124,7 +124,7 @@ public class CoachRepository : ICoachRepository
 
         await _dbContext.Coaches.AddAsync(coach);
 
-        var existingRoleAssignment = await _dbContext.Jwt_user_roles.FirstOrDefaultAsync(r => r.UserName == coach.Email);
+        var existingRoleAssignment = await _dbContext.Jwt_user_roles.FirstOrDefaultAsync(r => r.UserName == coach.Email && r.RoleId == 2);
         if (existingRoleAssignment != null)
         {
             return null; // workaround..

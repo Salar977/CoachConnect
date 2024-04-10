@@ -6,6 +6,15 @@ namespace CoachConnect.DataAccess.Entities;
 
 public class JwtUserRole
 {
-    public string UserName { get; set; } = string.Empty; // brukt username istedenfor id pga vbi har både type userid og coachid, vi skulle egentlig bare hatt userid på alt men det har vi ikke
-    public int RoleId { get; set; }   
+    [Key]
+    [Column(Order = 1)]
+    public string? UserName { get; set; } // brukt username istedenfor id pga vi har både type userid og coachid, vi skulle egentlig bare hatt userid på alt men det har vi ikke
+
+    [Key]
+    [Column(Order = 2)]
+    public int RoleId { get; set; }
 }
+
+//    public string UserName { get; set; } = string.Empty; 
+//    public int RoleId { get; set; }   
+//}

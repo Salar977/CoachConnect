@@ -43,16 +43,16 @@ public class PlayersController : ControllerBase
     //userid og teamid
     
     [HttpGet("user/{userId}", Name = "GetPlayersByUserId")]
-    public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetPlayersByUserId(int userId)
+    public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetByUserId(UserId userId)
     {
         _logger.LogTrace("Getting players by userid");
-        var res = await _playerService.GetByUserId(userId);
+        var res = await _playerService.GetByUserIdAsync(userId);
         return res != null
             ? Ok(res) : NotFound("Could not find any players with this userid");
     }
     
     [HttpGet("team/{teamId}", Name = "GetPlayersByTeamId")]
-    public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetByTeamIdAsync(int teamId)
+    public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetByTeamIdAsync(TeamId teamId)
     {
         _logger.LogTrace("Getting players by userid");
         var res = await _playerService.GetByTeamIdAsync(teamId);

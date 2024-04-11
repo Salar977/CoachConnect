@@ -1,5 +1,6 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
 using CoachConnect.BusinessLayer.DTOs.Players;
+using CoachConnect.BusinessLayer.DTOs.Teams;
 using CoachConnect.DataAccess.Entities;
 using CoachConnect.Shared.Helpers;
 using System;
@@ -12,8 +13,9 @@ namespace CoachConnect.BusinessLayer.Services.Interfaces;
 public interface IPlayerService
 {
     Task<PlayerDTO?> GetByIdAsync(Guid id);
-    Task<TeamDTO?> GetByTeamIdAsync(TeamId teamid);
-    Task<UserDTO?> GetByUserIdAsync(UserId userid);
+    Task<ICollection<PlayerDTO?>> GetByTeamIdAsync(TeamId teamid);
+    Task<ICollection<PlayerDTO?>> GetByUserIdAsync(UserId userid);
+
 
     Task<ICollection<PlayerDTO>> GetAllAsync(PlayerQuery playerQuery);
 

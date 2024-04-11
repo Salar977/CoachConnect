@@ -65,27 +65,31 @@ public class PlayerRepository : IPlayerRepository
             .ToListAsync();
     }
 
-    public async Task<Player?> GetByIdAsync(PlayerId id)
+    public async Task<Player?> GetByIdAsync(PlayerId playerId)
     {
-        _logger.LogDebug("Getting player by id: {id} from db", id);
+        _logger.LogDebug("Getting player by id: {id} from db", playerId);
 
-        return await _dbContext.Players.FindAsync(id);
+        return await _dbContext.Players.FindAsync(playerId);
     }
 
-    public async Task<ICollection<Player>> GetPlayersByTeamsIdAsync(TeamId teamId)
+
+
+    public async Task<ICollection<Player>> GetByTeamIdAsync(TeamId teamid)
     {
         return await _dbContext.Players
-            .Where(x => x.TeamId == teamId)
+            .Where(x => x.TeamId == teamid)
             .ToListAsync();
     }
 
 
-    public async Task<ICollection<Player>> GetPlayersByUserIdAsync(UserId userId)
+    public async Task<ICollection<Player>> GetByUserIdAsync(UserId userid)
     {
         return await _dbContext.Players
-            .Where(x => x.UserId == userId)
+            .Where(x => x.UserId == userid)
             .ToListAsync();
     }
+
+
 
     public async Task<Player?> RegisterPlayerAsync(Player player)
     {

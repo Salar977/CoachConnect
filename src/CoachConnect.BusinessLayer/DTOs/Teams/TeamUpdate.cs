@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoachConnect.BusinessLayer.DTOs.Players;
-public record PlayerRequest
-(string FirstName,
-    string LastName);
+namespace CoachConnect.BusinessLayer.DTOs.Teams;
+public record TeamUpdate
+(
+    string TeamCity,
+    string TeamName);

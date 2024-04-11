@@ -1,4 +1,4 @@
-﻿using CoachConnect.BusinessLayer.DTOs;
+﻿using CoachConnect.BusinessLayer.DTOs.Teams;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.DataAccess.Entities;
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoachConnect.BusinessLayer.Mappers;
+namespace CoachConnect.BusinessLayer.Mappers.Teams;
 public class TeamMapper : IMapper<Team, TeamDTO>
 {
     public TeamDTO MapToDTO(Team entity)
@@ -24,14 +24,14 @@ public class TeamMapper : IMapper<Team, TeamDTO>
 
     public Team MapToEntity(TeamDTO dto)
     {
-        var dtnow = DateTime.Now;
+        var now = DateTime.Now;
         return new Team
         {
             TeamCity = dto.TeamCity,
             TeamName = dto.TeamName,
             CoachId = dto.CoachId,
-            Created = dtnow,
-            Updated = dtnow,
+            Created = now,
+            Updated = now,
         };
     }
 }

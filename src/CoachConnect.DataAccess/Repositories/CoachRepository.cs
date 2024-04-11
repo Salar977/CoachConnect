@@ -135,7 +135,7 @@ public class CoachRepository : ICoachRepository
 
         JwtUserRole roleAssignment = new() // lager objekt og kjører inn i db
         {
-
+            Id = JwtUserRoleId.NewId,
             UserOrCoachId = coach.Id.coachId,
             RoleId = 2
         };

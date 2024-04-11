@@ -5,6 +5,7 @@ using CoachConnect.Shared.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Asn1.Esf;
+using Org.BouncyCastle.Crypto.Macs;
 
 namespace CoachConnect.DataAccess.Repositories;
 
@@ -61,7 +62,7 @@ public class UserRepository : IUserRepository
         var skipNumber = (userQuery.PageNumber - 1) * userQuery.PageSize;
 
         return await users
-            .Include(u => u.Players) // funker kun med eager loading og sikkert også med explicit loadoing som med getbyid
+            .Include(u => u.Players) // valgt eager loading her 
             .Skip(skipNumber)
             .Take(userQuery.PageSize)
             .ToListAsync();
@@ -142,9 +143,26 @@ public class UserRepository : IUserRepository
         _logger.LogDebug("Adding user: {user} to db", user.Email);
 
         await _dbContext.Users.AddAsync(user);
+
+
+        //var existingRoleAssignment = await _dbContext.Jwt_user_roles.FirstOrDefaultAsync(r => r.UserId.Equals(user.Id.userId) && r.RoleId == 3);
+        //if (existingRoleAssignment != null)
+        //{
+        //    _logger.LogDebug("Could not add user: {user} already has this role", user.Email);
+        //    return null;
+        //}
+
+        JwtUserRole roleAssignment = new() // lager objekt og kjører inn
+        {
+            UserId = user.Id.userId,
+
+            RoleId = 3
+        };
+
+        _dbContext.Jwt_user_roles.Add(roleAssignment);
+
         await _dbContext.SaveChangesAsync();
 
         return user;
-    }
-     
+    }     
 }

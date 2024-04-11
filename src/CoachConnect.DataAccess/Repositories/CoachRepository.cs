@@ -60,7 +60,7 @@ public class CoachRepository : ICoachRepository
         var skipNumber = (query.PageNumber - 1) * query.PageSize;
 
         return await coaches
-            .Include(c => c.Teams)
+            .Include(c => c.Teams) //Eagerly loading in
             .Skip(skipNumber)
             .Take(query.PageSize)
             .ToListAsync();
@@ -77,7 +77,7 @@ public class CoachRepository : ICoachRepository
     {
         _logger.LogDebug("Getting coach by id: {id} from db", id);
 
-        return await _dbContext.Coaches.Include(t => t.Teams)
+        return await _dbContext.Coaches.Include(t => t.Teams) //bruker eagerly loading
                                         .FirstOrDefaultAsync(c => c.Id == id);
     }
 
@@ -123,6 +123,25 @@ public class CoachRepository : ICoachRepository
         _logger.LogDebug("Adding coach: {coach} to db", coach.Email);
 
         await _dbContext.Coaches.AddAsync(coach);
+
+
+        //var existingRoleAssignment = await _dbContext.Jwt_user_roles.FirstOrDefaultAsync(r => r.UserId.Equals(coach.Id.coachId) && r.RoleId == 2);
+        //if (existingRoleAssignment != null)
+        //{
+        //    _logger.LogDebug("Could not add coach: {coach} already has this role", coach.Email);
+        //    return null; 
+        //}
+
+
+        JwtUserRole roleAssignment = new() // lager objekt og kjører inn i db
+        {
+
+            UserId = coach.Id.coachId,
+            RoleId = 2
+        };
+
+        _dbContext.Jwt_user_roles.Add(roleAssignment);
+
         await _dbContext.SaveChangesAsync();
 
         return coach;

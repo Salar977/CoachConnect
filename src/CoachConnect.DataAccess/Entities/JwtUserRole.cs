@@ -11,6 +11,13 @@ public readonly record struct JwtUserRoleId(Guid jwtUserRoleId)
 };
 public class JwtUserRole 
 {
+<<<<<<< HEAD
+=======
+    [Key] 
+    [Column(Order = 1)]
+    public Guid UserOrCoachId { get; set; }
+
+>>>>>>> main
     [Key]
     public JwtUserRoleId Id { get; set; }
 

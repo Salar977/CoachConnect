@@ -154,7 +154,7 @@ public class UserRepository : IUserRepository
 
         JwtUserRole roleAssignment = new() // lager objekt og kjører inn
         {
-            UserId = user.Id.userId,
+            UserOrCoachId = user.Id.userId,
 
             RoleId = 3
         };

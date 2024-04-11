@@ -40,5 +40,4 @@ public class User : Login
     public DateTime Updated { get; set; }
 
     public virtual ICollection<Player> Players { get; set; } = new List<Player>();
-    public virtual ICollection<JwtUserRole> UserRoles { get; set; } = new List<JwtUserRole>();
 }

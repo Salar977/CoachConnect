@@ -6,9 +6,9 @@ namespace CoachConnect.DataAccess.Entities;
 
 public class JwtUserRole
 {
-    [Key] // 2 [Key] annotations her så slipper ha PK column i tablellen. Den kombinerer og bruker begge samlet som en pk.
+    [Key] 
     [Column(Order = 1)]
-    public Guid UserId { get; set; }
+    public Guid UserOrCoachId { get; set; }
 
     [Key]
     [Column(Order = 2)]

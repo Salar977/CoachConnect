@@ -4,13 +4,17 @@ using static CoachConnect.DataAccess.Entities.JwtRole;
 
 namespace CoachConnect.DataAccess.Entities;
 
-public class JwtUserRole
+public readonly record struct JwtUserRoleId(Guid jwtUserRoleId)
 {
-    [Key] // 2 [Key] annotations her så slipper ha PK column i tablellen. Den kombinerer og bruker begge samlet som en pk.
-    [Column(Order = 1)]
-    public Guid UserId { get; set; }
-
+    public static JwtUserRoleId NewId => new JwtUserRoleId(Guid.NewGuid());
+    public static JwtUserRoleId Empty => new JwtUserRoleId(Guid.Empty);
+};
+public class JwtUserRole 
+{
     [Key]
-    [Column(Order = 2)]
+    public JwtUserRoleId Id { get; set; }
+
+    public Guid UserOrCoachId { get; set; }
+       
     public int RoleId { get; set; }
 }

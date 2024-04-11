@@ -18,6 +18,7 @@ public class JwtUserRole
     [Key]
     public JwtUserRoleId Id { get; set; }
 
+    [ForeignKey(nameof(UserOrCoachId))]
     public Guid UserOrCoachId { get; set; }
 
     [ForeignKey(nameof(RoleId))]       
@@ -25,4 +26,6 @@ public class JwtUserRole
     public int RoleId { get; set; }
 
     public JwtRole? Role { get; set; }
+
+    public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

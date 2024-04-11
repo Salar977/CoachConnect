@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 using static CoachConnect.DataAccess.Entities.JwtRole;
 
 namespace CoachConnect.DataAccess.Entities;
@@ -15,6 +16,9 @@ public class JwtUserRole
     public JwtUserRoleId Id { get; set; }
 
     public Guid UserOrCoachId { get; set; }
-       
+
+    [ForeignKey(nameof(RoleId))]
     public int RoleId { get; set; }
+
+    public JwtRole? Role { get; set; }
 }

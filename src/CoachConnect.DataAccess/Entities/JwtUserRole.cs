@@ -1,4 +1,5 @@
 ﻿
+using Mysqlx.Crud;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
@@ -15,14 +16,16 @@ public readonly record struct JwtUserRoleId(Guid jwtUserRoleId)
 public class JwtUserRole
 {
     [Key]
+    [Column(Order = 1)]
     public JwtUserRoleId Id { get; set; }
 
-    //[ForeignKey(nameof(UserId))]
-    public UserId UserId { get; set; }
-
-    //[ForeignKey(nameof(CoachId))]
-    public CoachId CoachId { get; set; }
+    [Key]
+    [Column(Order = 2)]
+    public string? UserName { get; set; }
     
     [ForeignKey(nameof(JwtRoleId))]
     public int JwtRoleId { get; set; } 
+
+    public virtual User? User { get; set; }
+    public virtual Coach? Coach { get; set; }
 }

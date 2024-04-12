@@ -42,7 +42,7 @@ public class LoginController : Controller
         return response;
     }
 
-    private string GenerateJSONWebToken(Login userOrCoachInfo)
+    private string GenerateJSONWebToken(Login userOrCoach)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -51,16 +51,16 @@ public class LoginController : Controller
     
 
         // Add UserId claim if the userOrCoachInfo is a User or Coach
-        if (userOrCoachInfo is User user)
+        if (userOrCoach is User user)
         {
             claims.Add(new Claim("UserId", user.Id.ToString()));
             claims.Add(new Claim("UserName", user.Email.ToString()));
-            //foreach (var role in user.Roles)
-            //{
-            //    claims.Add(new Claim("Role", role.JwtRoleId.ToString()));
-            //}
+            foreach (var role in user.Roles)
+            {
+                claims.Add(new Claim("Role", role.JwtRoleId.ToString()));
+            }
         }
-        else if (userOrCoachInfo is Coach coach)
+        else if (userOrCoach is Coach coach)
         {
             claims.Add(new Claim("UserId", coach.Id.ToString()));
             claims.Add(new Claim("UserName", coach.Id.ToString()));

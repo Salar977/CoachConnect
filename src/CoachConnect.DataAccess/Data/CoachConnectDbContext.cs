@@ -141,17 +141,6 @@ public class CoachConnectDbContext : DbContext
           );
 
         modelBuilder.Entity<JwtUserRole>()
-      .Property(x => x.UserId)
-      .HasConversion(
-          id => id.userId,
-          value => new UserId(value)
-       );
-
-        modelBuilder.Entity<JwtUserRole>()
-         .Property(x => x.CoachId)
-         .HasConversion(
-             id => id.coachId,
-             value => new CoachId(value)
-          );
+               .HasKey(j => new { j.Id, j.UserName });
     }
 }

@@ -13,7 +13,7 @@ public class User : Login
 {
     [Key]
     public UserId Id { get; set; }
-        
+
     [Required]
     [MinLength(2), MaxLength(50)]
     public string FirstName { get; set; } = string.Empty;
@@ -25,6 +25,7 @@ public class User : Login
     [Required]
     public string PhoneNumber { get; set; } = string.Empty;
 
+    [ForeignKey(nameof(JwtUserRole.UserName))]
     [Required]
     [EmailAddress]
     public string Email { get; set; } = string.Empty;
@@ -40,5 +41,5 @@ public class User : Login
     public DateTime Updated { get; set; }
 
     public virtual ICollection<Player> Players { get; set; } = new List<Player>();
-    // public virtual ICollection<JwtUserRole> Roles { get; set; } = new List<JwtUserRole>();
+    public virtual ICollection<JwtUserRole> Roles { get; set; } = new List<JwtUserRole>();
 }

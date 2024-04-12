@@ -42,4 +42,6 @@ public class Coach : Login
     public DateTime Updated { get; set; }
 
     public virtual ICollection<Team> Teams { get; set; } = new List<Team>();
+    // public virtual ICollection<JwtUserRole> Roles { get; set; } = new List<JwtUserRole>();
 }
+

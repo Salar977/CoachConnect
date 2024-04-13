@@ -26,7 +26,6 @@ public class Coach : Login
     [Required]
     public string PhoneNumber { get; set; } = string.Empty;
 
-    [ForeignKey(nameof(JwtUserRole.UserName))]
     [Required]
     [EmailAddress]
     public string Email { get; set; } = string.Empty;

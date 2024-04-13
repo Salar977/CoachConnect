@@ -23,7 +23,7 @@ public class JwtUserRole
     [Column(Order = 2)]
     public string? UserName { get; set; }
     
-    [ForeignKey(nameof(JwtRoleId))]
+    [ForeignKey(nameof(JwtRole.Id))]
     public int JwtRoleId { get; set; } 
 
     public virtual User? User { get; set; }

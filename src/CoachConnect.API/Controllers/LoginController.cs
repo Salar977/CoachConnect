@@ -55,6 +55,7 @@ public class LoginController : Controller
         {
             claims.Add(new Claim("UserId", user.Id.ToString()));
             claims.Add(new Claim("UserName", user.Email.ToString()));
+            //claims.Add(new Claim("UserName", user.Roles.ToString()));
             foreach (var role in user.Roles)
             {
                 claims.Add(new Claim("Role", role.JwtRoleId.ToString()));
@@ -63,14 +64,15 @@ public class LoginController : Controller
         else if (userOrCoach is Coach coach)
         {
             claims.Add(new Claim("UserId", coach.Id.ToString()));
-            claims.Add(new Claim("UserName", coach.Id.ToString()));
-            //foreach (var role in coach.Roles)
-            //{
-            //    claims.Add(new Claim("Role", role.JwtRoleId.ToString()));
-            //}
+            claims.Add(new Claim("UserName", coach.Email.ToString()));
+
+            foreach (var role in coach.Roles)
+            {
+                claims.Add(new Claim("Role", role.JwtRoleId.ToString()));
+            }
         }
 
-        // admin claims missing
+        // admin claims here(?)
 
         var token = new JwtSecurityToken(
             _config["Jwt:Issuer"],
@@ -85,13 +87,15 @@ public class LoginController : Controller
 
     private Login? AuthenticateUser(LoginDTO loginDto)
     {
-        var user = _dbContext.Users.FirstOrDefault(u => u.Email.Equals(loginDto.Username));
+        var user = _dbContext.Users.Include(u => u.Roles)
+            .FirstOrDefault(u => u.Email.Equals(loginDto.Username));
         if (user != null && BCrypt.Net.BCrypt.Verify(loginDto.Password, user.HashedPassword))
         {
             return user; 
         }
         
-        var coach = _dbContext.Coaches.FirstOrDefault(c => c.Email.Equals(loginDto.Username));
+        var coach = _dbContext.Coaches.Include(c => c.Roles)
+            .FirstOrDefault(c => c.Email.Equals(loginDto.Username));
         if (coach != null && BCrypt.Net.BCrypt.Verify(loginDto.Password, coach.HashedPassword))
         {
             return coach; 

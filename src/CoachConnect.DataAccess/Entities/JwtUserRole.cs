@@ -19,12 +19,5 @@ public class JwtUserRole
     public JwtUserRoleId Id { get; set; }
 
     public string? UserName { get; set; }
-    
     public int JwtRoleId { get; set; }
-
-
-    //public virtual ICollection<User> Users { get; set; } = new List<User>();
-    //public virtual ICollection<Coach> Coaches { get; set; } = new List<Coach>();
-    //public virtual Coach? Coach { get; set; }
-    //public virtual User? User { get; set; }
 }

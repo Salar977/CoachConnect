@@ -49,7 +49,6 @@ public class LoginController : Controller
 
         var claims = new List<Claim>();
 
-        // Add UserId claim if the userOrCoachInfo is a User or Coach
         if (userOrCoach is User user)
         {
             var userRoles = _dbContext.Jwt_user_roles.Where(u => u.UserName == user.Email);
@@ -72,9 +71,7 @@ public class LoginController : Controller
             {
                 claims.Add(new Claim("Role", role.JwtRoleId.ToString()));
             }
-        }
-
-        // admin claims here(?)
+        }       
 
         var token = new JwtSecurityToken(
             _config["Jwt:Issuer"],

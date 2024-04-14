@@ -89,15 +89,13 @@ public class LoginController : Controller
 
     private Login? AuthenticateUser(LoginDTO loginDto)
     {
-        var user = _dbContext.Users.Include(u => u.Roles)
-            .FirstOrDefault(u => u.Email.Equals(loginDto.Username));
+        var user = _dbContext.Users.FirstOrDefault(u => u.Email.Equals(loginDto.Username));
         if (user != null && BCrypt.Net.BCrypt.Verify(loginDto.Password, user.HashedPassword))
         {
             return user; 
         }
         
-        var coach = _dbContext.Coaches.Include(c => c.Roles)
-            .FirstOrDefault(c => c.Email.Equals(loginDto.Username));
+        var coach = _dbContext.Coaches.FirstOrDefault(c => c.Email.Equals(loginDto.Username));
         if (coach != null && BCrypt.Net.BCrypt.Verify(loginDto.Password, coach.HashedPassword))
         {
             return coach; 

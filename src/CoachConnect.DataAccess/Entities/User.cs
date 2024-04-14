@@ -42,5 +42,4 @@ public class User : Login
     public DateTime Updated { get; set; }
 
     public virtual ICollection<Player> Players { get; set; } = new List<Player>();
-    public virtual ICollection<JwtUserRole> Roles { get; set; } = new List<JwtUserRole>(); // fjerne og ikke bruke lazyload for roller inn i jwtclaims?
 }

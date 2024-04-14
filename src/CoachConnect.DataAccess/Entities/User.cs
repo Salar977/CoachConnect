@@ -35,8 +35,10 @@ public class User : Login
     [Required]
     public string Salt { get; set; } = string.Empty;
 
+    [Required]
     public DateTime Created { get; init; }
 
+    [Required]
     public DateTime Updated { get; set; }
 
     public virtual ICollection<Player> Players { get; set; } = new List<Player>();

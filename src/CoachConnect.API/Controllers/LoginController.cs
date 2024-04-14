@@ -48,25 +48,27 @@ public class LoginController : Controller
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>();
-    
 
         // Add UserId claim if the userOrCoachInfo is a User or Coach
         if (userOrCoach is User user)
         {
+            var userRoles = _dbContext.Jwt_user_roles.Where(u => u.UserName == user.Email);
+
             claims.Add(new Claim("UserId", user.Id.ToString()));
             claims.Add(new Claim("UserName", user.Email.ToString()));
-            //claims.Add(new Claim("UserName", user.Roles.ToString()));
-            foreach (var role in user.Roles)
+            foreach (var role in userRoles)
             {
                 claims.Add(new Claim("Role", role.JwtRoleId.ToString()));
             }
         }
         else if (userOrCoach is Coach coach)
         {
+            var userRoles = _dbContext.Jwt_user_roles.Where(u => u.UserName == coach.Email);
+
             claims.Add(new Claim("UserId", coach.Id.ToString()));
             claims.Add(new Claim("UserName", coach.Email.ToString()));
 
-            foreach (var role in coach.Roles)
+            foreach (var role in userRoles)
             {
                 claims.Add(new Claim("Role", role.JwtRoleId.ToString()));
             }

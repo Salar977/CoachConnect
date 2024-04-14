@@ -142,6 +142,5 @@ public class CoachConnectDbContext : DbContext
 
         modelBuilder.Entity<JwtUserRole>()
                .HasKey(j => new { j.Id, j.UserName });      
-    
     }
 }

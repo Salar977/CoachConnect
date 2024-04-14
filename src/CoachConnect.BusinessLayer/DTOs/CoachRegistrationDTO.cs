@@ -7,6 +7,5 @@ public record CoachRegistrationDTO(
     string LastName,
     string PhoneNumber,
     string Password,
-    string Email
-    // TeamId TeamId //  Deretter må få godkjent av eier/admin av Teamet?
+    string Email    
     );

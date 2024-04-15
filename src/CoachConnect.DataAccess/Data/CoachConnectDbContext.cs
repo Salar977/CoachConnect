@@ -138,6 +138,14 @@ public class CoachConnectDbContext : DbContext
          .HasConversion(
              id => id.coachId,
              value => new CoachId(value)
-          );        
+          );
+
+        //modelBuilder.Entity<JwtRole>()
+        //  .HasKey(r => r.Id);
+
+        modelBuilder.Entity<JwtUserRole>()
+          .HasOne<JwtRole>()  
+          .WithMany()         
+          .HasForeignKey(u => u.JwtRoleId);
     }
 }

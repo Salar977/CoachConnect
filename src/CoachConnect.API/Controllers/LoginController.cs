@@ -57,7 +57,7 @@ public class LoginController : Controller
             claims.Add(new Claim("UserName", user.Email.ToString()));
             foreach (var role in userRoles)
             {
-                claims.Add(new Claim("Role", role.JwtRoleId.ToString()));
+                claims.Add(new Claim(ClaimTypes.Role, role.JwtRoleId.ToString()));
             }
         }
         else if (userOrCoach is Coach coach)
@@ -69,7 +69,7 @@ public class LoginController : Controller
 
             foreach (var role in userRoles)
             {
-                claims.Add(new Claim("Role", role.JwtRoleId.ToString()));
+                claims.Add(new Claim(ClaimTypes.Role, role.JwtRoleId.ToString()));
             }
         }       
 

@@ -18,7 +18,7 @@ public class UsersController : ControllerBase
         _logger = logger;
     }
 
-    [Authorize(Roles = "2, 3")]
+    [Authorize(Roles = "3")]
     // GET: https://localhost:7036/api/v1/users
     [HttpGet(Name = "GetUsers")]
     public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers([FromQuery] UserQuery userQuery) 

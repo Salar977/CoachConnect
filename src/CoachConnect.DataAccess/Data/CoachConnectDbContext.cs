@@ -139,5 +139,10 @@ public class CoachConnectDbContext : DbContext
              id => id.coachId,
              value => new CoachId(value)
           );
+
+        modelBuilder.Entity<JwtUserRole>()
+          .HasOne<JwtRole>()  
+          .WithMany()         
+          .HasForeignKey(u => u.JwtRoleId);
     }
 }

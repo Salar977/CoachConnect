@@ -3,12 +3,12 @@
 ### GET ALL / Filtered
 
 GET {{baseUrl}}/api/v1/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9 Eksempel på JWT token, sett inn når JWT er implementert? Hvordan lage token for at disse skal fungere?
+Authorization: Bearer inputJwtTokenHere 
 
 ### GET BY ID
 
 GET {{baseUrl}}/api/v1/users/8f2466af-57c3-458c-82d8-676d80573c6c
-Authorization: Bearer inputTokenHere
+Authorization: Bearer inputJwtTokenHere
 
 ### REGISTER USER
 

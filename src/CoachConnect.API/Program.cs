@@ -80,8 +80,7 @@ app.UseSerilogRequestLogging();
 app.UseRateLimiter();
 
 app.UseHttpsRedirection();
-
-// app.UseMvc();
+app.UseMiddleware<JwtExtractionMiddleware>();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

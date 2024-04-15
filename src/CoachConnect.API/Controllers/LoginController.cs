@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace JWTAuthentication.Controllers;
@@ -41,19 +42,56 @@ public class LoginController : Controller
         return response;
     }
 
-    private string GenerateJSONWebToken(Login userOrCoachInfo)
+    public enum UserRole
+    {
+        Admin = 1,
+        Coach = 2,
+        User = 3    
+    }
+
+
+    private string GenerateJSONWebToken(Login userOrCoach)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-        var token = new JwtSecurityToken(_config["Jwt:Issuer"],
-          _config["Jwt:Issuer"],
-          null,
-          expires: DateTime.Now.AddMinutes(120),
-          signingCredentials: credentials);
+        var claims = new List<Claim>();
+
+        if (userOrCoach is User user)
+        {
+            var userRoles = _dbContext.Jwt_user_roles.Where(u => u.UserName == user.Email);
+
+            claims.Add(new Claim("UserId", user.Id.ToString()));
+            claims.Add(new Claim("UserName", user.Email.ToString()));                       
+
+            foreach (var role in userRoles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role.JwtRoleId.ToString()));
+            }
+        }
+        else if (userOrCoach is Coach coach)
+        {
+            var userRoles = _dbContext.Jwt_user_roles.Where(u => u.UserName == coach.Email);
+
+            claims.Add(new Claim("UserId", coach.Id.ToString()));
+            claims.Add(new Claim("UserName", coach.Email.ToString()));
+
+            foreach (var role in userRoles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role.JwtRoleId.ToString()));
+            }
+        }       
+
+        var token = new JwtSecurityToken(
+            _config["Jwt:Issuer"],
+            _config["Jwt:Issuer"],
+            claims,
+            expires: DateTime.Now.AddMinutes(120),
+            signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
 
     private Login? AuthenticateUser(LoginDTO loginDto)
     {

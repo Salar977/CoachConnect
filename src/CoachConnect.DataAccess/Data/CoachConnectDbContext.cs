@@ -140,9 +140,6 @@ public class CoachConnectDbContext : DbContext
              value => new CoachId(value)
           );
 
-        //modelBuilder.Entity<JwtRole>()
-        //  .HasKey(r => r.Id);
-
         modelBuilder.Entity<JwtUserRole>()
           .HasOne<JwtRole>()  
           .WithMany()         

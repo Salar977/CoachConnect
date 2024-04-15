@@ -42,6 +42,14 @@ public class LoginController : Controller
         return response;
     }
 
+    public enum UserRole
+    {
+        Admin = 1,
+        Coach = 2,
+        User = 3    
+    }
+
+
     private string GenerateJSONWebToken(Login userOrCoach)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
@@ -54,7 +62,8 @@ public class LoginController : Controller
             var userRoles = _dbContext.Jwt_user_roles.Where(u => u.UserName == user.Email);
 
             claims.Add(new Claim("UserId", user.Id.ToString()));
-            claims.Add(new Claim("UserName", user.Email.ToString()));
+            claims.Add(new Claim("UserName", user.Email.ToString()));                       
+
             foreach (var role in userRoles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role.JwtRoleId.ToString()));

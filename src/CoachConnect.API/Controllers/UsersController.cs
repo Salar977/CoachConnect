@@ -18,7 +18,8 @@ public class UsersController : ControllerBase
         _logger = logger;
     }
 
-    [Authorize(Roles = "3")]
+
+    [Authorize(Roles = "Admin")]
     // GET: https://localhost:7036/api/v1/users
     [HttpGet(Name = "GetUsers")]
     public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers([FromQuery] UserQuery userQuery) 
@@ -30,7 +31,8 @@ public class UsersController : ControllerBase
         return Ok(await _userService.GetAllAsync(userQuery));
     }
 
-    //[Authorize]
+
+    [Authorize(Roles = "User")]
     // GET https://localhost:7036/api/v1/users/8f2466af-57c3-458c-82d8-676d80573c6c
     [HttpGet("{id}", Name = "GetUserById")] 
     public async Task<ActionResult<UserDTO>> GetUserById([FromRoute] Guid id) // bruk Guid her pga modelbinding kjenner ikke igjen vår custom UserId, så bruk Guid her og vi må konvertere under isteden

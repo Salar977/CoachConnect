@@ -67,6 +67,9 @@ public class GameAttendanceRepository : IGameAttendanceRepository
         var skipNumber = (gameAttendanceQuery.PageNumber - 1) * gameAttendanceQuery.PageSize;
 
         return await gameAttendances
+            .Include(g => g.Player)
+            .Include(g => g.Game)
+            .Include(g => g.Game)
             .Skip(skipNumber)
             .Take(gameAttendanceQuery.PageSize)
             .ToListAsync();
@@ -74,10 +77,17 @@ public class GameAttendanceRepository : IGameAttendanceRepository
 
     public async Task<GameAttendance?> GetByIdAsync(GameAttendanceId id)
     {
-        _logger.LogDebug("Getting gameAttendance by id: {id} from db", id);
+    _logger.LogDebug("Getting gameAttendance by id: {id} from db", id);
 
-        return await _dbContext.Game_attendences.FindAsync(id);
+    var gameAttendance = await _dbContext.Game_attendences
+        .Include(g => g.Player)
+        .Include(g => g.Game)
+        .FirstOrDefaultAsync(g => g.Id == id);
+
+    return gameAttendance; 
     }
+
+
 
     public async Task<GameAttendance?> RegisterGameAttendanceAsync(GameAttendance gameAttendance)
     {

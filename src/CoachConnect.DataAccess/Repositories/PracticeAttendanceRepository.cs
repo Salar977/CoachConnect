@@ -26,8 +26,10 @@ public class PracticeAttendanceRepository : IPracticeAttendanceRepository
             _logger.LogError("Cannot find practice Attendance");
             return null;
         }
+
         _dbContext.Practice_attendences.Remove(deleteAttendance);
         await _dbContext.SaveChangesAsync();
+
         _logger.LogInformation("Deleted Practice Attendance");
         return deleteAttendance;
     }
@@ -46,7 +48,7 @@ public class PracticeAttendanceRepository : IPracticeAttendanceRepository
 
         if(!string.IsNullOrWhiteSpace(practiceAttendanceQuery.LastName))
         {
-            practiceAttendances = practiceAttendances.Where(x => x.Player.LastName.Contains(practiceAttendanceQuery.LastName));
+            practiceAttendances = practiceAttendances.Where(x => x.Player!.LastName.Contains(practiceAttendanceQuery.LastName));
         }
 
         var skipNumber = (practiceAttendanceQuery.PageNumber - 1) * practiceAttendanceQuery.PageSize;
@@ -71,24 +73,26 @@ public class PracticeAttendanceRepository : IPracticeAttendanceRepository
         return practiceAttendance;
     }
 
-    public async Task<IEnumerable<PracticeAttendance>> GetByPracticeAsync(PracticeId id)
+    public async Task<IEnumerable<PracticeAttendance>> GetByPracticeIdAsync(PracticeId id)
     {
         _logger.LogInformation("Return all practice attendences from practice");
         return await _dbContext.Practice_attendences.Where(x => x.PracticeId == id).ToListAsync();
     }
 
-    public async Task<PracticeAttendance?> RegisterAsync(PracticeAttendance practiceAttendance)
-
+    public async Task<PracticeAttendance?> GetByPracticeIdAndPlayerIdAsync(PracticeId practiceId, PlayerId playerId)
     {
-        var newPracticeAttendance = await _dbContext.Practices.FirstOrDefaultAsync(x => x.Id == practiceAttendance.PracticeId);
-        if (newPracticeAttendance is null)
-        {
-            _logger.LogWarning("Failed to register practice attendance in the database: {practice}", practiceAttendance);
-            return null;
-        }
+        _logger.LogInformation("check if attendance exists in the database...");
+        return await _dbContext.Practice_attendences
+        .FirstOrDefaultAsync(x => x.PracticeId == practiceId && x.PlayerId == playerId);
+    }
+
+    public async Task<PracticeAttendance?> RegisterAsync(PracticeAttendance practiceAttendance)
+    {
+
         var entry = await _dbContext.Practice_attendences.AddAsync(practiceAttendance);
+
         await _dbContext.SaveChangesAsync();
-        _logger.LogInformation("Registered practice in the database: {practice}", newPracticeAttendance);
+        _logger.LogInformation("Registered practice attendance in the database: {entry}", entry.Entity);
         return entry.Entity;
     }
 }

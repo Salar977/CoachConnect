@@ -2,8 +2,6 @@
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace CoachConnect.API.Controllers;
 [Route("api/practice/attendances")]
 [ApiController]
@@ -20,16 +18,16 @@ public class PracticeAttendancesController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("{practiceId:guid}", Name = "GetAllByPracticeAsync")]
-    public async Task<ActionResult<PracticeAttendanceResponse>> GetAllByPractice([FromRoute] Guid practiceId)
+    [HttpGet("/api/{practiceId:guid}/attendances", Name = "GetAllByPracticeAsync")]
+    public async Task<ActionResult<IEnumerable<PracticeAttendanceResponse>>> GetAllByPractice([FromRoute] Guid practiceId)
     {
-        _logger.LogInformation("Getting all attendences for the practice");
+        _logger.LogInformation("Getting all attendences for the practice - Controller");
         return Ok(await _practiceAttendanceService.GetByPracticeAsync(practiceId));
     }
 
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<PracticeAttendanceResponse>> GetById([FromQuery] Guid id)
+    [HttpGet("{id:guid}", Name = "GetByIdAsync")]
+    public async Task<ActionResult<PracticeAttendanceResponse>> GetById([FromRoute] Guid id)
     {
         var attendance = await _practiceAttendanceService.GetByIdAsync(id);
         if(attendance is null)
@@ -40,7 +38,7 @@ public class PracticeAttendancesController : ControllerBase
     }
 
 
-    [HttpPost]
+    [HttpPost("register", Name = "AddAttendanceAsync")]
     public async Task<ActionResult<PracticeAttendanceResponse>> AddAttendance(PracticeAttendanceRequest practiceAttendanceRequest)
     {
         var attendance = await _practiceAttendanceService.RegisterPracticeAttendanceAsync(practiceAttendanceRequest);
@@ -49,8 +47,7 @@ public class PracticeAttendancesController : ControllerBase
         return Ok(attendance);
     }
 
-    // DELETE api/<PracticeAttendancesController>/5
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:guid}", Name = "DeleteByIdAsync")]
     public async Task<ActionResult<PracticeAttendanceResponse>> DeleteById([FromQuery] Guid id)
     {
         var deleteAttendance = await _practiceAttendanceService.DeleteByIdAsync(id);

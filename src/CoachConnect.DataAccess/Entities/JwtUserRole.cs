@@ -22,4 +22,5 @@ public class JwtUserRole
 
     [ForeignKey(nameof(JwtRole.Id))]
     public int JwtRoleId { get; set; }
+
 }

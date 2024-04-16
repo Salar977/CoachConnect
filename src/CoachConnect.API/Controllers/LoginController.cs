@@ -1,4 +1,5 @@
-﻿using CoachConnect.BusinessLayer.DTOs;
+﻿using CoachConnect.API.Controllers;
+using CoachConnect.BusinessLayer.DTOs;
 using CoachConnect.DataAccess.Data;
 using CoachConnect.DataAccess.Entities;
 using CoachConnect.Shared.Helpers;
@@ -19,17 +20,21 @@ public class LoginController : Controller
 {
     private IConfiguration _config;
     private readonly CoachConnectDbContext _dbContext;
+    private readonly ILogger<UsersController> _logger;
 
-    public LoginController(IConfiguration config, CoachConnectDbContext dbContext)
+    public LoginController(IConfiguration config, CoachConnectDbContext dbContext, ILogger<UsersController> logger)
     {
         _config = config;
         _dbContext = dbContext;
+        _logger = logger;
     }
     
     [AllowAnonymous]
     [HttpPost]
     public IActionResult Login([FromBody] LoginDTO loginDto)
     {
+        _logger.LogDebug("User logging in: {username}", loginDto.Username);
+
         IActionResult response = Unauthorized("Not Authorized");
         var user = AuthenticateUser(loginDto);
 
@@ -52,6 +57,8 @@ public class LoginController : Controller
 
     private string GenerateJSONWebToken(Login userOrCoach)
     {
+        _logger.LogDebug("Generating Token");
+
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
@@ -62,12 +69,13 @@ public class LoginController : Controller
             var userRoles = _dbContext.Jwt_user_roles.Where(u => u.UserName == user.Email);
 
             claims.Add(new Claim("UserId", user.Id.ToString()));
-            claims.Add(new Claim("UserName", user.Email.ToString()));                       
+            claims.Add(new Claim("UserName", user.Email.ToString()));
 
             foreach (var role in userRoles)
             {
-                claims.Add(new Claim(ClaimTypes.Role, role.JwtRoleId.ToString()));
-            }
+                var enumRole = (UserRole)role.JwtRoleId;
+                claims.Add(new Claim(ClaimTypes.Role, enumRole.ToString()));
+            }        
         }
         else if (userOrCoach is Coach coach)
         {
@@ -78,7 +86,8 @@ public class LoginController : Controller
 
             foreach (var role in userRoles)
             {
-                claims.Add(new Claim(ClaimTypes.Role, role.JwtRoleId.ToString()));
+                var enumRole = (UserRole)role.JwtRoleId;
+                claims.Add(new Claim(ClaimTypes.Role, enumRole.ToString()));
             }
         }       
 
@@ -95,6 +104,9 @@ public class LoginController : Controller
 
     private Login? AuthenticateUser(LoginDTO loginDto)
     {
+
+        _logger.LogDebug("Authenticating user: {username}", loginDto.Username);
+
         var user = _dbContext.Users.FirstOrDefault(u => u.Email.Equals(loginDto.Username));
         if (user != null && BCrypt.Net.BCrypt.Verify(loginDto.Password, user.HashedPassword))
         {

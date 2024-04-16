@@ -41,7 +41,7 @@ public class GameAttendanceRepository : IGameAttendanceRepository
 
         if (!string.IsNullOrWhiteSpace(gameAttendanceQuery.PlayerLastName))
         {
-            gameAttendances = gameAttendances.Where(g => g.Player.LastName.StartsWith(gameAttendanceQuery.PlayerLastName));
+            gameAttendances = gameAttendances.Where(g => g.Player!.LastName.StartsWith(gameAttendanceQuery.PlayerLastName));
         }
 
         if (gameAttendanceQuery.GameId != null && gameAttendanceQuery.GameId != Guid.Empty)
@@ -54,7 +54,7 @@ public class GameAttendanceRepository : IGameAttendanceRepository
         {
             if (gameAttendanceQuery.SortBy.Equals("PlayerLastName", StringComparison.OrdinalIgnoreCase))
             {
-                gameAttendances = gameAttendanceQuery.IsDescending ? gameAttendances.OrderByDescending(x => x.Player.LastName) : gameAttendances.OrderBy(x => x.Player.LastName);
+                gameAttendances = gameAttendanceQuery.IsDescending ? gameAttendances.OrderByDescending(x => x.Player!.LastName) : gameAttendances.OrderBy(x => x.Player!.LastName);
             }         
         }
 

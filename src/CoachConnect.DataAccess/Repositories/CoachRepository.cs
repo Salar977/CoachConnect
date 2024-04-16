@@ -66,13 +66,6 @@ public class CoachRepository : ICoachRepository
             .ToListAsync();
     }
 
-    //public async Task<Coach?> GetByIdAsync(CoachId id)
-    //{
-    //    _logger.LogDebug("Getting coach by id: {id} from db", id);
-
-    //    return await _dbContext.Coaches.FindAsync(id);
-    //}
-
     public async Task<Coach?> GetByIdAsync(CoachId id)
     {
         _logger.LogDebug("Getting coach by id: {id} from db", id);

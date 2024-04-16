@@ -32,7 +32,7 @@ public class UsersController : ControllerBase
     }
 
 
-    [Authorize(Roles = "User")]
+    [Authorize(Roles = "User, Coach")]
     // GET https://localhost:7036/api/v1/users/8f2466af-57c3-458c-82d8-676d80573c6c
     [HttpGet("{id}", Name = "GetUserById")] 
     public async Task<ActionResult<UserDTO>> GetUserById([FromRoute] Guid id) // bruk Guid her pga modelbinding kjenner ikke igjen vår custom UserId, så bruk Guid her og vi må konvertere under isteden

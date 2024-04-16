@@ -28,6 +28,12 @@ public class GameAttendanceRepository : IGameAttendanceRepository
         var res = await _dbContext.Game_attendences.FindAsync(id);
         if (res == null) return null;
 
+        var player = await _dbContext.Players.FirstOrDefaultAsync(x => x.Id == res.PlayerId);
+        if (player is not null)
+        {
+            player.TotalGames--;
+        }
+
         _dbContext.Game_attendences.Remove(res);
         await _dbContext.SaveChangesAsync();
         return res;
@@ -78,6 +84,13 @@ public class GameAttendanceRepository : IGameAttendanceRepository
         _logger.LogDebug("Adding Gameattendance to DB");
 
         await _dbContext.Game_attendences.AddAsync(gameAttendance);
+
+        var player = await _dbContext.Players.FirstOrDefaultAsync(x => x.Id == gameAttendance.PlayerId);
+        if (player is not null)
+        {
+            player.TotalGames++;
+        }
+
         await _dbContext.SaveChangesAsync();
 
         return gameAttendance;

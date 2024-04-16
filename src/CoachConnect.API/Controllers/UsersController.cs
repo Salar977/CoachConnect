@@ -18,6 +18,7 @@ public class UsersController : ControllerBase
         _logger = logger;
     }
 
+
     [Authorize(Roles = "Admin")]
     // GET: https://localhost:7036/api/v1/users
     [HttpGet(Name = "GetUsers")]
@@ -29,6 +30,7 @@ public class UsersController : ControllerBase
 
         return Ok(await _userService.GetAllAsync(userQuery));
     }
+
 
     [Authorize(Roles = "User")]
     // GET https://localhost:7036/api/v1/users/8f2466af-57c3-458c-82d8-676d80573c6c

@@ -54,6 +54,7 @@ public class LoginController : Controller
         User = 3    
     }
 
+
     private string GenerateJSONWebToken(Login userOrCoach)
     {
         _logger.LogDebug("Generating Token");

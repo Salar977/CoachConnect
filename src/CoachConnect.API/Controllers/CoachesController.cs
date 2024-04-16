@@ -2,6 +2,7 @@
 using CoachConnect.BusinessLayer.Services;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.Shared.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoachConnect.API.Controllers;
@@ -18,6 +19,7 @@ public class CoachesController : ControllerBase
         _logger = logger;
     }
 
+    [Authorize(Roles = "Admin")]
     // GET: https://localhost:7036/api/v1/coaches
     [HttpGet(Name = "GetCoaches")]
     public async Task<ActionResult<IEnumerable<CoachDTO>>> GetCoaches([FromQuery] CoachQuery query)
@@ -29,6 +31,7 @@ public class CoachesController : ControllerBase
         return Ok(await _coachService.GetAllAsync(query));
     }
 
+    [Authorize(Roles = "Admin")]
     // GET https://localhost:7036/api/v1/coaches/2b1e02fc-4b92-4b0d-84a7-2418ff07ac13
     [HttpGet("{id}", Name = "GetCoachById")]
     public async Task<ActionResult<CoachDTO>> GetCoachById([FromRoute] Guid id)
@@ -39,6 +42,7 @@ public class CoachesController : ControllerBase
         return res != null ? Ok(res) : NotFound("Could not find any coach with this id");
     }
 
+    [Authorize(Roles = "Admin , Coach")]
     // PUT https://localhost:7036/api/v1/coaches/92a93093-c123-4748-a8d9-558d61690d76
     [HttpPut("{id}", Name = "UpdateCoach")]
     public async Task<ActionResult<CoachDTO>> UpdateCoach(Guid id, [FromBody] CoachDTO dto)
@@ -49,6 +53,7 @@ public class CoachesController : ControllerBase
         return res != null ? Ok(res) : BadRequest("Could not update coach");
     }
 
+    [Authorize(Roles = "Admin , Coach")]
     // DELETE https://localhost:7036/api/v1/users/2b1e02fc-4b92-4b0d-84a7-2418ff07ac13
     [HttpDelete("{id}", Name = "DeleteCoach")]
     public async Task<ActionResult<CoachDTO>> DeleteCoach([FromRoute] Guid id)
@@ -59,6 +64,7 @@ public class CoachesController : ControllerBase
         return res != null ? Ok(res) : BadRequest("Could not delete coach");
     }
 
+    [Authorize(Roles = "Admin , Coach")]
     // POST https://localhost:7036/api/v1/coaches/register
     [HttpPost("register", Name = "RegisterCoach")]
     public async Task<ActionResult<CoachDTO>> RegisterCoach([FromBody] CoachRegistrationDTO dto)

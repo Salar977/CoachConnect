@@ -6,4 +6,4 @@ using System.Threading.Tasks;
 
 namespace CoachConnect.BusinessLayer.DTOs.Teams;
 public record TeamRequest(string TeamCity,
-    string TeamName);
+                          string TeamName);

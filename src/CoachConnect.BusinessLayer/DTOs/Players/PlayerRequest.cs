@@ -5,6 +5,5 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CoachConnect.BusinessLayer.DTOs.Players;
-public record PlayerRequest
-(string FirstName,
-    string LastName);
+public record PlayerRequest(string FirstName,
+                            string LastName);

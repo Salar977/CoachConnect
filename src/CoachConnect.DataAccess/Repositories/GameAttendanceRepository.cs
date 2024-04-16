@@ -28,6 +28,12 @@ public class GameAttendanceRepository : IGameAttendanceRepository
         var res = await _dbContext.Game_attendences.FindAsync(id);
         if (res == null) return null;
 
+        var player = await _dbContext.Players.FirstOrDefaultAsync(x => x.Id == res.PlayerId);
+        if (player is not null)
+        {
+            player.TotalGames--;
+        }
+
         _dbContext.Game_attendences.Remove(res);
         await _dbContext.SaveChangesAsync();
         return res;
@@ -41,7 +47,7 @@ public class GameAttendanceRepository : IGameAttendanceRepository
 
         if (!string.IsNullOrWhiteSpace(gameAttendanceQuery.PlayerLastName))
         {
-            gameAttendances = gameAttendances.Where(g => g.Player.LastName.StartsWith(gameAttendanceQuery.PlayerLastName));
+            gameAttendances = gameAttendances.Where(g => g.Player!.LastName.StartsWith(gameAttendanceQuery.PlayerLastName));
         }
 
         if (gameAttendanceQuery.GameId != null && gameAttendanceQuery.GameId != Guid.Empty)
@@ -54,13 +60,16 @@ public class GameAttendanceRepository : IGameAttendanceRepository
         {
             if (gameAttendanceQuery.SortBy.Equals("PlayerLastName", StringComparison.OrdinalIgnoreCase))
             {
-                gameAttendances = gameAttendanceQuery.IsDescending ? gameAttendances.OrderByDescending(x => x.Player.LastName) : gameAttendances.OrderBy(x => x.Player.LastName);
+                gameAttendances = gameAttendanceQuery.IsDescending ? gameAttendances.OrderByDescending(x => x.Player!.LastName) : gameAttendances.OrderBy(x => x.Player!.LastName);
             }         
         }
 
         var skipNumber = (gameAttendanceQuery.PageNumber - 1) * gameAttendanceQuery.PageSize;
 
         return await gameAttendances
+            .Include(g => g.Player)
+            .Include(g => g.Game)
+            .Include(g => g.Game)
             .Skip(skipNumber)
             .Take(gameAttendanceQuery.PageSize)
             .ToListAsync();
@@ -68,16 +77,30 @@ public class GameAttendanceRepository : IGameAttendanceRepository
 
     public async Task<GameAttendance?> GetByIdAsync(GameAttendanceId id)
     {
-        _logger.LogDebug("Getting gameAttendance by id: {id} from db", id);
+    _logger.LogDebug("Getting gameAttendance by id: {id} from db", id);
 
-        return await _dbContext.Game_attendences.FindAsync(id);
+    var gameAttendance = await _dbContext.Game_attendences
+        .Include(g => g.Player)
+        .Include(g => g.Game)
+        .FirstOrDefaultAsync(g => g.Id == id);
+
+    return gameAttendance; 
     }
+
+
 
     public async Task<GameAttendance?> RegisterGameAttendanceAsync(GameAttendance gameAttendance)
     {
         _logger.LogDebug("Adding Gameattendance to DB");
 
         await _dbContext.Game_attendences.AddAsync(gameAttendance);
+
+        var player = await _dbContext.Players.FirstOrDefaultAsync(x => x.Id == gameAttendance.PlayerId);
+        if (player is not null)
+        {
+            player.TotalGames++;
+        }
+
         await _dbContext.SaveChangesAsync();
 
         return gameAttendance;

@@ -2,7 +2,7 @@
 
 namespace CoachConnect.BusinessLayer.DTOs.Practices;
 
-public record PracticeAttendanceResponse(Guid PracticeAttendanceId,
+public record PracticeAttendanceResponse(PracticeAttendanceId PracticeAttendanceId,
                                          PracticeId PracticeId,
                                          PlayerId PlayerId,
                                          DateTime Created,

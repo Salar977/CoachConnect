@@ -8,7 +8,7 @@ public class PracticeAttendanceMapper : IMapper<PracticeAttendance, PracticeAtte
 {
     public PracticeAttendanceResponse MapToDTO(PracticeAttendance entity)
     {
-        return new PracticeAttendanceResponse(entity.Id.practiceAttendanceId,
+        return new PracticeAttendanceResponse(entity.Id,
                                               entity.PracticeId,
                                               entity.PlayerId,
                                               entity.Created,

@@ -39,10 +39,13 @@ public class PracticeAttendancesController : ControllerBase
 
 
     [HttpPost("register", Name = "AddAttendanceAsync")]
-    public async Task<ActionResult<PracticeAttendanceResponse>> AddAttendance(PracticeAttendanceRequest practiceAttendanceRequest)
+    public async Task<ActionResult<PracticeAttendanceResponse>> AddAttendance([FromBody]
+                                                                               PracticeAttendanceRequest
+                                                                               practiceAttendanceRequest)
     {
+        if(!ModelState.IsValid) { return BadRequest("Model is not valid"); }
         var attendance = await _practiceAttendanceService.RegisterPracticeAttendanceAsync(practiceAttendanceRequest);
-        if (attendance is null) { return BadRequest(); }
+        if (attendance is null) { return BadRequest("attendance is null"); }
 
         return Ok(attendance);
     }

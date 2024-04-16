@@ -12,12 +12,17 @@ public class PracticeMapper : IMapper<Practice, PracticeResponse>
                                     entity.Location,
                                     entity.PracticeDate,
                                     entity.Created,
-                                    entity.Updated,
-                                    entity.PracticeAttendances);
+                                    entity.Updated);
     }
 
     public Practice MapToEntity(PracticeResponse practiceResponse)
     {
-        throw new NotImplementedException();
+        var now = DateTime.Now;
+        return new Practice
+        {
+            Id = new PracticeId(practiceResponse.PracticeId),
+            Location = practiceResponse.Location,
+            PracticeDate = practiceResponse.PracticeDate
+        };
     }
 }

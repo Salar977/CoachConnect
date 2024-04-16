@@ -44,7 +44,7 @@ public class PracticeController : ControllerBase
     }
 
 
-    [HttpPost]
+    [HttpPost("register")]
     public async Task<ActionResult<PracticeResponse>> CreatePractice([FromBody] PracticeRequest practice)
     {
         if (!ModelState.IsValid) return BadRequest();
@@ -56,8 +56,8 @@ public class PracticeController : ControllerBase
         return Ok(createPractice);
     }
 
-    [HttpDelete]
-    public async Task<ActionResult<PracticeResponse>> DeleteById([FromQuery] Guid id)
+    [HttpDelete("delete/{id:guid}")]
+    public async Task<ActionResult<PracticeResponse>> DeleteById([FromRoute] Guid id)
     {
         var practice = await _practiceService.GetByIdAsync(id);
 

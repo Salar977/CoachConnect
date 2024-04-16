@@ -88,7 +88,7 @@ public class PracticeAttendanceService : IPracticeAttendanceService
 
             // see if practice attendance exists in that practice
             var attendanceExist = _attendanceRepository.GetByPracticeIdAndPlayerIdAsync(newAttendance.PracticeId, newAttendance.PlayerId);
-            if (attendanceExist is not null)
+            if (attendanceExist is null)
             {
                 _logger.LogError("Practice attendance already exists");
                 return null;

@@ -69,7 +69,7 @@ public class PracticeService : IPracticeService
 
             var practiceExists = _practiceRepository.GetByPracticeTimeAsync(startDate);
 
-            if (practiceExists is null)
+            if (practiceExists is not null)
             {
                 var practiceEntity = _practiceRequestMapper.MapToEntity(practice);
                 practiceEntity.Id = PracticeId.NewId;

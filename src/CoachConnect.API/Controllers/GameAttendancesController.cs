@@ -57,16 +57,16 @@ public class GameAttendancesController : ControllerBase
         _logger.LogDebug("Deleting Gameattendance: {id}", id);
 
         var res = await _gameAttendanceService.DeleteAsync(id);
-        return res != null ? Ok(res) : BadRequest("Could not delete gameAttendance ID");
+        return res != null ? Ok(res) : BadRequest("Could not delete gameAttendance");
     }
 
     // https://localhost:7036/api/v1/gameattendances/3fa85f64-5717-4562-b3fc-2c963f66afa6
-    [HttpPut("{id}", Name = "UpdateGameAttendance")]
-    public async Task<ActionResult<GameAttendanceDTO>> UpdateGameAttendance([FromRoute] Guid id, [FromBody] GameAttendanceDTO dto)
-    {
-        _logger.LogDebug("Updating Game Attendance: {id}", id);
+    //[HttpPut("{id}", Name = "UpdateGameAttendance")]
+    //public async Task<ActionResult<GameAttendanceDTO>> UpdateGameAttendance([FromRoute] Guid id, [FromBody] GameAttendanceDTO dto)
+    //{
+    //    _logger.LogDebug("Updating Game Attendance: {id}", id);
 
-        var res = await _gameAttendanceService.UpdateAsync(id, dto);
-        return res != null ? Ok(res) : BadRequest("Could not update gameAttendance");
-    }
+    //    var res = await _gameAttendanceService.UpdateAsync(id, dto);
+    //    return res != null ? Ok(res) : BadRequest("Could not update gameAttendance");
+    //}
 }

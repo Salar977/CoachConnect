@@ -25,7 +25,11 @@ public class GameAttendanceRepository : IGameAttendanceRepository
     {
         _logger.LogDebug("Deleting gameAttendance: {id} from db", id);
 
-        var res = await _dbContext.Game_attendences.FindAsync(id);
+        var res = await _dbContext.Game_attendences
+            .Include(g => g.Player)
+            .Include(g => g.Game)
+            .FirstOrDefaultAsync(g => g.Id == id);
+
         if (res == null) return null;
 
         _dbContext.Game_attendences.Remove(res);
@@ -61,6 +65,8 @@ public class GameAttendanceRepository : IGameAttendanceRepository
         var skipNumber = (gameAttendanceQuery.PageNumber - 1) * gameAttendanceQuery.PageSize;
 
         return await gameAttendances
+            .Include(g => g.Player)
+            .Include(g => g.Game)
             .Skip(skipNumber)
             .Take(gameAttendanceQuery.PageSize)
             .ToListAsync();
@@ -68,35 +74,43 @@ public class GameAttendanceRepository : IGameAttendanceRepository
 
     public async Task<GameAttendance?> GetByIdAsync(GameAttendanceId id)
     {
-        _logger.LogDebug("Getting gameAttendance by id: {id} from db", id);
+    _logger.LogDebug("Getting gameAttendance by id: {id} from db", id);
 
-        return await _dbContext.Game_attendences.FindAsync(id);
+    var gameAttendance = await _dbContext.Game_attendences
+        .Include(g => g.Player)
+        .Include(g => g.Game)
+        .FirstOrDefaultAsync(g => g.Id == id);
+
+    return gameAttendance; 
     }
+
+
 
     public async Task<GameAttendance?> RegisterGameAttendanceAsync(GameAttendance gameAttendance)
     {
         _logger.LogDebug("Adding Gameattendance to DB");
 
         await _dbContext.Game_attendences.AddAsync(gameAttendance);
+
         await _dbContext.SaveChangesAsync();
 
         return gameAttendance;
     }
 
-    public async Task<GameAttendance?> UpdateAsync(GameAttendanceId id, GameAttendance gameAttendance)
-    {
-        _logger.LogDebug("Updating gameAttendance: {id} in db", id);
+    //public async Task<GameAttendance?> UpdateAsync(GameAttendanceId id, GameAttendance gameAttendance)
+    //{
+    //    _logger.LogDebug("Updating gameAttendance: {id} in db", id);
 
-        var gameAtt = await _dbContext.Game_attendences.FirstOrDefaultAsync(g => g.Id.Equals(id));
-        if (gameAtt == null) return null;
+    //    var gameAtt = await _dbContext.Game_attendences.FirstOrDefaultAsync(g => g.Id.Equals(id));
+    //    if (gameAtt == null) return null;
 
-        gameAtt.GameId = gameAttendance.GameId != GameId.Empty ? gameAttendance.GameId : gameAtt.GameId;
-        gameAtt.PlayerId = gameAttendance.PlayerId != PlayerId.Empty ? gameAttendance.PlayerId : gameAtt.PlayerId;
-        gameAtt.Updated = DateTime.Now;
+    //    gameAtt.GameId = gameAttendance.GameId != GameId.Empty ? gameAttendance.GameId : gameAtt.GameId;
+    //    gameAtt.PlayerId = gameAttendance.PlayerId != PlayerId.Empty ? gameAttendance.PlayerId : gameAtt.PlayerId;
+    //    gameAtt.Updated = DateTime.Now;
 
-        await _dbContext.SaveChangesAsync();
+    //    await _dbContext.SaveChangesAsync();
 
-        return gameAtt;
-    }
+    //    return gameAtt;
+    //}
 
 }

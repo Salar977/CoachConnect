@@ -13,6 +13,6 @@ public interface IGameService
     Task<GameDTO?> GetByIdAsync(Guid id); 
     Task<ICollection<GameDTO>> GetAllAsync(GameQuery gameQuery); 
     Task<GameRegistrationDTO?> CreateAsync(GameRegistrationDTO gameRegistrationDTO); 
-    Task<GameDTO?> UpdateAsync(Guid id, GameDTO gameDto); 
+    Task<GameUpdateDTO?> UpdateAsync(Guid id, GameUpdateDTO gameUpdateDto); 
     Task<GameDTO?> DeleteAsync(Guid id); 
 }

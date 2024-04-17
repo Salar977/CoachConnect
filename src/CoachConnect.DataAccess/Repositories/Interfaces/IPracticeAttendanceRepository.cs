@@ -11,6 +11,7 @@ public interface IPracticeAttendanceRepository
 
     Task<PracticeAttendance?> DeleteByIdAsync(PracticeAttendanceId id);
     Task<PracticeAttendance?> GetByIdAsync(PracticeAttendanceId id);
+    Task<PracticeAttendance?> GetByPracticeIdAndPlayerIdAsync(PracticeId practiceId, PlayerId playerId);
 
-    Task<IEnumerable<PracticeAttendance>> GetByPracticeAsync(PracticeId id);
+    Task<IEnumerable<PracticeAttendance>> GetByPracticeIdAsync(PracticeId id);
 }

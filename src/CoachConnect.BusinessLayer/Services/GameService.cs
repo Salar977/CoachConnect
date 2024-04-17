@@ -19,18 +19,21 @@ namespace CoachConnect.BusinessLayer.Services
         private readonly IGameRepository _gameRepository;
         private readonly IPracticeRepository _practiceRepository;
         private readonly IMapper<Game, GameDTO> _gameMapper;
+        private readonly IMapper<Game, GameUpdateDTO> _gameUpdateMapper;
         private readonly IMapper<Game, GameRegistrationDTO> _gameRegistrationMapper;
         private readonly ILogger<GameService> _logger;
 
         public GameService(IGameRepository gameRepository,
                            IPracticeRepository practiceRepository,
                            IMapper<Game, GameDTO> gameMapper,
+                           IMapper<Game, GameUpdateDTO> gameUpdateMapper,
                            IMapper<Game, GameRegistrationDTO> gameRegistrationMapper,
                            ILogger<GameService> logger)
         {
             _gameRepository = gameRepository;
             _practiceRepository = practiceRepository;
             _gameMapper = gameMapper;
+            _gameUpdateMapper = gameUpdateMapper;
             _gameRegistrationMapper = gameRegistrationMapper;
             _logger = logger;
         }
@@ -84,16 +87,16 @@ namespace CoachConnect.BusinessLayer.Services
             return res != null ? _gameMapper.MapToDTO(res) : null;
         }
 
-        public async Task<GameDTO?> UpdateAsync(Guid id, GameDTO gameDto)
+        public async Task<GameUpdateDTO?> UpdateAsync(Guid id, GameUpdateDTO gameUpdateDto)
         {
             _logger.LogDebug("Updating Game: {id}", id);
 
             var gameId = new GameId(id);
-            var game = _gameMapper.MapToEntity(gameDto);
+            var game = _gameUpdateMapper.MapToEntity(gameUpdateDto);
             game.Id = gameId;
 
             var res = await _gameRepository.UpdateAsync(gameId, game);
-            return res != null ? _gameMapper.MapToDTO(game) : null;
+            return res != null ? _gameUpdateMapper.MapToDTO(game) : null;
         }
     }
     

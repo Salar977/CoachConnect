@@ -9,5 +9,3 @@ public record CoachDTO(
     string Email,
     CoachId Id,
     IEnumerable<TeamDTO> Teams);
-
-

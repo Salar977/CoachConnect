@@ -14,18 +14,21 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IMapper<User, UserDTO> _userMapper;
+    private readonly IMapper<User, UserCoachUpdateDTO> _userUpdateMapper;    
     private readonly IMapper<Player, PlayerDTO> _playerMapper;
     private readonly IMapper<User, UserRegistrationDTO> _userRegistrationMapper;
     private readonly ILogger<UserService> _logger;
 
     public UserService(IUserRepository userRepository, 
                        IMapper<User, UserDTO> userMapper,
+                       IMapper<User, UserCoachUpdateDTO> userUpdateMapper,
                        IMapper<Player, PlayerDTO> playerMapper,
                        IMapper<User, UserRegistrationDTO> userRegistrationMapper,
                        ILogger<UserService> logger)
     {   
         _userRepository = userRepository;
         _userMapper = userMapper;
+        _userUpdateMapper = userUpdateMapper;
         _playerMapper = playerMapper;
         _userRegistrationMapper = userRegistrationMapper;
         _logger = logger;
@@ -74,7 +77,7 @@ public class UserService : IUserService
         return res != null ? _userMapper.MapToDTO(res) : null;
     }  
     
-    public async Task<UserDTO?> UpdateAsync(Guid id, UserDTO dto)
+    public async Task<UserCoachUpdateDTO?> UpdateAsync(Guid id, UserCoachUpdateDTO dto)
     {
         _logger.LogDebug("Updating user: {id}", id);
 
@@ -82,11 +85,11 @@ public class UserService : IUserService
         // kanksje noe som : throw new UnauthorizedAccessException($"User {loggedInUserId} has no access to delete user {id}");
 
         var userId = new UserId(id);
-        var user = _userMapper.MapToEntity(dto);
+        var user = _userUpdateMapper.MapToEntity(dto);
         user.Id = userId;
 
         var res = await _userRepository.UpdateAsync(userId, user);
-        return res != null ? _userMapper.MapToDTO(user) : null;
+        return res != null ? _userUpdateMapper.MapToDTO(user) : null;
     }
 
     public async Task<UserDTO?> DeleteAsync(Guid id)

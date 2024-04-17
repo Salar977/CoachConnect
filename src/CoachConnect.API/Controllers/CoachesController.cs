@@ -19,7 +19,7 @@ public class CoachesController : ControllerBase
         _logger = logger;
     }
 
-    [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")]
     // GET: https://localhost:7036/api/v1/coaches
     [HttpGet(Name = "GetCoaches")]
     public async Task<ActionResult<IEnumerable<CoachDTO>>> GetCoaches([FromQuery] CoachQuery query)
@@ -31,7 +31,7 @@ public class CoachesController : ControllerBase
         return Ok(await _coachService.GetAllAsync(query));
     }
 
-    [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")]
     // GET https://localhost:7036/api/v1/coaches/2b1e02fc-4b92-4b0d-84a7-2418ff07ac13
     [HttpGet("{id}", Name = "GetCoachById")]
     public async Task<ActionResult<CoachDTO>> GetCoachById([FromRoute] Guid id)
@@ -45,7 +45,7 @@ public class CoachesController : ControllerBase
     //[Authorize(Roles = "Admin , Coach")]
     // PUT https://localhost:7036/api/v1/coaches/92a93093-c123-4748-a8d9-558d61690d76
     [HttpPut("{id}", Name = "UpdateCoach")]
-    public async Task<ActionResult<CoachDTO>> UpdateCoach(Guid id, [FromBody] CoachDTO dto)
+    public async Task<ActionResult<UserCoachUpdateDTO>> UpdateCoach(Guid id, [FromBody] UserCoachUpdateDTO dto)
     {
         _logger.LogDebug("Updating coach: {id}", id);
 

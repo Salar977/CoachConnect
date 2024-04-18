@@ -1,8 +1,8 @@
-﻿using CoachConnect.BusinessLayer.DTOs;
+﻿using CoachConnect.BusinessLayer.DTOs.Games;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.DataAccess.Entities;
 
-namespace CoachConnect.BusinessLayer.Mappers;
+namespace CoachConnect.BusinessLayer.Mappers.GameMappers;
 
 public class GameMapper : IMapper<Game, GameDTO>
 {
@@ -18,14 +18,6 @@ public class GameMapper : IMapper<Game, GameDTO>
 
     public Game MapToEntity(GameDTO dto)
     {
-        var dtnow = DateTime.Now;
-        return new Game
-        {
-            Location = dto.Location,
-            OpponentName = dto.OpponentName,
-            GameTime = dto.GameTime,
-            Created = dtnow,
-            Updated = dtnow
-        };
+        throw new NotImplementedException();
     }
 }

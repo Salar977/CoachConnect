@@ -4,7 +4,7 @@ namespace CoachConnect.BusinessLayer.DTOs.Games;
 public record GameUpdateDTO(
 
     string Location,
-    string HomeTeam,
-    string AwayTeam,
+    TeamId HomeTeam,
+    TeamId AwayTeam,
     DateTime GameTime
     );

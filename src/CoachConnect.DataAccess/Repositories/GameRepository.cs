@@ -52,21 +52,11 @@ public class GameRepository : IGameRepository
         if (!string.IsNullOrWhiteSpace(gameQuery.Location))
         {
             games = games.Where(g => g.Location.StartsWith(gameQuery.Location));
-        }
-
-        if (!string.IsNullOrWhiteSpace(gameQuery.HomeTeam))
-        {
-            games = games.Where(g => g.HomeTeam.StartsWith(gameQuery.HomeTeam));
-        }
-
-        if (!string.IsNullOrWhiteSpace(gameQuery.AwayTeam))
-        {
-            games = games.Where(g => g.AwayTeam.StartsWith(gameQuery.AwayTeam));
-        }
+        }       
 
         if (gameQuery.GameDate != null && gameQuery.GameDate != DateTime.MinValue)
         {
-            games = games.Where(g => g.GameTime.Date == gameQuery.GameDate.Value.Date); // salar: gjort endring for å få dato get by date. Endret også navn til GameDate i GameQuery.cs
+            games = games.Where(g => g.GameTime.Date == gameQuery.GameDate.Value.Date); 
         }
 
         if (!string.IsNullOrWhiteSpace(gameQuery.SortBy))
@@ -121,8 +111,8 @@ public class GameRepository : IGameRepository
         if (gme == null) return null;
 
         gme.Location = string.IsNullOrEmpty(game.Location) ? gme.Location : game.Location;
-        gme.HomeTeam = string.IsNullOrEmpty(game.HomeTeam) ? gme.HomeTeam : game.HomeTeam;
-        gme.AwayTeam = string.IsNullOrEmpty(game.AwayTeam) ? gme.AwayTeam : game.AwayTeam;
+        gme.HomeTeam = game.HomeTeam;
+        gme.AwayTeam = game.AwayTeam;
         gme.GameTime = game.GameTime;
         gme.Updated = DateTime.Now;
 

@@ -9,6 +9,6 @@ namespace CoachConnect.BusinessLayer.DTOs.Games;
 public record GameRegistrationDTO(
 
     string Location,
-    string HomeTeam,
-    string AwayTeam,
+    TeamId HomeTeam,
+    TeamId AwayTeam,
     DateTime GameTime);

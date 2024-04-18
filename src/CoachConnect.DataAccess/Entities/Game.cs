@@ -21,10 +21,12 @@ public class Game
     public string Location { get; set; } = string.Empty;
 
     [Required]
-    public string HomeTeam { get; set; } = string.Empty;
+    [ForeignKey(nameof(Team.Id))]
+    public TeamId HomeTeam { get; set; }
 
-    [Required]    
-    public string AwayTeam { get; set; } = string.Empty;
+    [Required]
+    [ForeignKey(nameof(Team.Id))]
+    public TeamId AwayTeam { get; set; }
 
     [Required]
     public DateTime GameTime { get; set; }

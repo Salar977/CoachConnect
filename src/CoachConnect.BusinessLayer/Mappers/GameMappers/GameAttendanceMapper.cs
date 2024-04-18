@@ -15,6 +15,7 @@ public class GameAttendanceMapper : IMapper<GameAttendance, GameAttendanceDTO>
         return new GameAttendanceDTO(
             entity.Player!.FirstName,
             entity.Player!.LastName,
+            entity.Game!.HomeTeam,
             entity.Game!.AwayTeam,
             entity.Game.GameTime,
             entity.Id,

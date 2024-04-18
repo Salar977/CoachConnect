@@ -15,18 +15,21 @@ public class CoachService : ICoachService
 {
     private readonly ICoachRepository _coachRepository;
     private readonly IMapper<Coach, CoachDTO> _coachMapper;
+    private readonly IMapper<Coach, UserCoachUpdateDTO> _coachUpdateMapper;
     private readonly IMapper<Team, TeamDTO> _teamMapper;
     private readonly IMapper<Coach, CoachRegistrationDTO> _coachRegistartionMapper;
     private readonly ILogger<CoachService> _logger;
 
     public CoachService(ICoachRepository coachRepository,
                         IMapper<Coach, CoachDTO> coachMapper,
+                        IMapper<Coach, UserCoachUpdateDTO> coachUpdateMapper,
                         IMapper<Team, TeamDTO> teamMapper,
                         IMapper<Coach, CoachRegistrationDTO> coachRegistrationMapper,
                         ILogger<CoachService> logger)
     {
         _coachRepository = coachRepository;
         _coachMapper = coachMapper;
+        _coachUpdateMapper = coachUpdateMapper;
         _teamMapper = teamMapper;
         _coachRegistartionMapper = coachRegistrationMapper;
         _logger = logger;
@@ -75,7 +78,7 @@ public class CoachService : ICoachService
         return res != null ? _coachMapper.MapToDTO(res) : null;
     }     
 
-    public async Task<CoachDTO?> UpdateAsync(Guid id, CoachDTO dto)
+    public async Task<UserCoachUpdateDTO?> UpdateAsync(Guid id, UserCoachUpdateDTO dto)
     {
         _logger.LogDebug("Updating coach: {id}", id);
 
@@ -83,11 +86,11 @@ public class CoachService : ICoachService
         // kanksje noe som : throw new UnauthorizedAccessException($"Coach {loggedInUserId} has no access to delete coach {id}");
 
         var coachId = new CoachId(id);
-        var coach = _coachMapper.MapToEntity(dto);
+        var coach = _coachUpdateMapper.MapToEntity(dto);
         coach.Id = coachId;
 
         var res = await _coachRepository.UpdateAsync(coachId, coach);
-        return res != null ? _coachMapper.MapToDTO(coach) : null;
+        return res != null ? _coachUpdateMapper.MapToDTO(coach) : null;
     }
 
     public async Task<CoachDTO?> DeleteAsync(Guid id)

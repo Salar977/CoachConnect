@@ -51,11 +51,11 @@ public class GamesController : ControllerBase
 
     // https://localhost:7036/api/v1/games/2f042e86-d75e-4591-a810-aca80812cde3
     [HttpPut("{id}", Name = "UpdateGame")]
-    public async Task<ActionResult<GameDTO>> UpdateGame(Guid id, [FromBody] GameDTO gameDTO)
+    public async Task<ActionResult<GameUpdateDTO>> UpdateGame(Guid id, [FromBody] GameUpdateDTO gameUpdateDTO)
     {
         _logger.LogDebug("Updating game with ID: {id}", id);
 
-        var res = await _gameService.UpdateAsync(id, gameDTO);
+        var res = await _gameService.UpdateAsync(id, gameUpdateDTO);
         return res != null ? Ok(res) : BadRequest("Could not update game");
     }
 

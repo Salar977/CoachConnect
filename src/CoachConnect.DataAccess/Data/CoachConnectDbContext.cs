@@ -17,10 +17,20 @@ public class CoachConnectDbContext : DbContext
     public DbSet<PracticeAttendance> Practice_attendences { get; set; }
     public DbSet<Team> Teams { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<JwtRole> Jwt_roles { get; set; }
+    public DbSet<JwtUserRole> Jwt_user_roles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<JwtUserRole>()
+
+          .Property(x => x.Id)
+          .HasConversion(
+              id => id.jwtUserRoleId,
+              value => new JwtUserRoleId(value)
+          );
 
         modelBuilder.Entity<User>()
             .Property(x => x.Id)
@@ -129,5 +139,10 @@ public class CoachConnectDbContext : DbContext
              id => id.coachId,
              value => new CoachId(value)
           );
+
+        modelBuilder.Entity<JwtUserRole>()
+          .HasOne<JwtRole>()  
+          .WithMany()         
+          .HasForeignKey(u => u.JwtRoleId);
     }
 }

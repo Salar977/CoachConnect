@@ -12,7 +12,6 @@ namespace CoachConnect.BusinessLayer.Services;
 public class PracticeService : IPracticeService
 {
     private readonly IPracticeRepository _practiceRepository;
-    private readonly IGameRepository _gameRepository;
 
     private readonly IMapper<Practice, PracticeResponse> _practiceMapper;
     private readonly IMapper<Practice, PracticeRequest> _practiceRequestMapper;
@@ -20,15 +19,12 @@ public class PracticeService : IPracticeService
     private readonly ILogger<PracticeService> _logger;
 
     public PracticeService(IPracticeRepository practiceRepository,
-                           IGameRepository gameRepository,
-
                            IMapper<Practice, PracticeResponse> practiceMapper,
                            IMapper<Practice, PracticeRequest> practiceRequestMapper,
                            IMapper<Practice, PracticeUpdate> practiceUpdateMapper,
                            ILogger<PracticeService> logger)
     {
         _practiceRepository = practiceRepository;
-        _gameRepository = gameRepository;
 
         _practiceMapper = practiceMapper;
         _practiceRequestMapper = practiceRequestMapper;
@@ -54,9 +50,7 @@ public class PracticeService : IPracticeService
     public async Task<PracticeResponse?> GetByIdAsync(Guid id)
     {
         _logger.LogDebug("Get practice by id: {id}", id);
-
         var res = await _practiceRepository.GetByIdAsync(new PracticeId(id));
-
         return res != null ? _practiceMapper.MapToDTO(res) : null;
     }
 
@@ -64,29 +58,25 @@ public class PracticeService : IPracticeService
     {
         try
         {    
-
             DateTime startDate = practice.PracticeDate.Date;
 
             var practiceExists = _practiceRepository.GetByPracticeTimeAsync(startDate);
 
-            if (practiceExists is null)
-            {
-                var practiceEntity = _practiceRequestMapper.MapToEntity(practice);
-                practiceEntity.Id = PracticeId.NewId;
+            if (practiceExists is null) return null;
 
-                var res = await _practiceRepository.RegisterPracticeAsync(practiceEntity);
+            var practiceEntity = _practiceRequestMapper.MapToEntity(practice);
+            practiceEntity.Id = PracticeId.NewId;
 
-                if (res is null) return null;
+            var res = await _practiceRepository.RegisterPracticeAsync(practiceEntity);
 
-                _logger.LogInformation("Registered practice - Service");
-                return _practiceMapper.MapToDTO(res);
-            }
-            return null;
+            if (res is null) return null;
 
+            _logger.LogInformation("Registered practice: {res}", res);
+            return _practiceMapper.MapToDTO(res);
         }
         catch (Exception ex)
         {
-            _logger.LogError("Something went wrong with practice registration, {@ex}", ex);
+            _logger.LogError("Something went wrong with practice registration, {ex}", ex);
             return null;
         }
     }
@@ -109,7 +99,7 @@ public class PracticeService : IPracticeService
 
             if (grabPractice is null) return null;
 
-            _logger.LogInformation("Practice was updated - Service");
+            _logger.LogInformation("Practice was updated: {grabPractice}", grabPractice);
 
             return _practiceMapper.MapToDTO(grabPractice);
         }

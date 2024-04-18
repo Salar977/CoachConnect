@@ -1,11 +1,10 @@
 ﻿using CoachConnect.BusinessLayer.DTOs.Practices;
 using CoachConnect.BusinessLayer.Services.Interfaces;
+using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace CoachConnect.API.Controllers;
-[Route("api/practice/attendances")]
+[Route("api/v1/practice/attendances")]
 [ApiController]
 
 public class PracticeAttendancesController : ControllerBase
@@ -20,42 +19,56 @@ public class PracticeAttendancesController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("{practiceId:guid}", Name = "GetAllByPracticeAsync")]
-    public async Task<ActionResult<PracticeAttendanceResponse>> GetAllByPractice([FromRoute] Guid practiceId)
+    [HttpGet(Name = "GetAllAsync")]
+    public async Task<ActionResult<IEnumerable<PracticeAttendanceResponse>>> GetAllAsync([FromQuery] PracticeAttendanceQuery attendanceQuery)
     {
-        _logger.LogInformation("Getting all attendences for the practice");
+        _logger.LogInformation("Get all practices - Controller");
+        return Ok(await _practiceAttendanceService.GetAllAsync(attendanceQuery));
+    }
+
+    [HttpGet("/api/v1/practice/{practiceId:guid}", Name = "GetAllByPracticeAsync")]
+    public async Task<ActionResult<IEnumerable<PracticeAttendanceResponse>>> GetAllByPractice([FromRoute] Guid practiceId)
+    {
+        _logger.LogInformation("Getting all attendences for the practice - Controller");
         return Ok(await _practiceAttendanceService.GetByPracticeAsync(practiceId));
     }
 
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<PracticeAttendanceResponse>> GetById([FromQuery] Guid id)
+    [HttpGet("{id:guid}", Name = "GetAttendanceByIdAsync")]
+    public async Task<ActionResult<PracticeAttendanceResponse>> GetById([FromRoute] Guid id)
     {
         var attendance = await _practiceAttendanceService.GetByIdAsync(id);
         if(attendance is null)
         {
+            _logger.LogWarning("Attendance not found");
             return NotFound();
         }
+
+        _logger.LogInformation("Returned attendance: {attendance}", attendance);
         return Ok(attendance);
     }
 
 
-    [HttpPost]
-    public async Task<ActionResult<PracticeAttendanceResponse>> AddAttendance(PracticeAttendanceRequest practiceAttendanceRequest)
+    [HttpPost("register", Name = "AddAttendanceAsync")]
+    public async Task<ActionResult<PracticeAttendanceResponse>> AddAttendance([FromBody]
+                                                                               PracticeAttendanceRequest
+                                                                               practiceAttendanceRequest)
     {
+        if(!ModelState.IsValid) { return BadRequest("Model is not valid"); }
         var attendance = await _practiceAttendanceService.RegisterPracticeAttendanceAsync(practiceAttendanceRequest);
-        if (attendance is null) { return BadRequest(); }
+        if (attendance is null) { return BadRequest("attendance is null"); }
 
+        _logger.LogInformation("Attendance is added to practice - Controller");
         return Ok(attendance);
     }
 
-    // DELETE api/<PracticeAttendancesController>/5
-    [HttpDelete("{id}")]
-    public async Task<ActionResult<PracticeAttendanceResponse>> DeleteById([FromQuery] Guid id)
+    [HttpDelete("{id:guid}", Name = "DeleteAttendanceByIdAsync")]
+    public async Task<ActionResult<PracticeAttendanceResponse>> DeleteById([FromRoute] Guid id)
     {
         var deleteAttendance = await _practiceAttendanceService.DeleteByIdAsync(id);
         if(deleteAttendance is null) return BadRequest();
 
+        _logger.LogInformation("Attendance is removed from practice - Controller");
         return Ok(deleteAttendance);
     }
 }

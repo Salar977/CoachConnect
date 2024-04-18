@@ -1,9 +1,8 @@
 ﻿namespace CoachConnect.BusinessLayer.DTOs;
 
-public record UserRegistrationDTO( 
+public record UserCoachUpdateDTO(
     string FirstName,
     string LastName,
     string PhoneNumber,
-    string Password,
-    string Email
-    );
+    string Email);
+  

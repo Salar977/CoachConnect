@@ -19,13 +19,7 @@ namespace CoachConnect.BusinessLayer.Validators
                 .MaximumLength(50).WithMessage("Location must not exceed 50 characters.");
 
             RuleFor(game => game.GameTime)
-                .NotEmpty().WithMessage("GameTime is required.")
-                .Must(BeInFuture).WithMessage("GameTime must be in the future.");
-        }
-
-        private bool BeInFuture(DateTime gameTime)
-        {
-            return gameTime > DateTime.Now;
+                .NotEmpty().WithMessage("GameTime is required.");
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoachConnect.DataAccess.Entities;
 
@@ -43,3 +44,4 @@ public class Coach : Login
 
     public virtual ICollection<Team> Teams { get; set; } = new List<Team>();
 }
+

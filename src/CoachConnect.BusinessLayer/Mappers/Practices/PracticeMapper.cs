@@ -8,12 +8,19 @@ public class PracticeMapper : IMapper<Practice, PracticeResponse>
 {
     public PracticeResponse MapToDTO(Practice entity)
     {
-        return new PracticeResponse(entity.Id,
+        if(entity.Updated == DateTime.MinValue)
+        {
+            return new PracticeResponse(entity.Id.practiceId,
                                     entity.Location,
-                                    entity.PracticeDate,
-                                    entity.Created,
-                                    entity.Updated,
-                                    entity.PracticeAttendances);
+                                    entity.PracticeDate.ToString("f"),
+                                    entity.Created.ToString("f"),
+                                    null);
+        }
+        return new PracticeResponse(entity.Id.practiceId,
+                                    entity.Location,
+                                    entity.PracticeDate.ToString("f"),
+                                    entity.Created.ToString("f"),
+                                    entity.Updated.ToString("f"));
     }
 
     public Practice MapToEntity(PracticeResponse practiceResponse)

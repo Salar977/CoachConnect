@@ -49,15 +49,20 @@ public class GameRepository : IGameRepository
 
         var games = _dbContext.Games.AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(gameQuery.Location))
-            {
-                games = games.Where(g => g.Location.StartsWith(gameQuery.Location));
-            }
+        if (!string.IsNullOrWhiteSpace(gameQuery.Location))
+        {
+            games = games.Where(g => g.Location.StartsWith(gameQuery.Location));
+        }
 
-            if (!string.IsNullOrWhiteSpace(gameQuery.OpponentName))
-            {
-                games = games.Where(g => g.OpponentName.StartsWith(gameQuery.OpponentName));
-            }
+        if (!string.IsNullOrWhiteSpace(gameQuery.HomeTeam))
+        {
+            games = games.Where(g => g.HomeTeam.StartsWith(gameQuery.HomeTeam));
+        }
+
+        if (!string.IsNullOrWhiteSpace(gameQuery.AwayTeam))
+        {
+            games = games.Where(g => g.AwayTeam.StartsWith(gameQuery.AwayTeam));
+        }
 
         if (gameQuery.GameDate != null && gameQuery.GameDate != DateTime.MinValue)
         {
@@ -73,7 +78,12 @@ public class GameRepository : IGameRepository
 
             if (gameQuery.SortBy.Equals("Opponent name", StringComparison.OrdinalIgnoreCase))
             {
-                games = gameQuery.IsDescending ? games.OrderByDescending(x => x.OpponentName) : games.OrderBy(x => x.OpponentName);
+                games = gameQuery.IsDescending ? games.OrderByDescending(x => x.HomeTeam) : games.OrderBy(x => x.HomeTeam);
+            }
+
+            if (gameQuery.SortBy.Equals("Opponent name", StringComparison.OrdinalIgnoreCase))
+            {
+                games = gameQuery.IsDescending ? games.OrderByDescending(x => x.AwayTeam) : games.OrderBy(x => x.AwayTeam);
             }
         }
 
@@ -111,7 +121,8 @@ public class GameRepository : IGameRepository
         if (gme == null) return null;
 
         gme.Location = string.IsNullOrEmpty(game.Location) ? gme.Location : game.Location;
-        gme.OpponentName = string.IsNullOrEmpty(game.OpponentName) ? gme.OpponentName : game.OpponentName;
+        gme.HomeTeam = string.IsNullOrEmpty(game.HomeTeam) ? gme.HomeTeam : game.HomeTeam;
+        gme.AwayTeam = string.IsNullOrEmpty(game.AwayTeam) ? gme.AwayTeam : game.AwayTeam;
         gme.GameTime = game.GameTime;
         gme.Updated = DateTime.Now;
 

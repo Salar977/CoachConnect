@@ -23,7 +23,7 @@ public class Game
     [Required]
     public string HomeTeam { get; set; } = string.Empty;
 
-    [Required]
+    [Required]    
     public string AwayTeam { get; set; } = string.Empty;
 
     [Required]
@@ -36,4 +36,5 @@ public class Game
     public DateTime Updated { get; set; }
 
     public virtual ICollection<GameAttendance> GameAttendances { get; set; } = new List<GameAttendance>();
+    public virtual ICollection<Team> Teams { get; set; } = new List<Team>();
 }

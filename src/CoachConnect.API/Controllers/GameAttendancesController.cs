@@ -1,4 +1,4 @@
-﻿using CoachConnect.BusinessLayer.DTOs;
+﻿using CoachConnect.BusinessLayer.DTOs.Games;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;

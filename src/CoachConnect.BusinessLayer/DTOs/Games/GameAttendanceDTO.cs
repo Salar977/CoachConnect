@@ -1,6 +1,6 @@
 ﻿using CoachConnect.DataAccess.Entities;
 
-namespace CoachConnect.BusinessLayer.DTOs;
+namespace CoachConnect.BusinessLayer.DTOs.Games;
 public record GameAttendanceDTO(
 
     string FirstName,
@@ -8,6 +8,6 @@ public record GameAttendanceDTO(
     string OpponentName,
     DateTime GameTime,
     GameAttendanceId GameAttendanceId,
-    GameId GameId,    
+    GameId GameId,
     PlayerId PlayerId);
 

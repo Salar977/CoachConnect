@@ -8,7 +8,8 @@ namespace CoachConnect.Shared.Helpers;
 public class GameQuery
 {
     public string? Location { get; set; } = null;
-    public string? OpponentName { get; set; } = null;
+    public string? HomeTeam { get; set; } = null;
+    public string? AwayTeam { get; set; } = null;
     public DateTime? GameDate { get; set; } = null;
     public string? SortBy { get; set; } = null;
     public bool IsDescending { get; set; } = false;

@@ -8,7 +8,7 @@ public class PracticeMapper : IMapper<Practice, PracticeResponse>
 {
     public PracticeResponse MapToDTO(Practice entity)
     {
-        return new PracticeResponse(entity.Id,
+        return new PracticeResponse(entity.Id.practiceId,
                                     entity.Location,
                                     entity.PracticeDate,
                                     entity.Created,

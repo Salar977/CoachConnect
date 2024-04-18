@@ -4,8 +4,6 @@ using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using CoachConnect.BusinessLayer.DTOs.Practices;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace CoachConnect.API.Controllers;
 [Route("api/v1/practices")]
 
@@ -25,13 +23,11 @@ public class PracticeController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PracticeResponse>>> GetAllPractice([FromQuery] PracticeQuery practiceQuery)
     {
-        practiceQuery.PageNumber = 1;
-        practiceQuery.PageSize = 10;
         _logger.LogInformation("Get all practices - Controller");
         return Ok(await _practiceService.GetAllAsync(practiceQuery));
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:guid}")]
     public async Task<ActionResult<PracticeResponse>> GetById([FromRoute] Guid id)
     {
         var practice = await _practiceService.GetByIdAsync(id);

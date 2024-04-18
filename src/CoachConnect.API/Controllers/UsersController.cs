@@ -19,7 +19,7 @@ public class UsersController : ControllerBase
     }
 
 
-    [Authorize(Roles = "Admin, Coach")]
+    // [Authorize(Roles = "Admin, Coach")]
     // GET: https://localhost:7036/api/v1/users
     [HttpGet(Name = "GetUsers")]
     public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers([FromQuery] UserQuery userQuery) 
@@ -32,7 +32,7 @@ public class UsersController : ControllerBase
     }
 
 
-    [Authorize(Roles = "Admin, Coach")]
+    // [Authorize(Roles = "Admin, Coach")]
     // GET https://localhost:7036/api/v1/users/8f2466af-57c3-458c-82d8-676d80573c6c
     [HttpGet("{id}", Name = "GetUserById")] 
     public async Task<ActionResult<UserDTO>> GetUserById([FromRoute] Guid id) // bruk Guid her pga modelbinding kjenner ikke igjen vår custom UserId, så bruk Guid her og vi må konvertere under isteden
@@ -46,7 +46,7 @@ public class UsersController : ControllerBase
     //[Authorize(Roles = "Admin, User")]
     // PUT https://localhost:7036/api/v1/users/8f2466af-57c3-458c-82d8-676d80573c6c
     [HttpPut("{id}", Name = "UpdateUser")]
-    public async Task<ActionResult<UserDTO>> UpdateUser([FromRoute] Guid id, [FromBody] UserDTO dto)
+    public async Task<ActionResult<UserCoachUpdateDTO>> UpdateUser([FromRoute] Guid id, [FromBody] UserCoachUpdateDTO dto)
     {
         _logger.LogDebug("Updating user: {id}", id);
 

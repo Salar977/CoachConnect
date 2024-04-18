@@ -9,7 +9,7 @@ public interface IUserService
     Task<ICollection<UserDTO>> GetAllAsync(UserQuery userQuery);
     Task<UserDTO?> GetByIdAsync(Guid id);
     Task<UserDTO?> GetByEmailAsync(string email);
-    Task<UserDTO?> UpdateAsync(Guid id, UserDTO dto);
+    Task<UserCoachUpdateDTO?> UpdateAsync(Guid id, UserCoachUpdateDTO dto);
     Task<UserDTO?> DeleteAsync(Guid id);     
     Task<UserDTO?> RegisterUserAsync(UserRegistrationDTO dto);
 }

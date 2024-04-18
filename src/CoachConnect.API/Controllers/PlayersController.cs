@@ -62,11 +62,11 @@ public class PlayersController : ControllerBase
     
 
     [HttpPost("register", Name = "CreatePlayer")]
-    public async Task<ActionResult<PlayerDTO>> CreatePlayer([FromBody] PlayerDTO playerDTO)
+    public async Task<ActionResult<PlayerDTO>> CreatePlayer([FromBody] PlayerRequest playerRequest)
     {
         _logger.LogDebug("Create new Player");
 
-        var res = await _playerService.CreateAsync(playerDTO);
+        var res = await _playerService.CreateAsync(playerRequest);
         return res != null ? Ok(res) : BadRequest("Could not Create new player");
     }
     [HttpPut("{id}", Name = "UpdatePlayer")]

@@ -19,7 +19,7 @@ public interface IPlayerService
 
     Task<ICollection<PlayerDTO>> GetAllAsync(PlayerQuery playerQuery);
 
-    Task<PlayerDTO?> CreateAsync(PlayerDTO playerDTO);
+    Task<PlayerDTO?> CreateAsync(PlayerRequest playerRequest);
 
     Task<PlayerDTO?> UpdateAsync(PlayerId id, PlayerDTO playerDto);
 

@@ -38,12 +38,12 @@ public class PlayerService : IPlayerService
         _playerRegisterMapper = playerRegisterMapper;
         _logger = logger;
     }
-    public async Task<PlayerDTO?> CreateAsync(PlayerDTO playerDTO)
+    public async Task<PlayerDTO?> CreateAsync(PlayerRequest playerRequest)
     {
         _logger.LogDebug("Create new Player");
 
 
-        var player = _playerMapper.MapToEntity(playerDTO);
+        var player = _playerRegisterMapper.MapToEntity(playerRequest);
         player.Id = PlayerId.NewId;
 
         var res = await _playerRepository.RegisterPlayerAsync(player);

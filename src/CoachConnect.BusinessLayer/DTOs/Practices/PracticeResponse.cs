@@ -2,9 +2,9 @@
 
 namespace CoachConnect.BusinessLayer.DTOs.Practice;
 
-public record PracticeResponse(Guid? PracticeId,
-                               string? Location,
-                               DateTime? PracticeDate,
-                               DateTime? Created,
-                               DateTime? Updated,
-                               IEnumerable<PracticeAttendance>? PracticeAttendances);
+public record PracticeResponse(Guid PracticeId,
+                               string Location,
+                               string PracticeDate,
+                               string Created,
+                               string? Updated);
+                               //IEnumerable<PracticeAttendance>? PracticeAttendances);

@@ -2,4 +2,4 @@
 
 namespace CoachConnect.BusinessLayer.DTOs.Practices;
 
-public record PracticeAttendanceRequest(PracticeId PracticeId, PlayerId PlayerId);
+public record PracticeAttendanceRequest(Guid PracticeId, Guid PlayerId);

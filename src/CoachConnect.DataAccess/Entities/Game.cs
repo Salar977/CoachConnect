@@ -21,7 +21,10 @@ public class Game
     public string Location { get; set; } = string.Empty;
 
     [Required]
-    public string OpponentName { get; set; } = string.Empty;
+    public string HomeTeam { get; set; } = string.Empty;
+
+    [Required]
+    public string AwayTeam { get; set; } = string.Empty;
 
     [Required]
     public DateTime GameTime { get; set; }

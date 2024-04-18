@@ -9,22 +9,14 @@ public class PracticeAttendanceMapper : IMapper<PracticeAttendance, PracticeAtte
     public PracticeAttendanceResponse MapToDTO(PracticeAttendance entity)
     {
         return new PracticeAttendanceResponse(entity.Id.practiceAttendanceId,
-                                              entity.PracticeId,
-                                              entity.PlayerId,
-                                              entity.Created,
-                                              entity.Updated);
+                                              entity.PracticeId.practiceId,
+                                              entity.PlayerId.playerId,
+                                              entity.Created.ToString("f"),
+                                              entity.Updated.ToString("f"));
     }
 
     public PracticeAttendance MapToEntity(PracticeAttendanceResponse practiceAttendance)
     {
         throw new NotImplementedException();
-        //return new PracticeAttendance
-        //{
-        //    Id = practiceAttendance.PracticeAttendanceId,
-        //    PracticeId = practiceAttendance.PracticeId,
-        //    PlayerId = practiceAttendance.PlayerId,
-        //    Created = practiceAttendance.Created,
-        //    Updated = practiceAttendance.Updated
-        //};
     }
 }

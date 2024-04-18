@@ -7,6 +7,7 @@ namespace CoachConnect.DataAccess.Repositories.Interfaces;
 public interface IPracticeRepository
 {
     Task<IEnumerable<Practice>> GetAllAsync(PracticeQuery practiceQuery);
+
     Task<Practice?> GetByIdAsync(PracticeId id);
     Task<Practice?> RegisterPracticeAsync(Practice practice);
     Task<Practice?> GetByPracticeTimeAsync(DateTime practiceTime);

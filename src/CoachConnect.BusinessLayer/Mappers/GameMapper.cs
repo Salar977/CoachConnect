@@ -11,23 +11,21 @@ public class GameMapper : IMapper<Game, GameDTO>
         return new GameDTO(
             entity.Location,
             entity.OpponentName,
-            entity.GameTime.ToString("f"),
-            entity.Id.gameId
+            entity.GameTime,
+            entity.Id
             );
     }
 
     public Game MapToEntity(GameDTO dto)
     {
-        throw new NotImplementedException();
-
-        //var dtnow = DateTime.Now;
-        //return new Game
-        //{
-        //    Location = dto.Location,
-        //    OpponentName = dto.OpponentName,
-        //    GameTime = dto.GameTime,
-        //    Created = dtnow,
-        //    Updated = dtnow
-        //};
+        var dtnow = DateTime.Now;
+        return new Game
+        {
+            Location = dto.Location,
+            OpponentName = dto.OpponentName,
+            GameTime = dto.GameTime,
+            Created = dtnow,
+            Updated = dtnow
+        };
     }
 }

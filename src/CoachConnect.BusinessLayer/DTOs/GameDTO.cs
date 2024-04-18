@@ -12,5 +12,5 @@ public record GameDTO(
     
     string Location,
     string OpponentName,
-    string GameTime,
-    Guid GameId);
+    DateTime GameTime,
+    GameId Id);

@@ -1,6 +1,6 @@
 ﻿using CoachConnect.DataAccess.Entities;
 
-namespace CoachConnect.BusinessLayer.DTOs;
+namespace CoachConnect.BusinessLayer.DTOs.Users;
 
 public class UserDTO
 {

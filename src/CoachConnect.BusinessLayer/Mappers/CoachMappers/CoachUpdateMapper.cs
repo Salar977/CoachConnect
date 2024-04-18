@@ -1,19 +1,19 @@
-﻿using CoachConnect.BusinessLayer.DTOs;
+﻿using CoachConnect.BusinessLayer.DTOs.Users;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.DataAccess.Entities;
 
-namespace CoachConnect.BusinessLayer.Mappers;
+namespace CoachConnect.BusinessLayer.Mappers.Coaches;
 
-public class UserUpdateMapper : IMapper<User, UserCoachUpdateDTO>
+public class CoachUpdateMapper : IMapper<Coach, UserCoachUpdateDTO>
 {
-    public UserCoachUpdateDTO MapToDTO(User entity)
+    public UserCoachUpdateDTO MapToDTO(Coach entity)
     {
         return new UserCoachUpdateDTO(entity.FirstName, entity.LastName, entity.PhoneNumber, entity.Email);
     }
 
-    public User MapToEntity(UserCoachUpdateDTO dto)
+    public Coach MapToEntity(UserCoachUpdateDTO dto)
     {
-        return new User()
+        return new Coach()
         {
             FirstName = dto.FirstName,
             LastName = dto.LastName,

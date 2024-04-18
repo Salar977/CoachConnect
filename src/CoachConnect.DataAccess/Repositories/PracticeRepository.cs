@@ -24,12 +24,12 @@ public class PracticeRepository : IPracticeRepository
     {
         var practices = _dbContext.Practices.AsQueryable();
         
-        var skipNumber = (practiceQuery.PageNumber - 1) * practiceQuery.PageSize;
+        var skipNumber = (practiceQuery.Page - 1) * practiceQuery.Size;
         _logger.LogInformation("Get all practices - Repository");
         return await practices
             .OrderBy(p => p.Created)
             .Skip(skipNumber)
-            .Take(practiceQuery.PageSize)
+            .Take(practiceQuery.Size)
             .ToListAsync();
     }
 
@@ -44,12 +44,12 @@ public class PracticeRepository : IPracticeRepository
         var newPractice = await _dbContext.Practices.AddAsync(practice);
         if (newPractice is null)
         {
-            _logger.LogWarning("Failed to register practice in the database: {practice}", practice);
+            _logger.LogWarning("Failed to register practice in the database");
             return null;
         }
         
         await _dbContext.SaveChangesAsync();
-        _logger.LogInformation("Registered practice in the database: {practice}", practice);
+        _logger.LogInformation("Registered practice in the database: {practice} at {location}", practice.Location, practice.PracticeDate.ToString("f"));
         return newPractice.Entity;
     }
 
@@ -58,7 +58,7 @@ public class PracticeRepository : IPracticeRepository
         var updatePractice = await _dbContext.Practices.FirstOrDefaultAsync(x => x.Id == id);
         if (updatePractice is null)
         {
-            _logger.LogWarning("Failed to update practice in the database: {practice}", practice);
+            _logger.LogWarning("Failed to update practice in the database: {practice}", practice.Location);
             return null;
         }
         

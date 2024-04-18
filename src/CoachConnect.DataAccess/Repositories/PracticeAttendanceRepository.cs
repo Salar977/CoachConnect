@@ -40,20 +40,10 @@ public class PracticeAttendanceRepository : IPracticeAttendanceRepository
 
         var practiceAttendances = _dbContext.Practice_attendences.AsQueryable();
 
-        if(practiceAttendanceQuery.PracticeId is not null && practiceAttendanceQuery.PracticeId != Guid.Empty)
-        {
-            var gameId = practiceAttendanceQuery.PracticeId.Value;
-            practiceAttendances = practiceAttendances.Where(x => x.PracticeId == new PracticeId(gameId));
-        }
-
-        if(!string.IsNullOrWhiteSpace(practiceAttendanceQuery.LastName))
-        {
-            practiceAttendances = practiceAttendances.Where(x => x.Player!.LastName.Contains(practiceAttendanceQuery.LastName));
-        }
-
         var skipNumber = (practiceAttendanceQuery.PageNumber - 1) * practiceAttendanceQuery.PageSize;
 
         return await practiceAttendances
+            .OrderBy(x => x.Created)
             .Skip(skipNumber)
             .Take(practiceAttendanceQuery.PageSize)
             .ToListAsync();

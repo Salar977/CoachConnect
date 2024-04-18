@@ -3,6 +3,7 @@ using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.DataAccess.Entities;
 using CoachConnect.DataAccess.Repositories.Interfaces;
+using CoachConnect.Shared.Helpers;
 using Microsoft.Extensions.Logging;
 
 namespace CoachConnect.BusinessLayer.Services;
@@ -34,19 +35,29 @@ public class PracticeAttendanceService : IPracticeAttendanceService
     public async Task<PracticeAttendanceResponse?> DeleteByIdAsync(Guid id)
     {
         var practiceId = new PracticeAttendanceId(id);
-        var res = await _attendanceRepository.DeleteByIdAsync(practiceId);
 
-        if(res is null)
+        var attendance = await _attendanceRepository.GetByIdAsync(practiceId);
+
+        if (attendance is null)
         {
             _logger.LogError("Cannot delete Practice Attendance");
             return null;
         }
 
-        var player = await _playerRepository.GetByIdAsync(res.PlayerId);
+        var player = await _playerRepository.GetByIdAsync(attendance.PlayerId);
 
         if (player is not null) { player.TotalPractices--; }
 
-        return _mapper.MapToDTO(res);
+        await _attendanceRepository.DeleteByIdAsync(practiceId);
+
+        return _mapper.MapToDTO(attendance);
+    }
+
+    public async Task<IEnumerable<PracticeAttendanceResponse>> GetAllAsync(PracticeAttendanceQuery attendanceQuery)
+    {
+        _logger.LogDebug("Get all practice attendances - Service");
+        var res = await _attendanceRepository.GetAllAsync(attendanceQuery);
+        return res.Select(_mapper.MapToDTO).ToList();
     }
 
     public async Task<PracticeAttendanceResponse?> GetByIdAsync(Guid id)
@@ -79,7 +90,7 @@ public class PracticeAttendanceService : IPracticeAttendanceService
             newAttendance.Id = PracticeAttendanceId.NewId;
 
             // see if practice exists
-            var practice = await _practiceRepository.GetByIdAsync(practiceAttendanceRequest.PracticeId);
+            var practice = await _practiceRepository.GetByIdAsync(new PracticeId(practiceAttendanceRequest.PracticeId));
             if (practice is null)
             {
                 _logger.LogError("Practice with this id does not exist");
@@ -88,13 +99,13 @@ public class PracticeAttendanceService : IPracticeAttendanceService
 
             // see if practice attendance exists in that practice
             var attendanceExist = _attendanceRepository.GetByPracticeIdAndPlayerIdAsync(newAttendance.PracticeId, newAttendance.PlayerId);
-            if (attendanceExist is not null)
+            if (attendanceExist is null)
             {
                 _logger.LogError("Practice attendance already exists");
                 return null;
             }
 
-            var player = await _playerRepository.GetByIdAsync(practiceAttendanceRequest.PlayerId);
+            var player = await _playerRepository.GetByIdAsync(new PlayerId(practiceAttendanceRequest.PlayerId));
 
             if(player is not null) { player.TotalPractices++; }
 

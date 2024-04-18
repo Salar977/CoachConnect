@@ -20,23 +20,23 @@ public class PracticeController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet]
+    [HttpGet(Name = "GetAllPracticeAsync")]
     public async Task<ActionResult<IEnumerable<PracticeResponse>>> GetAllPractice([FromQuery] PracticeQuery practiceQuery)
     {
         _logger.LogInformation("Get all practices - Controller");
         return Ok(await _practiceService.GetAllAsync(practiceQuery));
     }
 
-    [HttpGet("{id:guid}")]
+    [HttpGet("{id:guid}", Name = "GetPracticeByIdAsync")]
     public async Task<ActionResult<PracticeResponse>> GetById([FromRoute] Guid id)
     {
         var practice = await _practiceService.GetByIdAsync(id);
 
 
-        if(practice is null)
+        if (practice is null)
         {
-            _logger.LogWarning("Practice not found");
-            return NotFound("Practice not found");
+            _logger.LogWarning("Practice was not found with id: {id}", id);
+            return NotFound("Practice was not found");
         }
 
         _logger.LogInformation("Retrieving practice.");
@@ -44,7 +44,7 @@ public class PracticeController : ControllerBase
     }
 
 
-    [HttpPost("register")]
+    [HttpPost("register", Name = "CreatePracticeAsync")]
     public async Task<ActionResult<PracticeResponse>> CreatePractice([FromBody] PracticeRequest practice)
     {
         if (!ModelState.IsValid) return BadRequest();
@@ -56,15 +56,33 @@ public class PracticeController : ControllerBase
         return Ok(createPractice);
     }
 
-    [HttpDelete("delete/{id:guid}")]
+    [HttpDelete("delete/{id:guid}", Name = "DeletePracticeByIdAsync")]
     public async Task<ActionResult<PracticeResponse>> DeleteById([FromRoute] Guid id)
     {
         var practice = await _practiceService.GetByIdAsync(id);
-
-
-        if(practice is null) return NotFound();
+        if (practice is null)
+        {
+            _logger.LogWarning("Practice was not found with id: {id}", id);
+            return NotFound("Practice was not found");
+        }
 
         await _practiceService.DeleteAsync(id);
+
+        return Ok(practice);
+    }
+
+    [HttpPut("{id:guid}", Name = "UpdatePracticeByIdAsync")]
+    public async Task<ActionResult<PracticeResponse>> UpdateById([FromRoute] Guid id,
+                                                                 [FromBody] PracticeUpdate practiceUpdate)
+    {
+        var practice = await _practiceService.GetByIdAsync(id);
+        if (practice is null)
+        {
+            _logger.LogWarning("Practice was not found with id: {id}", id);
+            return NotFound("Practice was not found");
+        }
+
+        await _practiceService.UpdateAsync(id, practiceUpdate);
 
         return Ok(practice);
     }

@@ -13,13 +13,12 @@ public class PracticeRegistrationMapper : IMapper<Practice, PracticeRequest>
 
     public Practice MapToEntity(PracticeRequest practiceRequest)
     {
-        var now = DateTime.Now;
         return new Practice
         {
             Location = practiceRequest.Location,
             PracticeDate = practiceRequest.PracticeDate,
-            Created = now,
-            Updated = now
+            Created = DateTime.Now,
+            Updated = DateTime.MinValue
         };
     }
 }

@@ -11,20 +11,12 @@ public class PracticeAttendanceMapper : IMapper<PracticeAttendance, PracticeAtte
         return new PracticeAttendanceResponse(entity.Id.practiceAttendanceId,
                                               entity.PracticeId.practiceId,
                                               entity.PlayerId.playerId,
-                                              entity.Created,
-                                              entity.Updated);
+                                              entity.Created.ToString("f"),
+                                              entity.Updated.ToString("f"));
     }
 
     public PracticeAttendance MapToEntity(PracticeAttendanceResponse practiceAttendance)
     {
         throw new NotImplementedException();
-        //return new PracticeAttendance
-        //{
-        //    Id = practiceAttendance.PracticeAttendanceId,
-        //    PracticeId = practiceAttendance.PracticeId,
-        //    PlayerId = practiceAttendance.PlayerId,
-        //    Created = practiceAttendance.Created,
-        //    Updated = practiceAttendance.Updated
-        //};
     }
 }

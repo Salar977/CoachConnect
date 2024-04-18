@@ -13,13 +13,12 @@ public class PracticeAttendanceRegistrationMapper : IMapper<PracticeAttendance, 
 
     public PracticeAttendance MapToEntity(PracticeAttendanceRequest dto)
     {
-        var now = DateTime.Now;
         return new PracticeAttendance
         {
-            PracticeId = dto.PracticeId,
-            PlayerId = dto.PlayerId,
-            Created = now,
-            Updated = now
+            PracticeId = new PracticeId(dto.PracticeId),
+            PlayerId = new PlayerId(dto.PlayerId),
+            Created = DateTime.Now,
+            Updated = DateTime.MinValue
         };
     }
 }

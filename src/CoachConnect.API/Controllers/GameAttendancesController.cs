@@ -1,4 +1,5 @@
 ﻿using CoachConnect.BusinessLayer.DTOs.Games;
+using CoachConnect.BusinessLayer.Services;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
@@ -49,6 +50,15 @@ public class GameAttendancesController : ControllerBase
         return res != null ? Ok(res) : NotFound("Could not find any gameAttendance with this id");
     }
 
+    // https://localhost:7036/api/v1/gameattendances/team/9f0a1b2c-3d4e-5f6a-7b8c-9d0e1f2a3019
+    [HttpGet("team/{id}", Name = "GetGameAttendancesByTeamId")]
+    public async Task<ActionResult<IEnumerable<GameAttendanceDTO>>> GetGameAttendancesByTeamId(Guid id)
+    {
+        _logger.LogDebug("Getting gameattendances by TeamID: {id}", id);
+
+        var game = await _gameAttendanceService.GetGameAttendancesByTeamId(id);
+        return game != null ? Ok(game) : NotFound($"Games with teamID '{id}' not found");
+    }
 
     // https://localhost:7036/api/v1/gameattendances/aa15514a-c2f8-46fd-a547-ab5c1fc76e14
     [HttpDelete("{id}", Name = "DeleteGameAttendance")]

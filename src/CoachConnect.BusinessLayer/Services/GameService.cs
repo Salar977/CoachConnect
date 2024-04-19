@@ -87,6 +87,25 @@ namespace CoachConnect.BusinessLayer.Services
             return res != null ? _gameMapper.MapToDTO(res) : null;
         }
 
+        public async Task<ICollection<GameDTO>> GetByTeamIdAsync(Guid id)
+        {
+            _logger.LogDebug("Getting Games by teamid: {id}", id);
+
+            var teamId = new TeamId(id);
+            var games = await _gameRepository.GetByTeamIdAsync(teamId);
+
+            if (games != null)
+            {
+                return games.Select(game => _gameMapper.MapToDTO(game)).ToList();
+            }
+            else
+            {
+                _logger.LogInformation("No games found for team ID: {id}", id);
+                return new List<GameDTO>(); 
+            }
+        }
+
+
         public async Task<GameUpdateDTO?> UpdateAsync(Guid id, GameUpdateDTO gameUpdateDto)
         {
             _logger.LogDebug("Updating Game: {id}", id);

@@ -39,6 +39,16 @@ public class GamesController : ControllerBase
         return game != null ? Ok(game) : NotFound($"Game with ID '{id}' not found");
     }
 
+    // https://localhost:7036/api/v1/games/team/2f042e86-d75e-4591-a810-aca808725555
+    [HttpGet("team/{id}", Name = "GetGameByTeamId")]
+    public async Task<ActionResult<IEnumerable<GameDTO>>> GetGameByTeamId(Guid id)
+    {
+        _logger.LogDebug("Getting game by TeamID: {id}", id);
+
+        var game = await _gameService.GetByTeamIdAsync(id);
+        return game != null ? Ok(game) : NotFound($"Games with teamID '{id}' not found");
+    }
+
     // https://localhost:7036/api/v1/games/register
     [HttpPost("register", Name = "CreateGame")]
     public async Task<ActionResult<GameRegistrationDTO>> CreateGame([FromBody] GameRegistrationDTO gameRegistrationDTO)

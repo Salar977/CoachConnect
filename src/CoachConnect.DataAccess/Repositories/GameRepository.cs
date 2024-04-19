@@ -54,9 +54,9 @@ public class GameRepository : IGameRepository
             games = games.Where(g => g.Location.StartsWith(gameQuery.Location));
         }       
 
-        if (gameQuery.GameDate != null && gameQuery.GameDate != DateTime.MinValue)
+        if (gameQuery.GameTime != null && gameQuery.GameTime != DateTime.MinValue)
         {
-            games = games.Where(g => g.GameTime.Date == gameQuery.GameDate.Value.Date); 
+            games = games.Where(g => g.GameTime.Date == gameQuery.GameTime.Value.Date); 
         }
 
         if (!string.IsNullOrWhiteSpace(gameQuery.SortBy))
@@ -66,14 +66,9 @@ public class GameRepository : IGameRepository
                 games = gameQuery.IsDescending ? games.OrderByDescending(x => x.Location) : games.OrderBy(x => x.Location);
             }
 
-            if (gameQuery.SortBy.Equals("Opponent name", StringComparison.OrdinalIgnoreCase))
+            if (gameQuery.SortBy.Equals("GameTime", StringComparison.OrdinalIgnoreCase))
             {
-                games = gameQuery.IsDescending ? games.OrderByDescending(x => x.HomeTeam) : games.OrderBy(x => x.HomeTeam);
-            }
-
-            if (gameQuery.SortBy.Equals("Opponent name", StringComparison.OrdinalIgnoreCase))
-            {
-                games = gameQuery.IsDescending ? games.OrderByDescending(x => x.AwayTeam) : games.OrderBy(x => x.AwayTeam);
+                games = gameQuery.IsDescending ? games.OrderByDescending(x => x.GameTime) : games.OrderBy(x => x.GameTime);
             }
         }
 
@@ -91,6 +86,16 @@ public class GameRepository : IGameRepository
 
         return await _dbContext.Games.FindAsync(id);
     }
+
+    public async Task<ICollection<Game>> GetByTeamIdAsync(TeamId id)
+    {
+        _logger.LogDebug("Getting Games by teamid: {id} from db", id);
+
+        return await _dbContext.Games
+            .Where(g => g.HomeTeam == id || g.AwayTeam == id)
+            .ToListAsync();
+    }
+
 
     public async Task<Game?> GetByGameTimeAsync(DateTime dateTime)
     {
@@ -120,4 +125,5 @@ public class GameRepository : IGameRepository
 
         return gme;
     }
+
 }

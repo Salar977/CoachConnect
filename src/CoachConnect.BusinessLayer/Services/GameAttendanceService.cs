@@ -82,7 +82,6 @@ public class GameAttendanceService : IGameAttendanceService
 
         if (gameAttendances != null)
         {
-            // Filter game attendances based on the player's team ID
             var filteredGameAttendances = gameAttendances
                 .Where(gameAttendance => gameAttendance.Game.HomeTeam == teamId || gameAttendance.Game.AwayTeam == teamId)
                 .Select(game => _gameAttendanceMapper.MapToDTO(game))

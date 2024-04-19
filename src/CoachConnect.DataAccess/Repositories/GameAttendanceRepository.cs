@@ -81,7 +81,7 @@ public class GameAttendanceRepository : IGameAttendanceRepository
         .Include(g => g.Game)
         .FirstOrDefaultAsync(g => g.Id == id);
 
-    return gameAttendance; 
+        return gameAttendance; 
     }
 
     public async Task<ICollection<GameAttendance>> GetGameAttendancesByTeamId(TeamId id)

@@ -49,6 +49,12 @@ public class GameRepository : IGameRepository
 
         var games = _dbContext.Games.AsQueryable();
 
+        if (gameQuery.TeamId != null && gameQuery.TeamId != Guid.Empty)
+        {
+            var teamId = new TeamId((Guid)gameQuery.TeamId);
+            games = games.Where(g => g.HomeTeam == teamId || g.AwayTeam == teamId);
+        }
+
         if (!string.IsNullOrWhiteSpace(gameQuery.Location))
         {
             games = games.Where(g => g.Location.StartsWith(gameQuery.Location));

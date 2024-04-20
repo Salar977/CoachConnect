@@ -49,6 +49,12 @@ public class GameAttendanceRepository : IGameAttendanceRepository
                                                           g.Player.LastName.StartsWith(gameAttendanceQuery.PlayerLastName));
         }
 
+        if (gameAttendanceQuery.TeamId != null && gameAttendanceQuery.TeamId != Guid.Empty)
+        {
+            var teamId = gameAttendanceQuery.TeamId.Value;
+            gameAttendances = gameAttendances.Where(g => g.Player != null && g.Player.TeamId == new TeamId(teamId));
+        }
+
         if (gameAttendanceQuery.GameId != null && gameAttendanceQuery.GameId != Guid.Empty)
         {
             var gameId = gameAttendanceQuery.GameId.Value; 

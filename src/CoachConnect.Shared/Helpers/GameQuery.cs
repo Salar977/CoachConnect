@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace CoachConnect.Shared.Helpers;
 public class GameQuery
-{    public string? Location { get; set; } = null;
+{    
+    public string? Location { get; set; } = null;
+    public Guid? TeamId { get; set; }
     public DateTime? GameTime { get; set; } = null;
     public string? SortBy { get; set; } = null;
     public bool IsDescending { get; set; } = false;

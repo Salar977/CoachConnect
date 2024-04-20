@@ -24,7 +24,7 @@ public class CoachConnectDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-       
+        #region User
 
         modelBuilder.Entity<User>()
             .Property(x => x.Id)
@@ -33,13 +33,18 @@ public class CoachConnectDbContext : DbContext
                 value => new UserId(value)
             );
 
+        #endregion
+
+        #region Coach
         modelBuilder.Entity<Coach>()
            .Property(x => x.Id)
            .HasConversion(
                id => id.coachId,
                value => new CoachId(value)
            );
+        #endregion
 
+        #region Player
         modelBuilder.Entity<Player>()
             .Property(x => x.Id)
             .HasConversion(
@@ -59,8 +64,26 @@ public class CoachConnectDbContext : DbContext
          .HasConversion(
           id => id.teamId,
           value => new TeamId(value)
-             );       
+             );
+        #endregion      
 
+        #region Team
+        modelBuilder.Entity<Team>()
+            .Property(x => x.Id)
+            .HasConversion(
+                id => id.teamId,
+                value => new TeamId(value)
+            );
+
+        modelBuilder.Entity<Team>()
+       .Property(x => x.CoachId)
+       .HasConversion(
+           id => id.coachId,
+           value => new CoachId(value)
+        );
+        #endregion
+
+        #region Game
         modelBuilder.Entity<Game>()
             .Property(x => x.Id)
             .HasConversion(
@@ -81,21 +104,9 @@ public class CoachConnectDbContext : DbContext
             id => id.teamId,
             value => new TeamId(value)
          );
+        #endregion
 
-        modelBuilder.Entity<Team>()
-            .Property(x => x.Id)
-            .HasConversion(
-                id => id.teamId,
-                value => new TeamId(value)
-            );
-
-        modelBuilder.Entity<Team>()
-       .Property(x => x.CoachId)
-       .HasConversion(
-           id => id.coachId,
-           value => new CoachId(value)
-        );
-
+        #region Gameattendance
         modelBuilder.Entity<GameAttendance>()
             .Property(x => x.Id)
             .HasConversion(
@@ -116,14 +127,18 @@ public class CoachConnectDbContext : DbContext
                id => id.playerId,
                value => new PlayerId(value)
            );
+        #endregion
 
+        #region Practice
         modelBuilder.Entity<Practice>()
             .Property(x => x.Id)
             .HasConversion(
                 id => id.practiceId,
                 value => new PracticeId(value)
             );
+        #endregion
 
+        #region PracticeAttendance
         modelBuilder.Entity<PracticeAttendance>()
             .Property(x => x.Id)
             .HasConversion(
@@ -143,8 +158,10 @@ public class CoachConnectDbContext : DbContext
           .HasConversion(
               id => id.practiceId,
               value => new PracticeId(value)
-           );        
+           );
+        #endregion
 
+        #region JwtUserRole
         modelBuilder.Entity<JwtUserRole>()
           .HasOne<JwtRole>()  
           .WithMany()         
@@ -156,5 +173,6 @@ public class CoachConnectDbContext : DbContext
              id => id.jwtUserRoleId,
              value => new JwtUserRoleId(value)
          );
+        #endregion  
     }
 }

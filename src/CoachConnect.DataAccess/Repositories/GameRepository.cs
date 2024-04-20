@@ -93,16 +93,6 @@ public class GameRepository : IGameRepository
         return await _dbContext.Games.FindAsync(id);
     }
 
-    public async Task<ICollection<Game>> GetByTeamIdAsync(TeamId id)
-    {
-        _logger.LogDebug("Getting Games by teamid: {id} from db", id);
-
-        return await _dbContext.Games
-            .Where(g => g.HomeTeam == id || g.AwayTeam == id)
-            .ToListAsync();
-    }
-
-
     public async Task<Game?> GetByGameTimeAsync(DateTime dateTime)
     {
         _logger.LogDebug("Getting Game by time: {dateTime} from db", dateTime);

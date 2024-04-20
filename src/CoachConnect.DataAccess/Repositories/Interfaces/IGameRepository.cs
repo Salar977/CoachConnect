@@ -10,7 +10,6 @@ namespace CoachConnect.DataAccess.Repositories.Interfaces;
 public interface IGameRepository
 {
     Task<Game?> GetByIdAsync(GameId id);
-    Task<ICollection<Game>> GetByTeamIdAsync(TeamId id);
     Task<ICollection<Game>> GetAllAsync(GameQuery gameQuery); 
     Task<Game?> GetByGameTimeAsync(DateTime gameTime); 
     Task<Game?> CreateAsync(Game game); 

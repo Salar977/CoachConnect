@@ -21,6 +21,8 @@ public class JwtExtractionMiddleware
 
         if (token != null)
         {
+            _logger.LogInformation("Getting Id and Username from token");
+
             var jwtToken = new JwtSecurityToken(token);
             // var roles = jwtToken.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
             var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;

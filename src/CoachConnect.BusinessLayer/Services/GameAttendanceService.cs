@@ -83,7 +83,7 @@ public class GameAttendanceService : IGameAttendanceService
         if (gameAttendances != null)
         {
             var filteredGameAttendances = gameAttendances
-                .Where(gameAttendance => gameAttendance.Game.HomeTeam == teamId || gameAttendance.Game.AwayTeam == teamId)
+                .Where(gameAttendance => gameAttendance.Player != null && gameAttendance.Player.TeamId == teamId)
                 .Select(game => _gameAttendanceMapper.MapToDTO(game))
                 .ToList();
 

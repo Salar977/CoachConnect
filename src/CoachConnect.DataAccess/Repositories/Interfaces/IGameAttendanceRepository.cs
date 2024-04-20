@@ -11,7 +11,6 @@ public interface IGameAttendanceRepository
 {
     Task<ICollection<GameAttendance>> GetAllAsync(GameAttendanceQuery gameAttendanceQuery);
     Task<GameAttendance?> GetByIdAsync(GameAttendanceId id);
-    Task<ICollection<GameAttendance>> GetGameAttendancesByTeamId(TeamId id);
 
     //Task<GameAttendance?> UpdateAsync(GameAttendanceId id, GameAttendance gameAttendance);
     Task<GameAttendance?> DeleteAsync(GameAttendanceId id);

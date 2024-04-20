@@ -71,30 +71,7 @@ public class GameAttendanceService : IGameAttendanceService
         var gameAttendanceId = new GameAttendanceId(id);
         var res = await _gameAttendanceRepository.GetByIdAsync(gameAttendanceId);
         return res != null ? _gameAttendanceMapper.MapToDTO(res) : null;
-    }
-
-    public async Task<ICollection<GameAttendanceDTO>> GetGameAttendancesByTeamId(Guid id)
-    {
-        _logger.LogDebug("Getting Gameattendances by teamid: {id}", id);
-
-        var teamId = new TeamId(id);
-        var gameAttendances = await _gameAttendanceRepository.GetGameAttendancesByTeamId(teamId);
-
-        if (gameAttendances != null)
-        {
-            var filteredGameAttendances = gameAttendances
-                .Where(gameAttendance => gameAttendance.Player != null && gameAttendance.Player.TeamId == teamId)
-                .Select(game => _gameAttendanceMapper.MapToDTO(game))
-                .ToList();
-
-            return filteredGameAttendances;
-        }
-        else
-        {
-            _logger.LogInformation("No games found for team ID: {id}", id);
-            return new List<GameAttendanceDTO>();
-        }
-    }
+    }  
 
     public async Task<GameAttendanceRegistrationDTO?> RegisterGameAttendanceAsync(GameAttendanceRegistrationDTO dto)
     {

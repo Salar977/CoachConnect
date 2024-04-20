@@ -90,18 +90,7 @@ public class GameAttendanceRepository : IGameAttendanceRepository
         .FirstOrDefaultAsync(g => g.Id == id);
 
         return gameAttendance; 
-    }
-
-    public async Task<ICollection<GameAttendance>> GetGameAttendancesByTeamId(TeamId id)
-    {
-        _logger.LogDebug("Getting Gameattendances by teamid: {id} from db", id);
-
-        return await _dbContext.Game_attendences           
-            .Include(g => g.Player)
-            .Include(g => g.Game)           
-            .ToListAsync();
-    }
-
+    }  
 
     public async Task<GameAttendance?> RegisterGameAttendanceAsync(GameAttendance gameAttendance)
     {

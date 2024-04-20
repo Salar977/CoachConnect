@@ -24,13 +24,7 @@ public class CoachConnectDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<JwtUserRole>()
-
-          .Property(x => x.Id)
-          .HasConversion(
-              id => id.jwtUserRoleId,
-              value => new JwtUserRoleId(value)
-          );
+       
 
         modelBuilder.Entity<User>()
             .Property(x => x.Id)
@@ -39,6 +33,13 @@ public class CoachConnectDbContext : DbContext
                 value => new UserId(value)
             );
 
+        modelBuilder.Entity<Coach>()
+           .Property(x => x.Id)
+           .HasConversion(
+               id => id.coachId,
+               value => new CoachId(value)
+           );
+
         modelBuilder.Entity<Player>()
             .Property(x => x.Id)
             .HasConversion(
@@ -46,13 +47,19 @@ public class CoachConnectDbContext : DbContext
                 value => new PlayerId(value)
             );
 
+        modelBuilder.Entity<Player>()
+           .Property(p => p.UserId)
+           .HasConversion(
+               v => v.userId,
+               v => new UserId(v)
+           );
 
-        modelBuilder.Entity<Coach>()
-            .Property(x => x.Id)
-            .HasConversion(
-                id => id.coachId,
-                value => new CoachId(value)
-            );
+        modelBuilder.Entity<Player>()
+         .Property(x => x.TeamId)
+         .HasConversion(
+          id => id.teamId,
+          value => new TeamId(value)
+             );       
 
         modelBuilder.Entity<Game>()
             .Property(x => x.Id)
@@ -60,85 +67,6 @@ public class CoachConnectDbContext : DbContext
                 id => id.gameId,
                 value => new GameId(value)
             );
-
-        modelBuilder.Entity<GameAttendance>()
-            .Property(x => x.Id)
-            .HasConversion(
-                id => id.gameAttendanceId,
-                value => new GameAttendanceId(value)
-            );
-
-        modelBuilder.Entity<Practice>()
-            .Property(x => x.Id)
-            .HasConversion(
-                id => id.practiceId,
-                value => new PracticeId(value)
-            );
-
-        modelBuilder.Entity<PracticeAttendance>()
-            .Property(x => x.Id)
-            .HasConversion(
-                id => id.practiceAttendanceId,
-                value => new PracticeAttendanceId(value)
-            );
-
-        modelBuilder.Entity<Team>()
-            .Property(x => x.Id)
-            .HasConversion(
-                id => id.teamId,
-                value => new TeamId(value)
-            );
-
-        // Herfra og nedover: Configure the mapping for Player.UserId // trenger denne og pga vi har Foreignkey Userid i Player.cs (Ketils comment ikke slett comment inntil videre)
-
-        modelBuilder.Entity<Player>()
-            .Property(p => p.UserId)
-            .HasConversion(
-                v => v.userId,  // Convert UserId to underlying type
-                v => new UserId(v)
-            );  // Convert underlying type to UserId
-              
-        modelBuilder.Entity<GameAttendance>()
-            .Property(x => x.GameId)
-            .HasConversion(
-                id => id.gameId,
-                value => new GameId(value)
-            );
-
-        modelBuilder.Entity<GameAttendance>()
-           .Property(x => x.PlayerId)
-           .HasConversion(
-               id => id.playerId,
-               value => new PlayerId(value)
-           );
-
-        modelBuilder.Entity<Player>()
-           .Property(x => x.TeamId)
-           .HasConversion(
-               id => id.teamId,
-               value => new TeamId(value)
-           );
-
-        modelBuilder.Entity<PracticeAttendance>()
-         .Property(x => x.PlayerId)
-         .HasConversion(
-             id => id.playerId,
-             value => new PlayerId(value)
-           );
-
-        modelBuilder.Entity<PracticeAttendance>()
-          .Property(x => x.PracticeId)
-          .HasConversion(
-              id => id.practiceId,
-              value => new PracticeId(value)
-           );
-
-        modelBuilder.Entity<Team>()
-         .Property(x => x.CoachId)
-         .HasConversion(
-             id => id.coachId,
-             value => new CoachId(value)
-          );
 
         modelBuilder.Entity<Game>()
          .Property(x => x.HomeTeam)
@@ -154,9 +82,79 @@ public class CoachConnectDbContext : DbContext
             value => new TeamId(value)
          );
 
+        modelBuilder.Entity<Team>()
+            .Property(x => x.Id)
+            .HasConversion(
+                id => id.teamId,
+                value => new TeamId(value)
+            );
+
+        modelBuilder.Entity<Team>()
+       .Property(x => x.CoachId)
+       .HasConversion(
+           id => id.coachId,
+           value => new CoachId(value)
+        );
+
+        modelBuilder.Entity<GameAttendance>()
+            .Property(x => x.Id)
+            .HasConversion(
+                id => id.gameAttendanceId,
+                value => new GameAttendanceId(value)
+            );
+
+        modelBuilder.Entity<GameAttendance>()
+          .Property(x => x.GameId)
+          .HasConversion(
+              id => id.gameId,
+              value => new GameId(value)
+          );
+
+        modelBuilder.Entity<GameAttendance>()
+           .Property(x => x.PlayerId)
+           .HasConversion(
+               id => id.playerId,
+               value => new PlayerId(value)
+           );
+
+        modelBuilder.Entity<Practice>()
+            .Property(x => x.Id)
+            .HasConversion(
+                id => id.practiceId,
+                value => new PracticeId(value)
+            );
+
+        modelBuilder.Entity<PracticeAttendance>()
+            .Property(x => x.Id)
+            .HasConversion(
+                id => id.practiceAttendanceId,
+                value => new PracticeAttendanceId(value)
+            );
+
+        modelBuilder.Entity<PracticeAttendance>()
+         .Property(x => x.PlayerId)
+         .HasConversion(
+             id => id.playerId,
+             value => new PlayerId(value)
+           );
+
+        modelBuilder.Entity<PracticeAttendance>()
+          .Property(x => x.PracticeId)
+          .HasConversion(
+              id => id.practiceId,
+              value => new PracticeId(value)
+           );        
+
         modelBuilder.Entity<JwtUserRole>()
           .HasOne<JwtRole>()  
           .WithMany()         
           .HasForeignKey(u => u.JwtRoleId);
+
+        modelBuilder.Entity<JwtUserRole>()
+         .Property(x => x.Id)
+         .HasConversion(
+             id => id.jwtUserRoleId,
+             value => new JwtUserRoleId(value)
+         );
     }
 }

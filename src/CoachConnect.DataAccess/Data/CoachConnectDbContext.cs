@@ -140,6 +140,20 @@ public class CoachConnectDbContext : DbContext
              value => new CoachId(value)
           );
 
+        modelBuilder.Entity<Game>()
+         .Property(x => x.HomeTeam)
+         .HasConversion(
+             id => id.teamId,
+             value => new TeamId(value)
+          );
+
+        modelBuilder.Entity<Game>()
+        .Property(x => x.AwayTeam)
+        .HasConversion(
+            id => id.teamId,
+            value => new TeamId(value)
+         );
+
         modelBuilder.Entity<JwtUserRole>()
           .HasOne<JwtRole>()  
           .WithMany()         

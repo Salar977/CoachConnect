@@ -52,7 +52,9 @@ public class UsersController : ControllerBase
 
         string idFromToken = (string)this.HttpContext.Items["UserId"]!;
         string idFromRoute = "UserId { userId = " + id.ToString() + " }";
-        if (!idFromToken.Equals(idFromRoute))
+        bool isAdmin = this.HttpContext.User.IsInRole("Admin");
+
+        if (!isAdmin && !idFromToken.Equals(idFromRoute))
             return Unauthorized("No authorization to update this user");
 
         var res = await _userService.UpdateAsync(id, dto);
@@ -68,7 +70,9 @@ public class UsersController : ControllerBase
 
         string idFromToken = (string)this.HttpContext.Items["UserId"]!;
         string idFromRoute = "UserId { userId = " + id.ToString() + " }";
-        if (!idFromToken.Equals(idFromRoute))
+        bool isAdmin = this.HttpContext.User.IsInRole("Admin");
+
+        if (!isAdmin && !idFromToken.Equals(idFromRoute))
             return Unauthorized("No authorization to delete this user");
 
         var res = await _userService.DeleteAsync(id);

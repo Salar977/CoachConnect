@@ -5,7 +5,8 @@ public record GameAttendanceDTO(
 
     string FirstName,
     string LastName,
-    string OpponentName,
+    TeamId HomeTeam,
+    TeamId AwayTeam,
     DateTime GameTime,
     GameAttendanceId GameAttendanceId,
     GameId GameId,

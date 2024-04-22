@@ -10,7 +10,8 @@ public class GameMapper : IMapper<Game, GameDTO>
     {
         return new GameDTO(
             entity.Location,
-            entity.OpponentName,
+            entity.HomeTeam,
+            entity.AwayTeam,
             entity.GameTime,
             entity.Id
             );
@@ -18,6 +19,15 @@ public class GameMapper : IMapper<Game, GameDTO>
 
     public Game MapToEntity(GameDTO dto)
     {
-        throw new NotImplementedException();
+        var dtnow = DateTime.Now;
+        return new Game
+        {
+            Location = dto.Location,
+            HomeTeam = dto.HomeTeam,
+            AwayTeam = dto.AwayTeam,
+            GameTime = dto.GameTime,
+            Created = dtnow,
+            Updated = dtnow
+        };
     }
 }

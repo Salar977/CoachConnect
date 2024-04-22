@@ -49,19 +49,20 @@ public class GameRepository : IGameRepository
 
         var games = _dbContext.Games.AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(gameQuery.Location))
-            {
-                games = games.Where(g => g.Location.StartsWith(gameQuery.Location));
-            }
-
-            if (!string.IsNullOrWhiteSpace(gameQuery.OpponentName))
-            {
-                games = games.Where(g => g.OpponentName.StartsWith(gameQuery.OpponentName));
-            }
-
-        if (gameQuery.GameDate != null && gameQuery.GameDate != DateTime.MinValue)
+        if (gameQuery.TeamId != null && gameQuery.TeamId != Guid.Empty)
         {
-            games = games.Where(g => g.GameTime.Date == gameQuery.GameDate.Value.Date); // salar: gjort endring for å få dato get by date. Endret også navn til GameDate i GameQuery.cs
+            var teamId = new TeamId((Guid)gameQuery.TeamId);
+            games = games.Where(g => g.HomeTeam == teamId || g.AwayTeam == teamId);
+        }
+
+        if (!string.IsNullOrWhiteSpace(gameQuery.Location))
+        {
+            games = games.Where(g => g.Location.StartsWith(gameQuery.Location));
+        }       
+
+        if (gameQuery.GameTime != null && gameQuery.GameTime != DateTime.MinValue)
+        {
+            games = games.Where(g => g.GameTime.Date == gameQuery.GameTime.Value.Date); 
         }
 
         if (!string.IsNullOrWhiteSpace(gameQuery.SortBy))
@@ -71,9 +72,9 @@ public class GameRepository : IGameRepository
                 games = gameQuery.IsDescending ? games.OrderByDescending(x => x.Location) : games.OrderBy(x => x.Location);
             }
 
-            if (gameQuery.SortBy.Equals("Opponent name", StringComparison.OrdinalIgnoreCase))
+            if (gameQuery.SortBy.Equals("GameTime", StringComparison.OrdinalIgnoreCase))
             {
-                games = gameQuery.IsDescending ? games.OrderByDescending(x => x.OpponentName) : games.OrderBy(x => x.OpponentName);
+                games = gameQuery.IsDescending ? games.OrderByDescending(x => x.GameTime) : games.OrderBy(x => x.GameTime);
             }
         }
 
@@ -111,7 +112,8 @@ public class GameRepository : IGameRepository
         if (gme == null) return null;
 
         gme.Location = string.IsNullOrEmpty(game.Location) ? gme.Location : game.Location;
-        gme.OpponentName = string.IsNullOrEmpty(game.OpponentName) ? gme.OpponentName : game.OpponentName;
+        gme.HomeTeam = game.HomeTeam;
+        gme.AwayTeam = game.AwayTeam;
         gme.GameTime = game.GameTime;
         gme.Updated = DateTime.Now;
 
@@ -119,4 +121,5 @@ public class GameRepository : IGameRepository
 
         return gme;
     }
+
 }

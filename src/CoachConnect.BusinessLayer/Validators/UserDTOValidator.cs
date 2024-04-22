@@ -1,4 +1,4 @@
-﻿using CoachConnect.BusinessLayer.DTOs;
+﻿using CoachConnect.BusinessLayer.DTOs.Users;
 using CoachConnect.DataAccess.Entities;
 using FluentValidation;
 

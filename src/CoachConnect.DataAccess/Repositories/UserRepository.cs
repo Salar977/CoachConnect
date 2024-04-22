@@ -68,30 +68,6 @@ public class UserRepository : IUserRepository
             .ToListAsync();
     }
 
-    //public async Task<User?> GetByIdAsync(UserId id)
-    //{
-    //    _logger.LogDebug("Getting user by id: {id} from db", id);
-
-    //    return await _dbContext.Users.FindAsync(id);
-    //}
-
-    //public async Task<User?> GetByIdAsync(UserId id)
-    //{
-    //    _logger.LogDebug("Getting user by id: {id} from db", id);
-
-    //    var user = await _dbContext.Users.FindAsync(id);
-
-    //    //Explicitly trigger lazy loading
-    //    if (user != null)
-    //    {
-    //        await _dbContext.Entry(user)
-    //            .Collection(u => u.Players)
-    //            .LoadAsync();
-    //    }
-
-    //    return user;
-    //}
-
     public async Task<User?> GetByIdAsync(UserId id)
     {
         _logger.LogDebug("Getting user by id: {id} from db", id);
@@ -134,7 +110,17 @@ public class UserRepository : IUserRepository
         if (res == null) return null;
 
         _dbContext.Users.Remove(res);
+
+        var userRole = await _dbContext.Jwt_user_roles
+            .FirstOrDefaultAsync(r => r.UserName == res.Email && r.JwtRoleId == 3);
+
+        if (userRole != null)
+        {
+            _dbContext.Jwt_user_roles.Remove(userRole);
+        }
+
         await _dbContext.SaveChangesAsync();
+
         return res;
     }
 

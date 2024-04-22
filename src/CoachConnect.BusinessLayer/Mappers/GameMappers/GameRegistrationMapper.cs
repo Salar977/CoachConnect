@@ -14,7 +14,8 @@ public class GameRegistrationMapper : IMapper<Game, GameRegistrationDTO>
     {
         return new GameRegistrationDTO(
             entity.Location,
-            entity.OpponentName,
+            entity.HomeTeam,
+            entity.AwayTeam,
             entity.GameTime
         );
     }
@@ -25,7 +26,8 @@ public class GameRegistrationMapper : IMapper<Game, GameRegistrationDTO>
         return new Game()
         {
             Location = dto.Location,
-            OpponentName = dto.OpponentName,
+            HomeTeam = dto.HomeTeam,
+            AwayTeam = dto.AwayTeam,
             GameTime = dto.GameTime,
             Created = dtNow,
             Updated = dtNow

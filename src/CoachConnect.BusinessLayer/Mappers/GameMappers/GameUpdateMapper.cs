@@ -14,7 +14,8 @@ public class GameUpdateMapper : IMapper<Game, GameUpdateDTO>
     {
         return new GameUpdateDTO(
             entity.Location,
-            entity.OpponentName,
+            entity.HomeTeam,
+            entity.AwayTeam,
             entity.GameTime
             );
     }
@@ -25,7 +26,8 @@ public class GameUpdateMapper : IMapper<Game, GameUpdateDTO>
         return new Game
         {
             Location = dto.Location,
-            OpponentName = dto.OpponentName,
+            HomeTeam = dto.HomeTeam,
+            AwayTeam = dto.AwayTeam,
             GameTime = dto.GameTime
         };
     }

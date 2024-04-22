@@ -37,7 +37,7 @@ public class GamesController : ControllerBase
 
         var game = await _gameService.GetByIdAsync(id);
         return game != null ? Ok(game) : NotFound($"Game with ID '{id}' not found");
-    }
+    } 
 
     // https://localhost:7036/api/v1/games/register
     [HttpPost("register", Name = "CreateGame")]

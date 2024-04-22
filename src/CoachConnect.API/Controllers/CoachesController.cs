@@ -53,7 +53,9 @@ public class CoachesController : ControllerBase
 
         string idFromToken = (string)this.HttpContext.Items["UserId"]!;
         string idFromRoute = "CoachId { coachId = " + id.ToString() + " }";
-        if (!idFromToken.Equals(idFromRoute))
+        bool isAdmin = this.User.IsInRole("Admin");
+
+        if (!isAdmin && !idFromToken.Equals(idFromRoute))
             return Unauthorized("No authorization to delete this coach");
 
         var res = await _coachService.UpdateAsync(id, dto);
@@ -61,7 +63,7 @@ public class CoachesController : ControllerBase
     }
 
     // [Authorize(Roles = "Admin , Coach")]
-    // DELETE https://localhost:7036/api/v1/users/2b1e02fc-4b92-4b0d-84a7-2418ff07ac13
+    // DELETE https://localhost:7036/api/v1/coaches/2b1e02fc-4b92-4b0d-84a7-2418ff07ac13
     [HttpDelete("{id}", Name = "DeleteCoach")]
     public async Task<ActionResult<CoachDTO>> DeleteCoach([FromRoute] Guid id)
     {
@@ -69,7 +71,9 @@ public class CoachesController : ControllerBase
 
         string idFromToken = (string)this.HttpContext.Items["UserId"]!;
         string idFromRoute = "CoachId { coachId = " + id.ToString() + " }";
-        if (!idFromToken.Equals(idFromRoute))
+        bool isAdmin = this.User.IsInRole("Admin");
+
+        if (!isAdmin && !idFromToken.Equals(idFromRoute))
             return Unauthorized("No authorization to delete this coach");
 
         var res = await _coachService.DeleteAsync(id);

@@ -104,7 +104,6 @@ public class LoginController : Controller
 
     private Login? AuthenticateUser(LoginDTO loginDto)
     {
-
         _logger.LogDebug("Authenticating user: {username}", loginDto.Username);
 
         var user = _dbContext.Users.FirstOrDefault(u => u.Email.Equals(loginDto.Username));

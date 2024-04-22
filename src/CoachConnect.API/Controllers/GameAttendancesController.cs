@@ -1,4 +1,4 @@
-﻿using CoachConnect.BusinessLayer.DTOs.Games;
+﻿using CoachConnect.BusinessLayer.DTOs.GameAttendances;
 using CoachConnect.BusinessLayer.Services;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.Shared.Helpers;

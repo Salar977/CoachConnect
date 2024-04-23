@@ -1,9 +1,8 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
-using CoachConnect.BusinessLayer.DTOs.Teams;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.DataAccess.Entities;
 
-namespace CoachConnect.BusinessLayer.Mappers;
+namespace CoachConnect.BusinessLayer.Mappers.Coaches;
 
 public class CoachMapper : IMapper<Coach, CoachDTO>
 {

@@ -5,9 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoachConnect.BusinessLayer.DTOs;
-public record GameRegistrationDTO(
+namespace CoachConnect.BusinessLayer.DTOs.GameAttendances;
+public record GameAttendanceRegistrationDTO(
 
-    string Location,
-    string OpponentName,
-    DateTime GameTime);
+    GameId GameId,
+    PlayerId PlayerId);

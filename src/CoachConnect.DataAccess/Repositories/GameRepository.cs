@@ -95,7 +95,7 @@ public class GameRepository : IGameRepository
 
     public async Task<Game?> GetByGameTimeAsync(DateTime dateTime)
     {
-        _logger.LogDebug("Getting Game by time: {dateTime} from db", dateTime);
+        _logger.LogDebug("Getting Game by time: {dateTime} from db", dateTime); // minus 1 min
 
         DateTime startDate = dateTime.Date;
         DateTime endDate = startDate.AddDays(1);

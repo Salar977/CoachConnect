@@ -42,24 +42,27 @@ namespace CoachConnect.BusinessLayer.Services
         {
             _logger.LogDebug("Create new Game");
 
-            // Get the start and end of the specified date
             DateTime startDate = gameRegistrationDTO.GameTime.Date;
 
+            var practiceExists = await _practiceRepository.GetByPracticeTimeAsync(startDate); // Trenger TeamID i Practice.cs for å fullføre. Venter på implementering.
             var gameExists = await _gameRepository.GetByGameTimeAsync(startDate);
-            var practiceExists = await _practiceRepository.GetByPracticeTimeAsync(startDate);  
-            if (gameExists != null || practiceExists != null)
-            {
-                return null; // denne returnerer bare null, bør returnere mld om at det allerede finnes game eller practice på denne dato, hm vanskelig
-            }
-            else
-            {
-                var game = _gameRegistrationMapper.MapToEntity(gameRegistrationDTO);
-                game.Id = GameId.NewId;
 
-                var res = await _gameRepository.CreateAsync(game);
+            if (gameExists != null &&
+              ((gameExists.AwayTeam.teamId == gameRegistrationDTO.AwayTeam.teamId ||
+                gameExists.HomeTeam.teamId == gameRegistrationDTO.HomeTeam.teamId) ||
+               (gameExists.AwayTeam.teamId == gameRegistrationDTO.HomeTeam.teamId ||
+                gameExists.HomeTeam.teamId == gameRegistrationDTO.AwayTeam.teamId)))
+            {
+                return null;
+            }     
+           
+            var game = _gameRegistrationMapper.MapToEntity(gameRegistrationDTO);
+            game.Id = GameId.NewId;
 
-                return res != null ? _gameRegistrationMapper.MapToDTO(res) : null;
-            }
+            var res = await _gameRepository.CreateAsync(game);
+
+            return res != null ? _gameRegistrationMapper.MapToDTO(res) : null;
+            
         }
 
         public async Task<GameDTO?> DeleteAsync(Guid id)

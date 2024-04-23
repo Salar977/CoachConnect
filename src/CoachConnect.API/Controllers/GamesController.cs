@@ -1,6 +1,7 @@
 ﻿using CoachConnect.BusinessLayer.DTOs.Games;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.Shared.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoachConnect.API.Controllers;
@@ -18,6 +19,7 @@ public class GamesController : ControllerBase
         _logger = logger;
     }
 
+    [Authorize(Roles = "Admin, Coach, User")]
     // https://localhost:7036/api/v1/games
     [HttpGet(Name = "GetAllGames")]
     public async Task<ActionResult<IEnumerable<GameDTO>>> GetAllGames([FromQuery] GameQuery gameQuery)
@@ -29,6 +31,7 @@ public class GamesController : ControllerBase
         return Ok(await _gameService.GetAllAsync(gameQuery));
     }
 
+    [Authorize(Roles = "Admin, Coach, User")]
     // https://localhost:7036/api/v1/games/2f042e86-d75e-4591-a810-aca808725555
     [HttpGet("{id}", Name = "GetGameById")]
     public async Task<ActionResult<GameDTO>> GetGameById(Guid id)
@@ -37,8 +40,9 @@ public class GamesController : ControllerBase
 
         var game = await _gameService.GetByIdAsync(id);
         return game != null ? Ok(game) : NotFound($"Game with ID '{id}' not found");
-    } 
+    }
 
+    [Authorize(Roles = "Admin, Coach")]
     // https://localhost:7036/api/v1/games/register
     [HttpPost("register", Name = "CreateGame")]
     public async Task<ActionResult<GameRegistrationDTO>> CreateGame([FromBody] GameRegistrationDTO gameRegistrationDTO)
@@ -49,6 +53,7 @@ public class GamesController : ControllerBase
         return res != null ? Ok(res) : BadRequest("Could not create new game");
     }
 
+    [Authorize(Roles = "Admin, Coach")]
     // https://localhost:7036/api/v1/games/2f042e86-d75e-4591-a810-aca80812cde3
     [HttpPut("{id}", Name = "UpdateGame")]
     public async Task<ActionResult<GameUpdateDTO>> UpdateGame(Guid id, [FromBody] GameUpdateDTO gameUpdateDTO)
@@ -59,6 +64,7 @@ public class GamesController : ControllerBase
         return res != null ? Ok(res) : BadRequest("Could not update game");
     }
 
+    [Authorize(Roles = "Admin, Coach")]
     // https://localhost:7036/api/v1/games/2f042e86-d75e-4591-a810-aca80812cde3
     [HttpDelete("{id}", Name = "DeleteGame")]
     public async Task<ActionResult<GameDTO>> DeleteGame(Guid id)

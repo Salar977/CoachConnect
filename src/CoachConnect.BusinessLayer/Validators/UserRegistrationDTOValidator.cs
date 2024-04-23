@@ -1,4 +1,4 @@
-﻿using CoachConnect.BusinessLayer.DTOs.Users;
+﻿using CoachConnect.BusinessLayer.DTOs;
 using FluentValidation;
 
 namespace CoachConnect.BusinessLayer.Validators;

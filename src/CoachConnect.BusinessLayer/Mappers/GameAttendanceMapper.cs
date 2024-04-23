@@ -1,4 +1,4 @@
-﻿using CoachConnect.BusinessLayer.DTOs.GameAttendances;
+﻿using CoachConnect.BusinessLayer.DTOs;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.DataAccess.Entities;
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoachConnect.BusinessLayer.Mappers.GameAttendanceMapper;
+namespace CoachConnect.BusinessLayer.Mappers;
 public class GameAttendanceMapper : IMapper<GameAttendance, GameAttendanceDTO>
 {
     public GameAttendanceDTO MapToDTO(GameAttendance entity)
@@ -15,8 +15,7 @@ public class GameAttendanceMapper : IMapper<GameAttendance, GameAttendanceDTO>
         return new GameAttendanceDTO(
             entity.Player!.FirstName,
             entity.Player!.LastName,
-            entity.Game!.HomeTeam,
-            entity.Game!.AwayTeam,
+            entity.Game!.OpponentName,
             entity.Game.GameTime,
             entity.Id,
             entity.GameId,

@@ -1,10 +1,9 @@
 ﻿using CoachConnect.DataAccess.Entities;
 
-namespace CoachConnect.BusinessLayer.DTOs.Games;
+namespace CoachConnect.BusinessLayer.DTOs;
 public record GameUpdateDTO(
 
     string Location,
-    TeamId HomeTeam,
-    TeamId AwayTeam,
+    string OpponentName,
     DateTime GameTime
     );

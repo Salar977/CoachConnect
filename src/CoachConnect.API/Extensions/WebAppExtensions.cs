@@ -1,6 +1,6 @@
 ﻿using CoachConnect.BusinessLayer.Mappers.Interfaces;
+using CoachConnect.BusinessLayer.Mappers;
 using Microsoft.OpenApi.Models;
-using CoachConnect.BusinessLayer.Mappers.UserMappers;
 
 namespace CoachConnect.API.Extensions;
 

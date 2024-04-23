@@ -1,20 +1,20 @@
-﻿using CoachConnect.BusinessLayer.DTOs.Users;
+﻿using CoachConnect.BusinessLayer.DTOs;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.DataAccess.Entities;
 
-namespace CoachConnect.BusinessLayer.Mappers.UserMappers;
+namespace CoachConnect.BusinessLayer.Mappers;
 
-public class UserRegistrationMapper : IMapper<User, UserRegistrationDTO>
+public class CoachRegistrationMapper : IMapper<Coach, CoachRegistrationDTO>
 {
-    public UserRegistrationDTO MapToDTO(User entity)
+    public CoachRegistrationDTO MapToDTO(Coach entity)
     {
         throw new NotImplementedException();
     }
 
-    public User MapToEntity(UserRegistrationDTO dto)
+    public Coach MapToEntity(CoachRegistrationDTO dto)
     {
         var dtNow = DateTime.Now;
-        return new User()
+        return new Coach()
         {
             FirstName = dto.FirstName,
             LastName = dto.LastName,

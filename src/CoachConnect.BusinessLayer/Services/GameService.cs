@@ -1,4 +1,4 @@
-﻿using CoachConnect.BusinessLayer.DTOs.Games;
+﻿using CoachConnect.BusinessLayer.DTOs;
 using CoachConnect.BusinessLayer.Mappers;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.BusinessLayer.Services.Interfaces;
@@ -88,7 +88,7 @@ namespace CoachConnect.BusinessLayer.Services
             var gameId = new GameId(id);
             var res = await _gameRepository.GetByIdAsync(gameId);
             return res != null ? _gameMapper.MapToDTO(res) : null;
-        }      
+        }
 
         public async Task<GameUpdateDTO?> UpdateAsync(Guid id, GameUpdateDTO gameUpdateDto)
         {

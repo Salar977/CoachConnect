@@ -3,7 +3,7 @@ using CoachConnect.BusinessLayer.DTOs.Coach;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.DataAccess.Entities;
 
-namespace CoachConnect.BusinessLayer.Mappers.Coaches;
+namespace CoachConnect.BusinessLayer.Mappers;
 
 public class CoachMapper : IMapper<Coach, CoachDTO>
 {

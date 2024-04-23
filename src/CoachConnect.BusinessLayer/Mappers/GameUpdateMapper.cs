@@ -1,4 +1,4 @@
-﻿using CoachConnect.BusinessLayer.DTOs.Games;
+﻿using CoachConnect.BusinessLayer.DTOs;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.DataAccess.Entities;
 using System;
@@ -7,15 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoachConnect.BusinessLayer.Mappers.GameMappers;
+namespace CoachConnect.BusinessLayer.Mappers;
 public class GameUpdateMapper : IMapper<Game, GameUpdateDTO>
 {
     public GameUpdateDTO MapToDTO(Game entity)
     {
         return new GameUpdateDTO(
             entity.Location,
-            entity.HomeTeam,
-            entity.AwayTeam,
+            entity.OpponentName,
             entity.GameTime
             );
     }
@@ -26,8 +25,7 @@ public class GameUpdateMapper : IMapper<Game, GameUpdateDTO>
         return new Game
         {
             Location = dto.Location,
-            HomeTeam = dto.HomeTeam,
-            AwayTeam = dto.AwayTeam,
+            OpponentName = dto.OpponentName,
             GameTime = dto.GameTime
         };
     }

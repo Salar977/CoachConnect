@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using CoachConnect.BusinessLayer.DTOs.GameAttendances;
+using CoachConnect.BusinessLayer.DTOs;
 
 namespace CoachConnect.BusinessLayer.Validators
 {

@@ -1,6 +1,5 @@
-﻿using CoachConnect.BusinessLayer.DTOs.GameAttendances;
+﻿using CoachConnect.BusinessLayer.DTOs;
 using CoachConnect.BusinessLayer.Mappers;
-using CoachConnect.BusinessLayer.Mappers.GameMappers;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.DataAccess.Entities;
@@ -71,7 +70,7 @@ public class GameAttendanceService : IGameAttendanceService
         var gameAttendanceId = new GameAttendanceId(id);
         var res = await _gameAttendanceRepository.GetByIdAsync(gameAttendanceId);
         return res != null ? _gameAttendanceMapper.MapToDTO(res) : null;
-    }  
+    }
 
     public async Task<GameAttendanceRegistrationDTO?> RegisterGameAttendanceAsync(GameAttendanceRegistrationDTO dto)
     {

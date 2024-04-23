@@ -1,5 +1,4 @@
-﻿using CoachConnect.BusinessLayer.DTOs.GameAttendances;
-using CoachConnect.BusinessLayer.Services;
+﻿using CoachConnect.BusinessLayer.DTOs;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
@@ -48,7 +47,8 @@ public class GameAttendancesController : ControllerBase
 
         var res = await _gameAttendanceService.GetByIdAsync(id); 
         return res != null ? Ok(res) : NotFound("Could not find any gameAttendance with this id");
-    }   
+    }
+
 
     // https://localhost:7036/api/v1/gameattendances/aa15514a-c2f8-46fd-a547-ab5c1fc76e14
     [HttpDelete("{id}", Name = "DeleteGameAttendance")]

@@ -107,15 +107,6 @@ public class CoachRepository : ICoachRepository
         if (res == null) return null;
 
         _dbContext.Coaches.Remove(res);
-
-        var userRole = await _dbContext.Jwt_user_roles
-            .FirstOrDefaultAsync(r => r.UserName == res.Email && r.JwtRoleId == 2);
-
-        if (userRole != null)
-        {
-            _dbContext.Jwt_user_roles.Remove(userRole);
-        }
-
         await _dbContext.SaveChangesAsync();
         return res;
     }
@@ -125,6 +116,15 @@ public class CoachRepository : ICoachRepository
         _logger.LogDebug("Adding coach: {coach} to db", coach.Email);
 
         await _dbContext.Coaches.AddAsync(coach);
+
+
+        //var existingRoleAssignment = await _dbContext.Jwt_user_roles.FirstOrDefaultAsync(r => r.UserId.Equals(coach.Id.coachId) && r.RoleId == 2);
+        //if (existingRoleAssignment != null)
+        //{
+        //    _logger.LogDebug("Could not add coach: {coach} already has this role", coach.Email);
+        //    return null; 
+        //}
+
 
         JwtUserRole roleAssignment = new() // lager objekt og kjører inn i db
         {

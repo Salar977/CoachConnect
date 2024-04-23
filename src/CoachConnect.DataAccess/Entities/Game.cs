@@ -21,12 +21,7 @@ public class Game
     public string Location { get; set; } = string.Empty;
 
     [Required]
-    [ForeignKey(nameof(Team.Id))]
-    public TeamId HomeTeam { get; set; }
-
-    [Required]
-    [ForeignKey(nameof(Team.Id))]
-    public TeamId AwayTeam { get; set; }
+    public string OpponentName { get; set; } = string.Empty;
 
     [Required]
     public DateTime GameTime { get; set; }
@@ -38,6 +33,4 @@ public class Game
     public DateTime Updated { get; set; }
 
     public virtual ICollection<GameAttendance> GameAttendances { get; set; } = new List<GameAttendance>();
-    public virtual ICollection<Team> Teams { get; set; } = new List<Team>();
-    public virtual ICollection<Player> PLayers { get; set; } = new List<Player>();
 }

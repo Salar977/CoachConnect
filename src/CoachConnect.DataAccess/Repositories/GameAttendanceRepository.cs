@@ -45,14 +45,7 @@ public class GameAttendanceRepository : IGameAttendanceRepository
 
         if (!string.IsNullOrWhiteSpace(gameAttendanceQuery.PlayerLastName))
         {
-            gameAttendances = gameAttendances.Where(g => g.Player != null &&
-                                                          g.Player.LastName.StartsWith(gameAttendanceQuery.PlayerLastName));
-        }
-
-        if (gameAttendanceQuery.TeamId != null && gameAttendanceQuery.TeamId != Guid.Empty)
-        {
-            var teamId = gameAttendanceQuery.TeamId.Value;
-            gameAttendances = gameAttendances.Where(g => g.Player != null && g.Player.TeamId == new TeamId(teamId));
+            gameAttendances = gameAttendances.Where(g => g.Player!.LastName.StartsWith(gameAttendanceQuery.PlayerLastName));
         }
 
         if (gameAttendanceQuery.GameId != null && gameAttendanceQuery.GameId != Guid.Empty)
@@ -65,8 +58,7 @@ public class GameAttendanceRepository : IGameAttendanceRepository
         {
             if (gameAttendanceQuery.SortBy.Equals("PlayerLastName", StringComparison.OrdinalIgnoreCase))
             {
-                gameAttendances = gameAttendanceQuery.IsDescending ? gameAttendances.OrderByDescending(x => x.Player != null ? x.Player.LastName : null) 
-                                                                    : gameAttendances.OrderBy(x => x.Player != null ? x.Player.LastName : null);
+                gameAttendances = gameAttendanceQuery.IsDescending ? gameAttendances.OrderByDescending(x => x.Player!.LastName) : gameAttendances.OrderBy(x => x.Player!.LastName);
             }         
         }
 
@@ -89,8 +81,10 @@ public class GameAttendanceRepository : IGameAttendanceRepository
         .Include(g => g.Game)
         .FirstOrDefaultAsync(g => g.Id == id);
 
-        return gameAttendance; 
-    }  
+    return gameAttendance; 
+    }
+
+
 
     public async Task<GameAttendance?> RegisterGameAttendanceAsync(GameAttendance gameAttendance)
     {

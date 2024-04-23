@@ -6,12 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoachConnect.BusinessLayer.DTOs.Games;
+namespace CoachConnect.BusinessLayer.DTOs;
 
 public record GameDTO(
-
+    
     string Location,
-    TeamId HomeTeam,
-    TeamId AwayTeam,
+    string OpponentName,
     DateTime GameTime,
     GameId Id);

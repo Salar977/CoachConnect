@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using CoachConnect.BusinessLayer.DTOs.GameAttendances;
 
-namespace CoachConnect.BusinessLayer.Validators
+namespace CoachConnect.BusinessLayer.Validators.GameAttendanceValidators
 {
     public class GameAttendanceDTOValidator : AbstractValidator<GameAttendanceDTO>
     {

@@ -35,28 +35,6 @@ public class GameAttendanceService : IGameAttendanceService
         _gameAttendanceMapper = gameAttendanceMapper;
         _gameAttendanceRegistrationMapper = gameAttendanceRegistrationMapper;
     }
-
-    public async Task<GameAttendanceDTO?> DeleteAsync(Guid id)
-    {
-        _logger.LogDebug("Deleting GameAttendance: {id}", id);
-
-        var gameAttendanceId = new GameAttendanceId(id);
-        
-        var gameAttendance = await _gameAttendanceRepository.GetByIdAsync(gameAttendanceId);
-        if (gameAttendance == null)
-        {
-            _logger.LogError("Could not delete GameAttendance");
-            return null;
-        }
-
-        var player = await _playerRepository.GetByIdAsync(gameAttendance.PlayerId);
-        if (player != null) { player.TotalGames--; }
-
-        await _gameAttendanceRepository.DeleteAsync(gameAttendanceId);
-
-        return gameAttendance!= null ? _gameAttendanceMapper.MapToDTO(gameAttendance) : null;
-    }
-
     public async Task<ICollection<GameAttendanceDTO>> GetAllAsync(GameAttendanceQuery gameAttendanceQuery)
     {
         _logger.LogDebug("Getting all games");
@@ -71,8 +49,7 @@ public class GameAttendanceService : IGameAttendanceService
         var gameAttendanceId = new GameAttendanceId(id);
         var res = await _gameAttendanceRepository.GetByIdAsync(gameAttendanceId);
         return res != null ? _gameAttendanceMapper.MapToDTO(res) : null;
-    }  
-
+    }
     public async Task<GameAttendanceRegistrationDTO?> RegisterGameAttendanceAsync(GameAttendanceRegistrationDTO dto)
     {
         _logger.LogDebug("Create new Gameattendance");
@@ -87,16 +64,24 @@ public class GameAttendanceService : IGameAttendanceService
 
         return res != null ? _gameAttendanceRegistrationMapper.MapToDTO(res) : null;
     }
+    public async Task<GameAttendanceDTO?> DeleteAsync(Guid id)
+    {
+        _logger.LogDebug("Deleting GameAttendance: {id}", id);
 
-    //public async Task<GameAttendanceDTO?> UpdateAsync(Guid id, GameAttendanceDTO dto)
-    //{
-    //    _logger.LogDebug("Updating gameAttendance: {id}", id);
+        var gameAttendanceId = new GameAttendanceId(id);
 
-    //    var gameAttendanceId = new GameAttendanceId(id);
-    //    var gameAttendance = _gameAttendanceMapper.MapToEntity(dto);
-    //    gameAttendance.Id = gameAttendanceId;
+        var gameAttendance = await _gameAttendanceRepository.GetByIdAsync(gameAttendanceId);
+        if (gameAttendance == null)
+        {
+            _logger.LogError("Could not delete GameAttendance");
+            return null;
+        }
 
-    //    var res = await _gameAttendanceRepository.UpdateAsync(gameAttendanceId, gameAttendance);
-    //    return res != null ? _gameAttendanceMapper.MapToDTO(gameAttendance) : null;
-    //}
+        var player = await _playerRepository.GetByIdAsync(gameAttendance.PlayerId);
+        if (player != null) { player.TotalGames--; }
+
+        await _gameAttendanceRepository.DeleteAsync(gameAttendanceId);
+
+        return gameAttendance != null ? _gameAttendanceMapper.MapToDTO(gameAttendance) : null;
+    }
 }

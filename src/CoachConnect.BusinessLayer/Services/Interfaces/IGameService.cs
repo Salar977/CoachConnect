@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 namespace CoachConnect.BusinessLayer.Services.Interfaces;
 public interface IGameService
 {
-    Task<GameDTO?> GetByIdAsync(Guid id); 
-    Task<ICollection<GameDTO>> GetAllAsync(GameQuery gameQuery); 
+    Task<ICollection<GameDTO>> GetAllAsync(GameQuery gameQuery);
+    Task<GameDTO?> GetByIdAsync(Guid id);
+    Task<GameUpdateDTO?> UpdateAsync(Guid id, GameUpdateDTO gameUpdateDto);
     Task<GameRegistrationDTO?> CreateAsync(bool isAdmin, string idFromToken, GameRegistrationDTO gameRegistrationDTO); 
-    Task<GameUpdateDTO?> UpdateAsync(Guid id, GameUpdateDTO gameUpdateDto); 
     Task<GameDTO?> DeleteAsync(Guid id); 
 }

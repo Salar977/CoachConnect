@@ -26,6 +26,8 @@ public class GameAttendancesController : ControllerBase
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
+        // Ikke tid til å implementere at man kun kan se attendances for spillere på det laget man er trener for.
+
         _logger.LogDebug("Getting GameAttendances");
 
         return Ok(await _gameAttendanceService.GetAllAsync(gameAttendanceQuery));
@@ -36,6 +38,8 @@ public class GameAttendancesController : ControllerBase
     public async Task<ActionResult<GameAttendanceRegistrationDTO>> RegisterGameAttendance([FromBody] GameAttendanceRegistrationDTO gameAttendanceRegistrationDTO)
     {
         _logger.LogDebug("Create new Gameattendance");
+
+        // Ikke tid til å implementere at man kun kan registrere attendances for spillere på det laget man er trener for.
 
         var res = await _gameAttendanceService.RegisterGameAttendanceAsync(gameAttendanceRegistrationDTO);
         return res != null ? Ok(res) : BadRequest("Could not register gameAttendance");
@@ -48,6 +52,8 @@ public class GameAttendancesController : ControllerBase
     {
         _logger.LogDebug("Getting gameattendance by id {id}", id);
 
+        // Ikke tid til å implementere at man kun kan hente attendances for spillere på det laget man er trener for.
+
         var res = await _gameAttendanceService.GetByIdAsync(id); 
         return res != null ? Ok(res) : NotFound("Could not find any gameAttendance with this id");
     }
@@ -58,6 +64,8 @@ public class GameAttendancesController : ControllerBase
     public async Task<ActionResult<GameAttendanceDTO>> DeleteGameAttendance([FromRoute] Guid id)
     {
         _logger.LogDebug("Deleting Gameattendance: {id}", id);
+
+        // Ikke tid til å implementere at man kun kan slette attendances for spillere på det laget man er trener for.
 
         var res = await _gameAttendanceService.DeleteAsync(id);
         return res != null ? Ok(res) : BadRequest("Could not delete gameAttendance");

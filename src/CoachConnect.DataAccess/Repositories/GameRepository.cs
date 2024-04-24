@@ -20,29 +20,6 @@ public class GameRepository : IGameRepository
         _dbContext = dbContext;
         _logger = logger;
     }
-
-    public async Task<Game?> CreateAsync(Game game)
-    {
-        _logger.LogDebug("Adding Game to DB");
-
-        await _dbContext.Games.AddAsync(game);
-        await _dbContext.SaveChangesAsync();
-
-        return game;
-    }
-
-    public async Task<Game?> DeleteAsync(GameId id)
-    {
-        _logger.LogDebug("Deleting Game: {id} from db", id);
-
-        var res = await _dbContext.Games.FindAsync(id);
-        if (res == null) return null;
-
-        _dbContext.Games.Remove(res);
-        await _dbContext.SaveChangesAsync();
-        return res;
-    }
-
     public async Task<ICollection<Game>> GetAllAsync(GameQuery gameQuery)
     {
         _logger.LogDebug("Getting Games from db");
@@ -122,4 +99,25 @@ public class GameRepository : IGameRepository
         return gme;
     }
 
+    public async Task<Game?> CreateAsync(Game game)
+    {
+        _logger.LogDebug("Adding Game to DB");
+
+        await _dbContext.Games.AddAsync(game);
+        await _dbContext.SaveChangesAsync();
+
+        return game;
+    }
+
+    public async Task<Game?> DeleteAsync(GameId id)
+    {
+        _logger.LogDebug("Deleting Game: {id} from db", id);
+
+        var res = await _dbContext.Games.FindAsync(id);
+        if (res == null) return null;
+
+        _dbContext.Games.Remove(res);
+        await _dbContext.SaveChangesAsync();
+        return res;
+    }
 }

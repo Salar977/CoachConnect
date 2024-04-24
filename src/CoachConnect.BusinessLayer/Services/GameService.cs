@@ -40,6 +40,33 @@ namespace CoachConnect.BusinessLayer.Services
             _gameRegistrationMapper = gameRegistrationMapper;
             _logger = logger;
         }
+        public async Task<ICollection<GameDTO>> GetAllAsync(GameQuery gameQuery)
+        {
+            _logger.LogDebug("Getting all games");
+            var res = await _gameRepository.GetAllAsync(gameQuery);
+            return res.Select(game => _gameMapper.MapToDTO(game)).ToList();
+        }
+
+        public async Task<GameDTO?> GetByIdAsync(Guid id)
+        {
+            _logger.LogDebug("Getting Game by id: {id}", id);
+
+            var gameId = new GameId(id);
+            var res = await _gameRepository.GetByIdAsync(gameId);
+            return res != null ? _gameMapper.MapToDTO(res) : null;
+        }      
+
+        public async Task<GameUpdateDTO?> UpdateAsync(Guid id, GameUpdateDTO gameUpdateDto)
+        {
+            _logger.LogDebug("Updating Game: {id}", id);
+
+            var gameId = new GameId(id);
+            var game = _gameUpdateMapper.MapToEntity(gameUpdateDto);
+            game.Id = gameId;
+
+            var res = await _gameRepository.UpdateAsync(gameId, game);
+            return res != null ? _gameUpdateMapper.MapToDTO(game) : null;
+        }
 
         public async Task<GameRegistrationDTO?> CreateAsync(bool isAdmin, string idFromToken, GameRegistrationDTO gameRegistrationDTO)
         {
@@ -95,7 +122,7 @@ namespace CoachConnect.BusinessLayer.Services
 
             var res = await _gameRepository.CreateAsync(game);
 
-            return res != null ? _gameRegistrationMapper.MapToDTO(res) : null;            
+            return res != null ? _gameRegistrationMapper.MapToDTO(res) : null;
         }
 
         public async Task<GameDTO?> DeleteAsync(Guid id)
@@ -106,34 +133,5 @@ namespace CoachConnect.BusinessLayer.Services
             var res = await _gameRepository.DeleteAsync(gameId);
             return res != null ? _gameMapper.MapToDTO(res) : null;
         }
-
-        public async Task<ICollection<GameDTO>> GetAllAsync(GameQuery gameQuery)
-        {
-            _logger.LogDebug("Getting all games");
-            var res = await _gameRepository.GetAllAsync(gameQuery);
-            return res.Select(game => _gameMapper.MapToDTO(game)).ToList();
-        }
-
-        public async Task<GameDTO?> GetByIdAsync(Guid id)
-        {
-            _logger.LogDebug("Getting Game by id: {id}", id);
-
-            var gameId = new GameId(id);
-            var res = await _gameRepository.GetByIdAsync(gameId);
-            return res != null ? _gameMapper.MapToDTO(res) : null;
-        }      
-
-        public async Task<GameUpdateDTO?> UpdateAsync(Guid id, GameUpdateDTO gameUpdateDto)
-        {
-            _logger.LogDebug("Updating Game: {id}", id);
-
-            var gameId = new GameId(id);
-            var game = _gameUpdateMapper.MapToEntity(gameUpdateDto);
-            game.Id = gameId;
-
-            var res = await _gameRepository.UpdateAsync(gameId, game);
-            return res != null ? _gameUpdateMapper.MapToDTO(game) : null;
-        }
     }
-    
 }

@@ -26,36 +26,31 @@ public class GameAttendancesController : ControllerBase
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        // Ikke tid til å implementere at man kun kan se attendances for spillere på det laget man er trener for.
-
         _logger.LogDebug("Getting GameAttendances");
 
         return Ok(await _gameAttendanceService.GetAllAsync(gameAttendanceQuery));
     }
 
+    //[Authorize(Roles = "Admin, Coach")]
+    // https://localhost:7036/api/v1/gameattendances/8215514a-c2f8-46fd-a547-ab5c1fc76004
+    [HttpGet("{id}", Name = "GetGameAttendanceById")]
+    public async Task<ActionResult<GameAttendanceDTO>> GetGameAttendanceById([FromRoute] Guid id)
+    {
+        _logger.LogDebug("Getting gameattendance by id {id}", id);
+
+        var res = await _gameAttendanceService.GetByIdAsync(id);
+        return res != null ? Ok(res) : NotFound("Could not find any gameAttendance with this id");
+    }
+
+    //[Authorize(Roles = "Admin, Coach")]
     // https://localhost:7036/api/v1/gameattendances/register
     [HttpPost("register", Name = "registerGameAttendance")]
     public async Task<ActionResult<GameAttendanceRegistrationDTO>> RegisterGameAttendance([FromBody] GameAttendanceRegistrationDTO gameAttendanceRegistrationDTO)
     {
         _logger.LogDebug("Create new Gameattendance");
 
-        // Ikke tid til å implementere at man kun kan registrere attendances for spillere på det laget man er trener for.
-
         var res = await _gameAttendanceService.RegisterGameAttendanceAsync(gameAttendanceRegistrationDTO);
         return res != null ? Ok(res) : BadRequest("Could not register gameAttendance");
-    }
-
-    //[Authorize(Roles = "Admin, Coach")]
-    // https://localhost:7036/api/v1/gameattendances/8215514a-c2f8-46fd-a547-ab5c1fc76004
-    [HttpGet("{id}", Name = "GetGameAttendanceById")]
-    public async Task<ActionResult<GameAttendanceDTO>> GetGameAttendanceById([FromRoute] Guid id) 
-    {
-        _logger.LogDebug("Getting gameattendance by id {id}", id);
-
-        // Ikke tid til å implementere at man kun kan hente attendances for spillere på det laget man er trener for.
-
-        var res = await _gameAttendanceService.GetByIdAsync(id); 
-        return res != null ? Ok(res) : NotFound("Could not find any gameAttendance with this id");
     }
 
     //[Authorize(Roles = "Admin, Coach")]
@@ -65,19 +60,7 @@ public class GameAttendancesController : ControllerBase
     {
         _logger.LogDebug("Deleting Gameattendance: {id}", id);
 
-        // Ikke tid til å implementere at man kun kan slette attendances for spillere på det laget man er trener for.
-
         var res = await _gameAttendanceService.DeleteAsync(id);
         return res != null ? Ok(res) : BadRequest("Could not delete gameAttendance");
     }
-
-    // https://localhost:7036/api/v1/gameattendances/3fa85f64-5717-4562-b3fc-2c963f66afa6
-    //[HttpPut("{id}", Name = "UpdateGameAttendance")]
-    //public async Task<ActionResult<GameAttendanceDTO>> UpdateGameAttendance([FromRoute] Guid id, [FromBody] GameAttendanceDTO dto)
-    //{
-    //    _logger.LogDebug("Updating Game Attendance: {id}", id);
-
-    //    var res = await _gameAttendanceService.UpdateAsync(id, dto);
-    //    return res != null ? Ok(res) : BadRequest("Could not update gameAttendance");
-    //}
 }

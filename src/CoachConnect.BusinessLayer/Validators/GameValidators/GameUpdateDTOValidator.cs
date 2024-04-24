@@ -6,10 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoachConnect.BusinessLayer.Validators;
-public class GameRegistrationDTOValidator : AbstractValidator<GameRegistrationDTO>
+namespace CoachConnect.BusinessLayer.Validators.GameValidators;
+public class GameUpdateDTOValidator : AbstractValidator<GameUpdateDTO>
 {
-    public GameRegistrationDTOValidator()
+    public GameUpdateDTOValidator()
     {
         RuleFor(game => game.Location)
             .NotEmpty().WithMessage("Location is required.")

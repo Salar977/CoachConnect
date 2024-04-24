@@ -78,7 +78,8 @@ public class UsersController : ControllerBase
         var res = await _userService.DeleteAsync(id);
         return res != null ? Ok(res) : BadRequest("Could not delete user");
     }
-        
+
+    [AllowAnonymous]
     // POST https://localhost:7036/api/v1/users/register
     [HttpPost("register", Name = "RegisterUser")]
     public async Task<ActionResult<UserDTO>> RegisterUser([FromBody] UserRegistrationDTO dto)

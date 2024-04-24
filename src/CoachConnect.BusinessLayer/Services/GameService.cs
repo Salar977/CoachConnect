@@ -44,7 +44,7 @@ namespace CoachConnect.BusinessLayer.Services
 
             DateTime startDate = gameRegistrationDTO.GameTime.Date;
 
-            var practiceExists = await _practiceRepository.GetByPracticeTimeAsync(startDate); // Trenger TeamID i Practice.cs for å fullføre. Venter på implementering.
+            var practiceExists = await _practiceRepository.GetByPracticeTimeAsync(startDate);
             var gameExists = await _gameRepository.GetByGameTimeAsync(startDate);
 
             if (gameExists != null &&
@@ -54,8 +54,15 @@ namespace CoachConnect.BusinessLayer.Services
                 gameExists.HomeTeam.teamId == gameRegistrationDTO.AwayTeam.teamId)))
             {
                 return null;
-            }     
-           
+            }
+
+            //if (practiceExists != null &&
+            //    (practiceExists.Team?.Id.teamId == gameRegistrationDTO.AwayTeam.teamId ||
+            //     practiceExists.Team?.Id.teamId == gameRegistrationDTO.HomeTeam.teamId))
+            //{
+            //    return null;
+            //}
+
             var game = _gameRegistrationMapper.MapToEntity(gameRegistrationDTO);
             game.Id = GameId.NewId;
 

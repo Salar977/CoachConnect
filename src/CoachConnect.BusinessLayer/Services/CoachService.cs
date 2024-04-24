@@ -64,7 +64,6 @@ public class CoachService : ICoachService
         var teamDtos = teams.Select(team => _teamMapper.MapToDTO(team)).ToList();
 
         var coachDto = _coachMapper.MapToDTO(coach);
-        //coachDto.Teams = teamDtos; // dersom dto er regular class og ikke record
 
         coachDto = coachDto with { Teams = coachDto.Teams.Concat(teamDtos).ToList() };
 
@@ -83,9 +82,6 @@ public class CoachService : ICoachService
     {
         _logger.LogDebug("Updating coach: {id}", id);
 
-        // husk at coaches (el admin) kun skal kunne eoppdatere sin egen user Dette må vel settes i JWT autorisering. Ikke glem må ha med dette viktig.
-        // kanksje noe som : throw new UnauthorizedAccessException($"Coach {loggedInUserId} has no access to delete coach {id}");
-
         var coachId = new CoachId(id);
         var coach = _coachUpdateMapper.MapToEntity(dto);
         coach.Id = coachId;
@@ -96,8 +92,6 @@ public class CoachService : ICoachService
 
     public async Task<CoachDTO?> DeleteAsync(Guid id)
     {
-        // husk at coaches (el admin) kun skal kunne slette sin egen user. Dette må vel settes i JWT autorisering. Ikke glem må ha med dette.
-        // kanksje noe som : throw new UnauthorizedAccessException($"Coach {loggedInUserId} has no access to delete coach {id}");
         _logger.LogDebug("Deleting coach: {id}", id);
 
         var coachId = new CoachId(id);
@@ -118,7 +112,7 @@ public class CoachService : ICoachService
 
         var coach = _coachRegistartionMapper.MapToEntity(dto);
 
-        coach.Id = CoachId.NewId; // Generate a new CoachId. Må ha med for at CoachID Guid skal fungere.
+        coach.Id = CoachId.NewId; 
         coach.Salt = BCrypt.Net.BCrypt.GenerateSalt();
         coach.HashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password, coach.Salt);
 

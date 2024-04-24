@@ -18,6 +18,7 @@ namespace CoachConnect.BusinessLayer.Services
     {
         private readonly IGameRepository _gameRepository;
         private readonly IPracticeRepository _practiceRepository;
+        private readonly ITeamRepository _teamRepository;
         private readonly IMapper<Game, GameDTO> _gameMapper;
         private readonly IMapper<Game, GameUpdateDTO> _gameUpdateMapper;
         private readonly IMapper<Game, GameRegistrationDTO> _gameRegistrationMapper;
@@ -25,6 +26,7 @@ namespace CoachConnect.BusinessLayer.Services
 
         public GameService(IGameRepository gameRepository,
                            IPracticeRepository practiceRepository,
+                           ITeamRepository teamRepository,
                            IMapper<Game, GameDTO> gameMapper,
                            IMapper<Game, GameUpdateDTO> gameUpdateMapper,
                            IMapper<Game, GameRegistrationDTO> gameRegistrationMapper,
@@ -32,13 +34,14 @@ namespace CoachConnect.BusinessLayer.Services
         {
             _gameRepository = gameRepository;
             _practiceRepository = practiceRepository;
+            _teamRepository = teamRepository;
             _gameMapper = gameMapper;
             _gameUpdateMapper = gameUpdateMapper;
             _gameRegistrationMapper = gameRegistrationMapper;
             _logger = logger;
         }
 
-        public async Task<GameRegistrationDTO?> CreateAsync(GameRegistrationDTO gameRegistrationDTO)
+        public async Task<GameRegistrationDTO?> CreateAsync(bool isAdmin, string idFromToken, GameRegistrationDTO gameRegistrationDTO)
         {
             _logger.LogDebug("Create new Game");
 
@@ -47,29 +50,52 @@ namespace CoachConnect.BusinessLayer.Services
             var practiceExists = await _practiceRepository.GetByPracticeTimeAsync(startDate);
             var gameExists = await _gameRepository.GetByGameTimeAsync(startDate);
 
-            if (gameExists != null &&
+            if (!isAdmin)
+            {
+
+                if (gameExists != null &&
               ((gameExists.AwayTeam.teamId == gameRegistrationDTO.AwayTeam.teamId ||
                 gameExists.HomeTeam.teamId == gameRegistrationDTO.HomeTeam.teamId) ||
                (gameExists.AwayTeam.teamId == gameRegistrationDTO.HomeTeam.teamId ||
                 gameExists.HomeTeam.teamId == gameRegistrationDTO.AwayTeam.teamId)))
-            {
-                return null;
+                {
+                    return null;
+                }
+
+                // Uferdig sjekk om det finnes oppsatt trening på dato hvor kamp skal registreres
+
+                //if (practiceExists != null &&
+                //    (practiceExists.Team?.Id.teamId == gameRegistrationDTO.AwayTeam.teamId ||
+                //     practiceExists.Team?.Id.teamId == gameRegistrationDTO.HomeTeam.teamId))
+                //{
+                //    return null;
+                //}           
+
+
+                // Uferdig sjekk at coach kun kan registere kamper dersom sitt eget lag skal spille
+
+                //if (Guid.TryParse(idFromToken, out var coachGuid))
+                //{
+                //    var coachId = new CoachId(coachGuid);
+                //    var homeTeamId = new TeamId(gameRegistrationDTO.HomeTeam.teamId);
+                //    var awayTeamId = new TeamId(gameRegistrationDTO.AwayTeam.teamId);
+
+                //    var homeTeam = await _teamRepository.GetByIdAsync(homeTeamId);
+                //    var awayTeam = await _teamRepository.GetByIdAsync(awayTeamId);
+
+                //    if (homeTeam != null && awayTeam != null &&
+                //    (coachId != homeTeam.CoachId && coachId != awayTeam.CoachId))
+                //    {
+                //        return null;
+                //    }
+                //}
             }
-
-            //if (practiceExists != null &&
-            //    (practiceExists.Team?.Id.teamId == gameRegistrationDTO.AwayTeam.teamId ||
-            //     practiceExists.Team?.Id.teamId == gameRegistrationDTO.HomeTeam.teamId))
-            //{
-            //    return null;
-            //}
-
             var game = _gameRegistrationMapper.MapToEntity(gameRegistrationDTO);
             game.Id = GameId.NewId;
 
             var res = await _gameRepository.CreateAsync(game);
 
-            return res != null ? _gameRegistrationMapper.MapToDTO(res) : null;
-            
+            return res != null ? _gameRegistrationMapper.MapToDTO(res) : null;            
         }
 
         public async Task<GameDTO?> DeleteAsync(Guid id)

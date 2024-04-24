@@ -1,11 +1,11 @@
-﻿using CoachConnect.BusinessLayer.DTOs.Coach;
+﻿using CoachConnect.BusinessLayer.DTOs.Users;
 using FluentValidation;
 
 namespace CoachConnect.BusinessLayer.Validators;
 
-public class CoachRegistrationDTOValidator : AbstractValidator<CoachRegistrationDTO>
+public class UserRegistrationDTOValidator : AbstractValidator<UserRegistrationDTO>
 {
-    public CoachRegistrationDTOValidator() // må endres etterhvert dersom vi oppdaterer DTOet husk
+    public UserRegistrationDTOValidator() 
     {
         RuleFor(x => x.FirstName)
             .NotEmpty().WithMessage("FirstName can not be null")
@@ -32,5 +32,4 @@ public class CoachRegistrationDTOValidator : AbstractValidator<CoachRegistration
             .NotEmpty().WithMessage("Email must be included")
             .EmailAddress().WithMessage("Email must be valid");
     }
-
 }

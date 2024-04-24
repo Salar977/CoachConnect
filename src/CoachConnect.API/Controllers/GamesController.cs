@@ -59,7 +59,7 @@ public class GamesController : ControllerBase
         return res != null ? Ok(res) : BadRequest("Could not update game");
     }
 
-    // [Authorize(Roles = "Admin, Coach")]
+     [Authorize(Roles = "Admin, Coach")]
     // https://localhost:7036/api/v1/games/register
     [HttpPost("register", Name = "CreateGame")]
     public async Task<ActionResult<GameRegistrationDTO>> CreateGame([FromBody] GameRegistrationDTO gameRegistrationDTO)

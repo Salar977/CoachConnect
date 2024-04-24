@@ -98,24 +98,29 @@ namespace CoachConnect.BusinessLayer.Services
                 //    return null;
                 //}           
 
+                string idFromTokenBeforeExtraction = idFromToken;
 
-                // Uferdig sjekk at coach kun kan registere kamper dersom sitt eget lag skal spille
+                // Extracting the GUID portion
+                int startIndex = idFromTokenBeforeExtraction.IndexOf('=') + 1;
+                int length = idFromTokenBeforeExtraction.IndexOf('}') - startIndex;
+                string idFromTokenExtracted = idFromToken.Substring(startIndex, length);
 
-                //if (Guid.TryParse(idFromToken, out var coachGuid))
-                //{
-                //    var coachId = new CoachId(coachGuid);
-                //    var homeTeamId = new TeamId(gameRegistrationDTO.HomeTeam.teamId);
-                //    var awayTeamId = new TeamId(gameRegistrationDTO.AwayTeam.teamId);
+                if (Guid.TryParse(idFromTokenExtracted, out var coachGuid))
+                {
+                    var coachId = new CoachId(coachGuid);
+                    var homeTeamId = new TeamId(gameRegistrationDTO.HomeTeam.teamId);
+                    var awayTeamId = new TeamId(gameRegistrationDTO.AwayTeam.teamId);
 
-                //    var homeTeam = await _teamRepository.GetByIdAsync(homeTeamId);
-                //    var awayTeam = await _teamRepository.GetByIdAsync(awayTeamId);
+                    var homeTeam = await _teamRepository.GetByIdAsync(homeTeamId);
+                    var awayTeam = await _teamRepository.GetByIdAsync(awayTeamId);
 
-                //    if (homeTeam != null && awayTeam != null &&
-                //    (coachId != homeTeam.CoachId && coachId != awayTeam.CoachId))
-                //    {
-                //        return null;
-                //    }
-                //}
+                    if (homeTeam == null || awayTeam == null)
+                        return null;
+                    if (coachId != homeTeam.CoachId && coachId != awayTeam.CoachId)
+                    {
+                        return null;
+                    }
+                }
             }
             var game = _gameRegistrationMapper.MapToEntity(gameRegistrationDTO);
             game.Id = GameId.NewId;

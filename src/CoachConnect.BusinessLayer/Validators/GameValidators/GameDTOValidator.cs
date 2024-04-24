@@ -2,12 +2,12 @@
 using FluentValidation;
 using System;
 
-namespace CoachConnect.BusinessLayer.Validators
+namespace CoachConnect.BusinessLayer.Validators.GameValidators
 {
     public class GameDTOValidator : AbstractValidator<GameDTO>
     {
         public GameDTOValidator()
-        {        
+        {
 
             RuleFor(game => game.Location)
                 .NotEmpty().WithMessage("Location is required.")

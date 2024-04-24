@@ -42,14 +42,18 @@ public class GamesController : ControllerBase
         return game != null ? Ok(game) : NotFound($"Game with ID '{id}' not found");
     }
 
-    //[Authorize(Roles = "Admin, Coach")]
+    // [Authorize(Roles = "Admin, Coach")]
     // https://localhost:7036/api/v1/games/register
     [HttpPost("register", Name = "CreateGame")]
     public async Task<ActionResult<GameRegistrationDTO>> CreateGame([FromBody] GameRegistrationDTO gameRegistrationDTO)
     {
         _logger.LogDebug("Create new Game");
 
-        var res = await _gameService.CreateAsync(gameRegistrationDTO);
+        // startet implementering i GameService så en coach kun kan registrere Games der sitt eget lag spiller, er ikke komplett i servicelayer.
+        string idFromToken = (string)this.HttpContext.Items["UserId"]!;        
+        bool isAdmin = this.HttpContext.User.IsInRole("Admin");   
+
+        var res = await _gameService.CreateAsync(isAdmin, idFromToken, gameRegistrationDTO);
         return res != null ? Ok(res) : BadRequest("Could not create new game");
     }
 
@@ -59,6 +63,12 @@ public class GamesController : ControllerBase
     public async Task<ActionResult<GameUpdateDTO>> UpdateGame(Guid id, [FromBody] GameUpdateDTO gameUpdateDTO)
     {
         _logger.LogDebug("Updating game with ID: {id}", id);
+
+        // Ikke tid til å implementere ferdig. Sjekk at coach kun kan update games for sitt eget lag:
+
+        //string idFromToken = (string)this.HttpContext.Items["UserId"]!;
+        //string idFromRoute = "GameId { gameId = " + id.ToString() + " }";
+        //bool isAdmin = this.User.IsInRole("Admin");       
 
         var res = await _gameService.UpdateAsync(id, gameUpdateDTO);
         return res != null ? Ok(res) : BadRequest("Could not update game");
@@ -71,6 +81,12 @@ public class GamesController : ControllerBase
     {
         _logger.LogDebug("Deleting game with ID: {id}", id);
 
+        // Ikke tid til å implementere ferdig. Sjekk at coach kun kan slette games for sitt eget lag:
+
+        //string idFromToken = (string)this.HttpContext.Items["UserId"]!;
+        //string idFromRoute = "GameId { gameId = " + id.ToString() + " }";
+        //bool isAdmin = this.User.IsInRole("Admin");
+       
         var res = await _gameService.DeleteAsync(id);
         return res != null ? Ok(res) : BadRequest("Could not delete game");
     }

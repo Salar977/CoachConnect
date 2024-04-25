@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoachConnect.BusinessLayer"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoachConnect.API", "src\CoachConnect.API\CoachConnect.API.csproj", "{50684095-1BAD-4D9A-8DA1-78931DF47DF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoachConnect.Shared", "src\CoachConnect.Shared\CoachConnect.Shared.csproj", "{630C2D27-B7B6-48EF-949A-AD4D1C10632B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoachConnect.Shared", "src\CoachConnect.Shared\CoachConnect.Shared.csproj", "{630C2D27-B7B6-48EF-949A-AD4D1C10632B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,20 +1,27 @@
 using CoachConnect.API.Middleware;
 using CoachConnect.BusinessLayer;
-using CoachConnect.BusinessLayer.Services.Interfaces;
-using CoachConnect.BusinessLayer.Services;
 using CoachConnect.DataAccess;
-using CoachConnect.DataAccess.Repositories.Interfaces;
-using CoachConnect.DataAccess.Repositories;
 using Microsoft.AspNetCore.RateLimiting;
 using Serilog;
 using CoachConnect.API.Extensions;
-using FluentValidation.AspNetCore;
-using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Rate Limiter - Simple rate limiter with fixed 5 seconds for each request otherwise 429: Too Many Requests // Husk denne må flyttes til appsettings
+var config = builder.Configuration;
+builder.Services.AddRateLimiter(rateLimiterOptions =>
+{
+    rateLimiterOptions.AddFixedWindowLimiter("fixed", options =>
+    {
+        options.PermitLimit = config.GetValue<int>("RateLimitConfig:PermitLimit");
+        options.Window = TimeSpan.FromSeconds(config.GetValue<int>("RateLimitConfig:WindowInSeconds"));
+        options.QueueLimit = config.GetValue<int>("RateLimitConfig:QueueLimit");
+        rateLimiterOptions.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    });
+});
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -22,18 +29,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.RegisterMappers();
-
-// Rate Limiter - Simple rate limiter with fixed 5 seconds for each request otherwise 429: Too Many Requests // Husk denne må flyttes til appsettings
-builder.Services.AddRateLimiter(rateLimiterOptions =>
-{
-    rateLimiterOptions.AddFixedWindowLimiter("fixed", options =>
-    {
-        options.PermitLimit = 1;
-        options.Window = TimeSpan.FromSeconds(5);
-        options.QueueLimit = 0;
-        rateLimiterOptions.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-    });
-});
 
 void ConfigureServices(IServiceCollection services, IConfiguration configuration)
 {
@@ -76,18 +71,15 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseSerilogRequestLogging();
-
-app.UseRateLimiter();
-
 app.UseHttpsRedirection();
 app.UseMiddleware<JwtExtractionMiddleware>();
 app.UseRouting();
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
-app.MapControllers()
-    .RequireRateLimiting("fixed");
+app.MapControllers().RequireRateLimiting("fixed");
 
 app.Run();

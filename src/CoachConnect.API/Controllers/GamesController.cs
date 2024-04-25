@@ -42,7 +42,7 @@ public class GamesController : ControllerBase
         return game != null ? Ok(game) : NotFound($"Game with ID '{id}' not found");
     }
 
-    //[Authorize(Roles = "Admin, Coach")]
+    [Authorize(Roles = "Admin, Coach")]
     // https://localhost:7036/api/v1/games/2f042e86-d75e-4591-a810-aca80812cde3
     [HttpPut("{id}", Name = "UpdateGame")]
     public async Task<ActionResult<GameUpdateDTO>> UpdateGame(Guid id, [FromBody] GameUpdateDTO gameUpdateDTO)
@@ -70,20 +70,17 @@ public class GamesController : ControllerBase
         return res != null ? Ok(res) : BadRequest("Could not create new game");
     }
 
-    //[Authorize(Roles = "Admin, Coach")]
+    [Authorize(Roles = "Admin, Coach")]
     // https://localhost:7036/api/v1/games/2f042e86-d75e-4591-a810-aca80812cde3
     [HttpDelete("{id}", Name = "DeleteGame")]
     public async Task<ActionResult<GameDTO>> DeleteGame(Guid id)
     {
         _logger.LogDebug("Deleting game with ID: {id}", id);
 
-        // Ikke tid til å implementere ferdig. Sjekk at coach kun kan slette games for sitt eget lag:
+        string idFromToken = (string)this.HttpContext.Items["UserId"]!;
+        bool isAdmin = this.HttpContext.User.IsInRole("Admin");
 
-        //string idFromToken = (string)this.HttpContext.Items["UserId"]!;
-        //string idFromRoute = "GameId { gameId = " + id.ToString() + " }";
-        //bool isAdmin = this.User.IsInRole("Admin");
-       
-        var res = await _gameService.DeleteAsync(id);
+        var res = await _gameService.DeleteAsync(isAdmin, idFromToken, id);
         return res != null ? Ok(res) : BadRequest("Could not delete game");
     }
 }

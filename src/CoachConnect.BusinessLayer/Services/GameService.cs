@@ -182,9 +182,43 @@ namespace CoachConnect.BusinessLayer.Services
             return res != null ? _gameRegistrationMapper.MapToDTO(res) : null;
         }
 
-        public async Task<GameDTO?> DeleteAsync(Guid id)
+        public async Task<GameDTO?> DeleteAsync(bool isAdmin, string idFromToken, Guid id)
         {
             _logger.LogDebug("Deleting Game: {id}", id);
+            
+            if (!isAdmin)
+            {
+                string idFromTokenBeforeExtraction = idFromToken;
+
+                int startIndex = idFromTokenBeforeExtraction.IndexOf('=') + 1;
+                int length = idFromTokenBeforeExtraction.IndexOf('}') - startIndex;
+                string idFromTokenExtracted = idFromToken.Substring(startIndex, length);
+
+                if (Guid.TryParse(idFromTokenExtracted, out var coachGuid))
+                {
+                    var coachId = new CoachId(coachGuid);
+                    var NewGameId = new GameId(id);
+
+                    var game = await _gameRepository.GetByIdAsync(NewGameId);
+
+                    if (game != null)
+                    {
+                        var homeTeamId = new TeamId(game.HomeTeam.teamId);
+                        var awayTeamId = new TeamId(game.AwayTeam.teamId);
+
+                        var homeTeam = await _teamRepository.GetByIdAsync(homeTeamId);
+                        var awayTeam = await _teamRepository.GetByIdAsync(awayTeamId);
+
+                        if (homeTeam == null || awayTeam == null)
+                            return null;
+
+                        if (coachId != homeTeam.CoachId && coachId != awayTeam.CoachId)
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
 
             var gameId = new GameId(id);
             var res = await _gameRepository.DeleteAsync(gameId);

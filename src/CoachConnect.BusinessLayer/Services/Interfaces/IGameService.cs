@@ -12,7 +12,7 @@ public interface IGameService
 {
     Task<ICollection<GameDTO>> GetAllAsync(GameQuery gameQuery);
     Task<GameDTO?> GetByIdAsync(Guid id);
-    Task<GameUpdateDTO?> UpdateAsync(Guid id, GameUpdateDTO gameUpdateDto);
+    Task<GameUpdateDTO?> UpdateAsync(bool isAdmin, string idFromToken, Guid id, GameUpdateDTO gameUpdateDto);
     Task<GameRegistrationDTO?> CreateAsync(bool isAdmin, string idFromToken, GameRegistrationDTO gameRegistrationDTO); 
     Task<GameDTO?> DeleteAsync(Guid id); 
 }

@@ -56,9 +56,61 @@ namespace CoachConnect.BusinessLayer.Services
             return res != null ? _gameMapper.MapToDTO(res) : null;
         }      
 
-        public async Task<GameUpdateDTO?> UpdateAsync(Guid id, GameUpdateDTO gameUpdateDto)
+        public async Task<GameUpdateDTO?> UpdateAsync(bool isAdmin, string idFromToken, Guid id, GameUpdateDTO gameUpdateDto)
         {
             _logger.LogDebug("Updating Game: {id}", id);
+
+            DateTime startDate = gameUpdateDto.GameTime.Date;
+
+            var practiceExists = await _practiceRepository.GetByPracticeTimeAsync(startDate);
+            var gameExists = await _gameRepository.GetByGameTimeAsync(startDate);
+
+            if (gameExists != null &&
+            ((gameExists.AwayTeam.teamId == gameUpdateDto.AwayTeam.teamId ||
+            gameExists.HomeTeam.teamId == gameUpdateDto.HomeTeam.teamId) ||
+            (gameExists.AwayTeam.teamId == gameUpdateDto.HomeTeam.teamId ||
+            gameExists.HomeTeam.teamId == gameUpdateDto.AwayTeam.teamId)))
+            {
+                return null;
+            }
+
+            // Uferdig sjekk om det finnes oppsatt trening på dato hvor kamp skal endres til
+
+            //if (practiceExists != null &&
+            //    (practiceExists.Team?.Id.teamId == gameRegistrationDTO.AwayTeam.teamId ||
+            //     practiceExists.Team?.Id.teamId == gameRegistrationDTO.HomeTeam.teamId))
+            //{
+            //    return null;
+            //}
+            //
+
+            if (!isAdmin)
+            {
+                string idFromTokenBeforeExtraction = idFromToken;
+
+                int startIndex = idFromTokenBeforeExtraction.IndexOf('=') + 1;
+                int length = idFromTokenBeforeExtraction.IndexOf('}') - startIndex;
+                string idFromTokenExtracted = idFromToken.Substring(startIndex, length);
+
+                if (Guid.TryParse(idFromTokenExtracted, out var parsedCoachId))
+                {
+                    var coachId = new CoachId(parsedCoachId);
+
+                    var homeTeamId = new TeamId(gameUpdateDto.HomeTeam.teamId);
+                    var awayTeamId = new TeamId(gameUpdateDto.AwayTeam.teamId);
+
+                    var homeTeam = await _teamRepository.GetByIdAsync(homeTeamId);
+                    var awayTeam = await _teamRepository.GetByIdAsync(awayTeamId);
+
+                    if (homeTeam == null || awayTeam == null)
+                        return null;
+
+                    if (homeTeam.CoachId != coachId && awayTeam.CoachId != coachId)
+                    {
+                        return null;
+                    }
+                }
+            }
 
             var gameId = new GameId(id);
             var game = _gameUpdateMapper.MapToEntity(gameUpdateDto);
@@ -75,32 +127,32 @@ namespace CoachConnect.BusinessLayer.Services
             DateTime startDate = gameRegistrationDTO.GameTime.Date;
 
             var practiceExists = await _practiceRepository.GetByPracticeTimeAsync(startDate);
-            var gameExists = await _gameRepository.GetByGameTimeAsync(startDate);
+            var gameExists = await _gameRepository.GetByGameTimeAsync(startDate);                     
+
+            if (gameExists != null &&
+            ((gameExists.AwayTeam.teamId == gameRegistrationDTO.AwayTeam.teamId ||
+            gameExists.HomeTeam.teamId == gameRegistrationDTO.HomeTeam.teamId) ||
+            (gameExists.AwayTeam.teamId == gameRegistrationDTO.HomeTeam.teamId ||
+            gameExists.HomeTeam.teamId == gameRegistrationDTO.AwayTeam.teamId)))
+            {
+                return null;
+            }
+
+            // Uferdig sjekk om det finnes oppsatt trening på dato hvor kamp skal registreres
+
+            //if (practiceExists != null &&
+            //    (practiceExists.Team?.Id.teamId == gameRegistrationDTO.AwayTeam.teamId ||
+            //     practiceExists.Team?.Id.teamId == gameRegistrationDTO.HomeTeam.teamId))
+            //{
+            //    return null;
+            //}
+            //
 
             if (!isAdmin)
             {
 
-                if (gameExists != null &&
-              ((gameExists.AwayTeam.teamId == gameRegistrationDTO.AwayTeam.teamId ||
-                gameExists.HomeTeam.teamId == gameRegistrationDTO.HomeTeam.teamId) ||
-               (gameExists.AwayTeam.teamId == gameRegistrationDTO.HomeTeam.teamId ||
-                gameExists.HomeTeam.teamId == gameRegistrationDTO.AwayTeam.teamId)))
-                {
-                    return null;
-                }
-
-                // Uferdig sjekk om det finnes oppsatt trening på dato hvor kamp skal registreres
-
-                //if (practiceExists != null &&
-                //    (practiceExists.Team?.Id.teamId == gameRegistrationDTO.AwayTeam.teamId ||
-                //     practiceExists.Team?.Id.teamId == gameRegistrationDTO.HomeTeam.teamId))
-                //{
-                //    return null;
-                //}           
-
                 string idFromTokenBeforeExtraction = idFromToken;
 
-                // Extracting the GUID portion
                 int startIndex = idFromTokenBeforeExtraction.IndexOf('=') + 1;
                 int length = idFromTokenBeforeExtraction.IndexOf('}') - startIndex;
                 string idFromTokenExtracted = idFromToken.Substring(startIndex, length);

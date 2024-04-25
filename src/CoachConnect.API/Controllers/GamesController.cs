@@ -49,13 +49,10 @@ public class GamesController : ControllerBase
     {
         _logger.LogDebug("Updating game with ID: {id}", id);
 
-        // Ikke tid til å implementere ferdig. Sjekk at coach kun kan update games for sitt eget lag:
+        string idFromToken = (string)this.HttpContext.Items["UserId"]!;
+        bool isAdmin = this.HttpContext.User.IsInRole("Admin");
 
-        //string idFromToken = (string)this.HttpContext.Items["UserId"]!;
-        //string idFromRoute = "GameId { gameId = " + id.ToString() + " }";
-        //bool isAdmin = this.User.IsInRole("Admin");       
-
-        var res = await _gameService.UpdateAsync(id, gameUpdateDTO);
+        var res = await _gameService.UpdateAsync(isAdmin, idFromToken, id, gameUpdateDTO);
         return res != null ? Ok(res) : BadRequest("Could not update game");
     }
 
@@ -66,7 +63,6 @@ public class GamesController : ControllerBase
     {
         _logger.LogDebug("Create new Game");
 
-        // startet implementering i GameService så en coach kun kan registrere Games der sitt eget lag spiller, er ikke komplett i servicelayer.
         string idFromToken = (string)this.HttpContext.Items["UserId"]!;        
         bool isAdmin = this.HttpContext.User.IsInRole("Admin");   
 

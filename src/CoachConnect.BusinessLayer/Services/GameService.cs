@@ -40,6 +40,7 @@ namespace CoachConnect.BusinessLayer.Services
             _gameRegistrationMapper = gameRegistrationMapper;
             _logger = logger;
         }
+
         public async Task<ICollection<GameDTO>> GetAllAsync(GameQuery gameQuery)
         {
             _logger.LogDebug("Getting all games");

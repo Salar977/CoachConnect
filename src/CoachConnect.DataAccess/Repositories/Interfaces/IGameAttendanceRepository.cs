@@ -13,4 +13,5 @@ public interface IGameAttendanceRepository
     Task<GameAttendance?> GetByIdAsync(GameAttendanceId id);
     Task<GameAttendance?> RegisterGameAttendanceAsync(GameAttendance gameAttendance);
     Task<GameAttendance?> DeleteAsync(GameAttendanceId id);
+    Task<bool> CheckAttendanceExistsAsync(PlayerId playerId, GameId gameId);
 }

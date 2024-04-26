@@ -20,7 +20,7 @@ public class GameRepository : IGameRepository
         _dbContext = dbContext;
         _logger = logger;
     }
-    public async Task<ICollection<Game>> GetAllAsync(GameQuery gameQuery)
+    public async Task<ICollection<Game>> GetAllAsync(GameQuery gameQuery)  
     {
         _logger.LogDebug("Getting Games from db");
 

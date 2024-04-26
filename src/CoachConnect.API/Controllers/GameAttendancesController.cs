@@ -42,14 +42,17 @@ public class GameAttendancesController : ControllerBase
         return res != null ? Ok(res) : NotFound("Could not find any gameAttendance with this id");
     }
 
-    //[Authorize(Roles = "Admin, Coach")]
+    [Authorize(Roles = "Admin, Coach")]
     // https://localhost:7036/api/v1/gameattendances/register
     [HttpPost("register", Name = "registerGameAttendance")]
     public async Task<ActionResult<GameAttendanceRegistrationDTO>> RegisterGameAttendance([FromBody] GameAttendanceRegistrationDTO gameAttendanceRegistrationDTO)
     {
         _logger.LogDebug("Create new Gameattendance");
 
-        var res = await _gameAttendanceService.RegisterGameAttendanceAsync(gameAttendanceRegistrationDTO);
+        string idFromToken = (string)this.HttpContext.Items["UserId"]!;
+        bool isAdmin = this.HttpContext.User.IsInRole("Admin");
+
+        var res = await _gameAttendanceService.RegisterGameAttendanceAsync(isAdmin, idFromToken, gameAttendanceRegistrationDTO);
         return res != null ? Ok(res) : BadRequest("Could not register gameAttendance");
     }
 

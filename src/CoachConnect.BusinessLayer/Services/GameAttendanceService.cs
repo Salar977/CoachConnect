@@ -65,7 +65,7 @@ public class GameAttendanceService : IGameAttendanceService
 
         if (!isAdmin)
         {
-            string idFromTokenBeforeExtraction = idFromToken; // og dersom allrede finnes reg for den player den game ikke lov // 
+            string idFromTokenBeforeExtraction = idFromToken; 
 
             int startIndex = idFromTokenBeforeExtraction.IndexOf('=') + 1;
             int length = idFromTokenBeforeExtraction.IndexOf('}') - startIndex;

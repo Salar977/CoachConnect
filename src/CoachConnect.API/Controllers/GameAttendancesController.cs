@@ -42,7 +42,7 @@ public class GameAttendancesController : ControllerBase
         return res != null ? Ok(res) : NotFound("Could not find any gameAttendance with this id");
     }
 
-    [Authorize(Roles = "Admin, Coach")]
+    //[Authorize(Roles = "Admin, Coach")]
     // https://localhost:7036/api/v1/gameattendances/register
     [HttpPost("register", Name = "registerGameAttendance")]
     public async Task<ActionResult<GameAttendanceRegistrationDTO>> RegisterGameAttendance([FromBody] GameAttendanceRegistrationDTO gameAttendanceRegistrationDTO)

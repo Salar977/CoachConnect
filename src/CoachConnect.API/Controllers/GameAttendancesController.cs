@@ -56,7 +56,7 @@ public class GameAttendancesController : ControllerBase
         return res != null ? Ok(res) : BadRequest("Could not register gameAttendance");
     }
 
-     [Authorize(Roles = "Admin, Coach")]
+    // [Authorize(Roles = "Admin, Coach")]
     // https://localhost:7036/api/v1/gameattendances/aa15514a-c2f8-46fd-a547-ab5c1fc76e14
     [HttpDelete("{id}", Name = "DeleteGameAttendance")]
     public async Task<ActionResult<GameAttendanceDTO>> DeleteGameAttendance([FromRoute] Guid id)

@@ -13,5 +13,5 @@ public interface IGameAttendanceService
     Task<ICollection<GameAttendanceDTO>> GetAllAsync(GameAttendanceQuery gameAttendanceQuery);
     Task<GameAttendanceDTO?> GetByIdAsync(Guid id);
     Task<GameAttendanceRegistrationDTO?> RegisterGameAttendanceAsync(bool isAdmin, string idFromToken, GameAttendanceRegistrationDTO dto);
-    Task<GameAttendanceDTO?> DeleteAsync(Guid id);
+    Task<GameAttendanceDTO?> DeleteAsync(bool isAdmin, string idFromToken, Guid id);
 }

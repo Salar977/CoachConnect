@@ -79,8 +79,7 @@ public class GameAttendanceService : IGameAttendanceService
                 var returnedPlayer = await _playerRepository.GetByIdAsync(dto.PlayerId);
                 var game = await _gameRepository.GetByIdAsync(dto.GameId);
 
-                if (returnedPlayer == null || game == null || coach == null || coachId != coach.Id
-                    || returnedPlayer.TeamId.teamId != game.HomeTeam.teamId && returnedPlayer.TeamId.teamId != game.AwayTeam.teamId)
+                if (returnedPlayer == null || game == null || coach == null || returnedPlayer.TeamId.teamId != game.HomeTeam.teamId && returnedPlayer.TeamId.teamId != game.AwayTeam.teamId)
                 {
                     return null;
                 }
@@ -104,11 +103,33 @@ public class GameAttendanceService : IGameAttendanceService
         return res != null ? _gameAttendanceRegistrationMapper.MapToDTO(res) : null;
     }
 
-    public async Task<GameAttendanceDTO?> DeleteAsync(Guid id)
+    public async Task<GameAttendanceDTO?> DeleteAsync(bool isAdmin, string idFromToken, Guid id)
     {
         _logger.LogDebug("Deleting Gameattendance: {id}", id);
 
         var gameAttendanceId = new GameAttendanceId(id);
+
+        if (!isAdmin)
+        {
+            string idFromTokenBeforeExtraction = idFromToken;
+
+            int startIndex = idFromTokenBeforeExtraction.IndexOf('=') + 1;
+            int length = idFromTokenBeforeExtraction.IndexOf('}') - startIndex;
+            string idFromTokenExtracted = idFromToken.Substring(startIndex, length);
+
+            if (Guid.TryParse(idFromTokenExtracted, out var coachGuid))
+            {
+                var coachId = new CoachId(coachGuid);
+
+                var coach = await _coachRepository.GetByIdAsync(coachId);
+                var returnedGameAttendance = await _gameAttendanceRepository.GetByIdAsync(gameAttendanceId);
+
+                if (returnedGameAttendance == null || coach == null || returnedGameAttendance.Player == null || returnedGameAttendance.Player.Team == null || returnedGameAttendance.Player.Team.CoachId != coachId) 
+                {
+                    return null;
+                }
+            }
+        }
 
         var gameAttendance = await _gameAttendanceRepository.GetByIdAsync(gameAttendanceId);
         if (gameAttendance == null)

@@ -58,7 +58,12 @@ public class CoachService : ICoachService
 
         var coachId = new CoachId(id);
         var coach = await _coachRepository.GetByIdAsync(coachId);
-        if (coach == null) return null;
+
+        if (coach == null) 
+        {
+            _logger.LogInformation("Could not get coach by id -> coach == null");
+            return null;
+        }
 
         var teams = coach.Teams.ToList();
         var teamDtos = teams.Select(team => _teamMapper.MapToDTO(team)).ToList();
@@ -107,7 +112,7 @@ public class CoachService : ICoachService
         if (existingCoach != null)
         {
             _logger.LogDebug("Coach already exists: {email}", dto.Email);
-            return null; // sette opp custom exception? coach already exists. Returnerer nå bare BadRequesten fra controlleren.
+            return null; 
         }
 
         var coach = _coachRegistartionMapper.MapToEntity(dto);

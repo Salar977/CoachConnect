@@ -19,7 +19,7 @@ public class GamesController : ControllerBase
         _logger = logger;
     }
 
-    //[Authorize(Roles = "Admin, Coach, User")]
+    // [Authorize(Roles = "Admin, Coach, User")]
     // https://localhost:7036/api/v1/games
     [HttpGet(Name = "GetAllGames")]
     public async Task<ActionResult<IEnumerable<GameDTO>>> GetAllGames([FromQuery] GameQuery gameQuery)
@@ -31,7 +31,7 @@ public class GamesController : ControllerBase
         return Ok(await _gameService.GetAllAsync(gameQuery));
     }
 
-    //[Authorize(Roles = "Admin, Coach, User")]
+    // [Authorize(Roles = "Admin, Coach, User")]
     // https://localhost:7036/api/v1/games/2f042e86-d75e-4591-a810-aca808725555
     [HttpGet("{id}", Name = "GetGameById")]
     public async Task<ActionResult<GameDTO>> GetGameById(Guid id)
@@ -42,20 +42,17 @@ public class GamesController : ControllerBase
         return game != null ? Ok(game) : NotFound($"Game with ID '{id}' not found");
     }
 
-    //[Authorize(Roles = "Admin, Coach")]
+     [Authorize(Roles = "Admin, Coach")]
     // https://localhost:7036/api/v1/games/2f042e86-d75e-4591-a810-aca80812cde3
     [HttpPut("{id}", Name = "UpdateGame")]
     public async Task<ActionResult<GameUpdateDTO>> UpdateGame(Guid id, [FromBody] GameUpdateDTO gameUpdateDTO)
     {
         _logger.LogDebug("Updating game with ID: {id}", id);
 
-        // Ikke tid til å implementere ferdig. Sjekk at coach kun kan update games for sitt eget lag:
+        string idFromToken = (string)this.HttpContext.Items["UserId"]!;
+        bool isAdmin = this.HttpContext.User.IsInRole("Admin");
 
-        //string idFromToken = (string)this.HttpContext.Items["UserId"]!;
-        //string idFromRoute = "GameId { gameId = " + id.ToString() + " }";
-        //bool isAdmin = this.User.IsInRole("Admin");       
-
-        var res = await _gameService.UpdateAsync(id, gameUpdateDTO);
+        var res = await _gameService.UpdateAsync(isAdmin, idFromToken, id, gameUpdateDTO);
         return res != null ? Ok(res) : BadRequest("Could not update game");
     }
 
@@ -66,7 +63,6 @@ public class GamesController : ControllerBase
     {
         _logger.LogDebug("Create new Game");
 
-        // startet implementering i GameService så en coach kun kan registrere Games der sitt eget lag spiller, er ikke komplett i servicelayer.
         string idFromToken = (string)this.HttpContext.Items["UserId"]!;        
         bool isAdmin = this.HttpContext.User.IsInRole("Admin");   
 
@@ -74,20 +70,17 @@ public class GamesController : ControllerBase
         return res != null ? Ok(res) : BadRequest("Could not create new game");
     }
 
-    //[Authorize(Roles = "Admin, Coach")]
+    // [Authorize(Roles = "Admin, Coach")]
     // https://localhost:7036/api/v1/games/2f042e86-d75e-4591-a810-aca80812cde3
     [HttpDelete("{id}", Name = "DeleteGame")]
     public async Task<ActionResult<GameDTO>> DeleteGame(Guid id)
     {
         _logger.LogDebug("Deleting game with ID: {id}", id);
 
-        // Ikke tid til å implementere ferdig. Sjekk at coach kun kan slette games for sitt eget lag:
+        string idFromToken = (string)this.HttpContext.Items["UserId"]!;
+        bool isAdmin = this.HttpContext.User.IsInRole("Admin");
 
-        //string idFromToken = (string)this.HttpContext.Items["UserId"]!;
-        //string idFromRoute = "GameId { gameId = " + id.ToString() + " }";
-        //bool isAdmin = this.User.IsInRole("Admin");
-       
-        var res = await _gameService.DeleteAsync(id);
+        var res = await _gameService.DeleteAsync(isAdmin, idFromToken, id);
         return res != null ? Ok(res) : BadRequest("Could not delete game");
     }
 }

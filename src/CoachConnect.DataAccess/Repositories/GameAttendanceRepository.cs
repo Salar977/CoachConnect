@@ -21,7 +21,7 @@ public class GameAttendanceRepository : IGameAttendanceRepository
         _dbContext = dbContext;
     }
 
-    public async Task<ICollection<GameAttendance>> GetAllAsync(GameAttendanceQuery gameAttendanceQuery)
+    public async Task<ICollection<GameAttendance>> GetAllAsync(GameAttendanceQuery gameAttendanceQuery) // vi mangler mye logikk her for feks at coach kun kan hente data for sitt eget lag, samt user kun kan se oppmøte for egne barn, ikke tid.
     {
         _logger.LogDebug("Getting GameAttendances from db");
 
@@ -101,5 +101,13 @@ public class GameAttendanceRepository : IGameAttendanceRepository
         _dbContext.Game_attendences.Remove(res);
         await _dbContext.SaveChangesAsync();
         return res;
+    }
+
+    public async Task<bool> CheckAttendanceExistsAsync(PlayerId playerId, GameId gameId) // legg i interface?
+    {
+        var attendanceExists = await _dbContext.Set<GameAttendance>()
+            .AnyAsync(a => a.PlayerId == playerId && a.GameId == gameId);
+
+        return attendanceExists;
     }
 }

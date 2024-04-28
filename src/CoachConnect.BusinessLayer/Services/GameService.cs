@@ -66,24 +66,16 @@ namespace CoachConnect.BusinessLayer.Services
             var practiceExists = await _practiceRepository.GetByPracticeTimeAsync(startDate);
             var gameExists = await _gameRepository.GetByGameTimeAsync(startDate);
 
-            if (gameExists != null &&
-            ((gameExists.AwayTeam.teamId == gameUpdateDto.AwayTeam.teamId ||
-            gameExists.HomeTeam.teamId == gameUpdateDto.HomeTeam.teamId) ||
-            (gameExists.AwayTeam.teamId == gameUpdateDto.HomeTeam.teamId ||
-            gameExists.HomeTeam.teamId == gameUpdateDto.AwayTeam.teamId)))
+            if (gameExists != null && gameExists.Any(game =>
+                 game.AwayTeam.teamId == gameUpdateDto.AwayTeam.teamId ||
+                 game.HomeTeam.teamId == gameUpdateDto.HomeTeam.teamId ||
+                 game.AwayTeam.teamId == gameUpdateDto.HomeTeam.teamId ||
+                 game.HomeTeam.teamId == gameUpdateDto.AwayTeam.teamId))
             {
                 return null;
             }
 
-            // Uferdig sjekk om det finnes oppsatt trening på dato hvor kamp skal endres til
-
-            //if (practiceExists != null &&
-            //    (practiceExists.Team?.Id.teamId == gameRegistrationDTO.AwayTeam.teamId ||
-            //     practiceExists.Team?.Id.teamId == gameRegistrationDTO.HomeTeam.teamId))
-            //{
-            //    return null;
-            //}
-            //
+            // Må også legge til sjekk om det finnes oppsatt trening på dato hvor kamp skal endres til           
 
             if (!isAdmin)
             {
@@ -104,11 +96,11 @@ namespace CoachConnect.BusinessLayer.Services
                     var awayTeam = await _teamRepository.GetByIdAsync(awayTeamId);
 
                     if (homeTeam == null || awayTeam == null)
-                        return null;
+                        return null; // custom ex
 
                     if (homeTeam.CoachId != coachId && awayTeam.CoachId != coachId)
                     {
-                        return null;
+                        return null; // custom ex
                     }
                 }
             }
@@ -128,30 +120,21 @@ namespace CoachConnect.BusinessLayer.Services
             DateTime startDate = gameRegistrationDTO.GameTime.Date;
 
             var practiceExists = await _practiceRepository.GetByPracticeTimeAsync(startDate);
-            var gameExists = await _gameRepository.GetByGameTimeAsync(startDate);                     
+            var gameExists = await _gameRepository.GetByGameTimeAsync(startDate);
 
-            if (gameExists != null &&
-            ((gameExists.AwayTeam.teamId == gameRegistrationDTO.AwayTeam.teamId ||
-            gameExists.HomeTeam.teamId == gameRegistrationDTO.HomeTeam.teamId) ||
-            (gameExists.AwayTeam.teamId == gameRegistrationDTO.HomeTeam.teamId ||
-            gameExists.HomeTeam.teamId == gameRegistrationDTO.AwayTeam.teamId)))
+            if (gameExists != null && gameExists.Any(game =>
+            game.AwayTeam.teamId == gameRegistrationDTO.AwayTeam.teamId ||
+            game.HomeTeam.teamId == gameRegistrationDTO.HomeTeam.teamId ||
+            game.AwayTeam.teamId == gameRegistrationDTO.HomeTeam.teamId ||
+            game.HomeTeam.teamId == gameRegistrationDTO.AwayTeam.teamId))
             {
-                return null;
+                return null; // custom ex
             }
 
-            // Uferdig sjekk om det finnes oppsatt trening på dato hvor kamp skal registreres
-
-            //if (practiceExists != null &&
-            //    (practiceExists.Team?.Id.teamId == gameRegistrationDTO.AwayTeam.teamId ||
-            //     practiceExists.Team?.Id.teamId == gameRegistrationDTO.HomeTeam.teamId))
-            //{
-            //    return null;
-            //}
-            //
+            // Må også legge til sjekk om det finnes oppsatt trening på dato hvor kamp skal legges til         
 
             if (!isAdmin)
             {
-
                 string idFromTokenBeforeExtraction = idFromToken;
 
                 int startIndex = idFromTokenBeforeExtraction.IndexOf('=') + 1;
@@ -168,10 +151,11 @@ namespace CoachConnect.BusinessLayer.Services
                     var awayTeam = await _teamRepository.GetByIdAsync(awayTeamId);
 
                     if (homeTeam == null || awayTeam == null)
-                        return null;
+                        return null;  // custom ex
+
                     if (coachId != homeTeam.CoachId && coachId != awayTeam.CoachId)
                     {
-                        return null;
+                        return null; // custom ex
                     }
                 }
             }
@@ -211,11 +195,11 @@ namespace CoachConnect.BusinessLayer.Services
                         var awayTeam = await _teamRepository.GetByIdAsync(awayTeamId);
 
                         if (homeTeam == null || awayTeam == null)
-                            return null;
+                            return null; // custom ex
 
                         if (coachId != homeTeam.CoachId && coachId != awayTeam.CoachId)
                         {
-                            return null;
+                            return null; // custom ex
                         }
                     }
                 }

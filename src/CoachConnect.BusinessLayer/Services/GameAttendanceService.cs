@@ -22,7 +22,8 @@ public class GameAttendanceService : IGameAttendanceService
     private readonly IGameAttendanceRepository _gameAttendanceRepository;
     private readonly IGameRepository _gameRepository;
     private readonly IPlayerRepository _playerRepository;
-    private readonly ICoachRepository _coachRepository  ;
+    private readonly ICoachRepository _coachRepository;
+    private readonly ITeamRepository _teamRepository;
     private readonly IMapper<GameAttendance, GameAttendanceDTO> _gameAttendanceMapper;
     private readonly IMapper<GameAttendance, GameAttendanceRegistrationDTO> _gameAttendanceRegistrationMapper;
 
@@ -31,6 +32,7 @@ public class GameAttendanceService : IGameAttendanceService
                                 IGameRepository gameRepository,
                                 IPlayerRepository playerRepository,
                                 ICoachRepository coachRepository,
+                                ITeamRepository teamRepository,
                                 IMapper<GameAttendance, GameAttendanceDTO> gameAttendanceMapper,
                                 IMapper<GameAttendance, GameAttendanceRegistrationDTO> gameAttendanceRegistrationMapper)
     {
@@ -39,6 +41,7 @@ public class GameAttendanceService : IGameAttendanceService
         _gameRepository = gameRepository;
         _playerRepository = playerRepository;
         _coachRepository = coachRepository;
+        _teamRepository = teamRepository;
         _gameAttendanceMapper = gameAttendanceMapper;
         _gameAttendanceRegistrationMapper = gameAttendanceRegistrationMapper;
     }
@@ -79,15 +82,16 @@ public class GameAttendanceService : IGameAttendanceService
                 var returnedPlayer = await _playerRepository.GetByIdAsync(dto.PlayerId);
                 var game = await _gameRepository.GetByIdAsync(dto.GameId);
 
-                if (returnedPlayer == null || game == null || coach == null || returnedPlayer.TeamId.teamId != game.HomeTeam.teamId && returnedPlayer.TeamId.teamId != game.AwayTeam.teamId)
+                if (returnedPlayer == null || game == null || coach!.Id != returnedPlayer.Team?.CoachId || returnedPlayer.TeamId.teamId != game.HomeTeam.teamId
+                    && returnedPlayer.TeamId.teamId != game.AwayTeam.teamId)
                 {
-                    return null;
+                    return null; // custom ex
                 }
 
                 var attendanceExists = await _gameAttendanceRepository.CheckAttendanceExistsAsync(dto.PlayerId, dto.GameId);
                 if (attendanceExists)
                 {
-                    return null;
+                    return null; // custom ex
                 }
             }
         }
@@ -120,14 +124,23 @@ public class GameAttendanceService : IGameAttendanceService
             if (Guid.TryParse(idFromTokenExtracted, out var coachGuid))
             {
                 var coachId = new CoachId(coachGuid);
-
-                var coach = await _coachRepository.GetByIdAsync(coachId);
+                              
                 var returnedGameAttendance = await _gameAttendanceRepository.GetByIdAsync(gameAttendanceId);
+                if (returnedGameAttendance == null) return null;
 
-                if (returnedGameAttendance == null || coach == null || returnedGameAttendance.Player == null || returnedGameAttendance.Player.Team == null || returnedGameAttendance.Player.Team.CoachId != coachId) 
+                var game = await _gameRepository.GetByIdAsync(returnedGameAttendance.GameId); // denne må fikses!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+                var homeTeamId = new TeamId(game!.HomeTeam.teamId);
+                var awayTeamId = new TeamId(game!.AwayTeam.teamId);  
+
+                var homeTeam = await _teamRepository.GetByIdAsync(homeTeamId);
+                var awayTeam = await _teamRepository.GetByIdAsync(awayTeamId);
+
+                if (homeTeam == null || awayTeam == null || (homeTeam.CoachId != coachId && awayTeam.CoachId != coachId))
                 {
-                    return null;
+                    return null; // custom ex
                 }
+
             }
         }
 

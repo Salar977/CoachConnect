@@ -112,6 +112,13 @@ public class GameAttendanceService : IGameAttendanceService
         _logger.LogDebug("Deleting Gameattendance: {id}", id);
 
         var gameAttendanceId = new GameAttendanceId(id);
+        var gameAttendance = await _gameAttendanceRepository.GetByIdAsync(gameAttendanceId);
+
+        if (gameAttendance == null)
+        {
+            _logger.LogError("Could not delete Gameattendance");
+            return null;
+        }
 
         if (!isAdmin)
         {
@@ -124,14 +131,12 @@ public class GameAttendanceService : IGameAttendanceService
             if (Guid.TryParse(idFromTokenExtracted, out var coachGuid))
             {
                 var coachId = new CoachId(coachGuid);
-                              
-                var returnedGameAttendance = await _gameAttendanceRepository.GetByIdAsync(gameAttendanceId);
-                if (returnedGameAttendance == null) return null;
 
-                var game = await _gameRepository.GetByIdAsync(returnedGameAttendance.GameId); // denne må fikses!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                var game = await _gameRepository.GetByIdAsync(gameAttendance.GameId);
+                if (game == null) return null;
 
-                var homeTeamId = new TeamId(game!.HomeTeam.teamId);
-                var awayTeamId = new TeamId(game!.AwayTeam.teamId);  
+                var homeTeamId = new TeamId(game.HomeTeam.teamId);
+                var awayTeamId = new TeamId(game.AwayTeam.teamId);
 
                 var homeTeam = await _teamRepository.GetByIdAsync(homeTeamId);
                 var awayTeam = await _teamRepository.GetByIdAsync(awayTeamId);
@@ -140,15 +145,7 @@ public class GameAttendanceService : IGameAttendanceService
                 {
                     return null; // custom ex
                 }
-
             }
-        }
-
-        var gameAttendance = await _gameAttendanceRepository.GetByIdAsync(gameAttendanceId);
-        if (gameAttendance == null)
-        {
-            _logger.LogError("Could not delete Gameattendance");
-            return null;
         }
 
         var player = await _playerRepository.GetByIdAsync(gameAttendance.PlayerId);
@@ -156,6 +153,7 @@ public class GameAttendanceService : IGameAttendanceService
 
         await _gameAttendanceRepository.DeleteAsync(gameAttendanceId);
 
-        return gameAttendance != null ? _gameAttendanceMapper.MapToDTO(gameAttendance) : null;
+        return _gameAttendanceMapper.MapToDTO(gameAttendance);
     }
+
 }

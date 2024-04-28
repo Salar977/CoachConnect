@@ -7,6 +7,7 @@ using CoachConnect.API.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using CoachConnect.DataAccess.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -81,5 +82,7 @@ app.UseAuthorization();
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.MapControllers().RequireRateLimiting("fixed");
+
+app.MigrateDb();
 
 app.Run();

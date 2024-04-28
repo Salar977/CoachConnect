@@ -138,7 +138,7 @@ public class GameAttendanceService : IGameAttendanceService
                 var game = await _gameRepository.GetByIdAsync(gameAttendance.GameId);
                 if (game == null) 
                 {
-                    _logger.LogError("Could not delete gameattendance -> (game == null");
+                    _logger.LogError("Could not delete gameattendance -> game == null");
                     return null;
                 }               
 

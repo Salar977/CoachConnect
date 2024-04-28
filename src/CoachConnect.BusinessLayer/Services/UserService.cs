@@ -57,7 +57,12 @@ public class UserService : IUserService
 
         var userId = new UserId(id);
         var user = await _userRepository.GetByIdAsync(userId);
-        if (user == null) return null;
+
+        if (user == null)
+        {
+            _logger.LogInformation("Could not get user by id -> user == null");
+            return null;
+        }
 
         var players = user.Players;
         var playerDtos = players.Select(player => _playerMapper.MapToDTO(player)).ToList();
@@ -106,7 +111,7 @@ public class UserService : IUserService
         if (existingUser != null)
         {
             _logger.LogDebug("User already exists: {email}", dto.Email);
-            return null; // sette opp custom exception? user already exists. Returnerer nå bare BadRequesten fra controlleren.
+            return null;
         }
 
         var user = _userRegistrationMapper.MapToEntity(dto);

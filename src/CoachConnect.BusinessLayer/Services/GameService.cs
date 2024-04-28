@@ -72,6 +72,7 @@ namespace CoachConnect.BusinessLayer.Services
                  game.AwayTeam.teamId == gameUpdateDto.HomeTeam.teamId ||
                  game.HomeTeam.teamId == gameUpdateDto.AwayTeam.teamId))
             {
+                _logger.LogInformation("Could not update Game. A game for this team already exist on this date");
                 return null;
             }
 
@@ -95,12 +96,16 @@ namespace CoachConnect.BusinessLayer.Services
                     var homeTeam = await _teamRepository.GetByIdAsync(homeTeamId);
                     var awayTeam = await _teamRepository.GetByIdAsync(awayTeamId);
 
-                    if (homeTeam == null || awayTeam == null)
-                        return null; // custom ex
+                    if (homeTeam == null || awayTeam == null) 
+                    {
+                        _logger.LogInformation("Could not update Game. Hometeam or Awayteam does not exist");
+                        return null;
+                    }                    
 
                     if (homeTeam.CoachId != coachId && awayTeam.CoachId != coachId)
                     {
-                        return null; // custom ex
+                        _logger.LogInformation("Could not update game, coach is not the coach for either team");
+                        return null; 
                     }
                 }
             }
@@ -128,7 +133,8 @@ namespace CoachConnect.BusinessLayer.Services
             game.AwayTeam.teamId == gameRegistrationDTO.HomeTeam.teamId ||
             game.HomeTeam.teamId == gameRegistrationDTO.AwayTeam.teamId))
             {
-                return null; // custom ex
+                _logger.LogInformation("Could not register Game. A game for this team already exist on this date");
+                return null;
             }
 
             // Må også legge til sjekk om det finnes oppsatt trening på dato hvor kamp skal legges til         
@@ -150,12 +156,16 @@ namespace CoachConnect.BusinessLayer.Services
                     var homeTeam = await _teamRepository.GetByIdAsync(homeTeamId);
                     var awayTeam = await _teamRepository.GetByIdAsync(awayTeamId);
 
-                    if (homeTeam == null || awayTeam == null)
-                        return null;  // custom ex
+                    if (homeTeam == null || awayTeam == null) 
+                    {
+                        _logger.LogInformation("Could not register Game. Hometeam or Awayteam does not exist");
+                        return null;
+                    }
 
                     if (coachId != homeTeam.CoachId && coachId != awayTeam.CoachId)
                     {
-                        return null; // custom ex
+                        _logger.LogInformation("Could not register game, user is not the coach for either team");
+                        return null;
                     }
                 }
             }
@@ -195,11 +205,15 @@ namespace CoachConnect.BusinessLayer.Services
                         var awayTeam = await _teamRepository.GetByIdAsync(awayTeamId);
 
                         if (homeTeam == null || awayTeam == null)
-                            return null; // custom ex
+                        {
+                            _logger.LogInformation("Could not delete Game. Hometeam or Awayteam does not exist");
+                            return null;
+                        }
 
                         if (coachId != homeTeam.CoachId && coachId != awayTeam.CoachId)
                         {
-                            return null; // custom ex
+                            _logger.LogInformation("Could not delete game, user is not the coach for either team");
+                            return null;
                         }
                     }
                 }

@@ -86,13 +86,16 @@ public class GameAttendanceService : IGameAttendanceService
                 if (returnedPlayer == null || game == null || coach?.Id != returnedPlayer.Team?.CoachId ||
                     (returnedPlayer.TeamId.teamId != game.HomeTeam.teamId && returnedPlayer.TeamId.teamId != game.AwayTeam.teamId))
                 {
-                    return null; // custom ex
+                    _logger.LogInformation("Could not register gameattendance. Either the player or the game does not exist," +
+                        " the coach is not the coach for the specified team, or the player is not part of the specified team.");
+                    return null; 
                 }
 
                 var attendanceExists = await _gameAttendanceRepository.CheckAttendanceExistsAsync(dto.PlayerId, dto.GameId);
                 if (attendanceExists)
                 {
-                    return null; // custom ex
+                    _logger.LogInformation("Could not register gameattendance. Gameattendance already exists");
+                    return null;
                 }
             }
         }
@@ -107,7 +110,6 @@ public class GameAttendanceService : IGameAttendanceService
         return res != null ? _gameAttendanceRegistrationMapper.MapToDTO(res) : null;
     }
 
-
     public async Task<GameAttendanceDTO?> DeleteAsync(bool isAdmin, string idFromToken, Guid id)
     {
         _logger.LogDebug("Deleting Gameattendance: {id}", id);
@@ -117,7 +119,7 @@ public class GameAttendanceService : IGameAttendanceService
 
         if (gameAttendance == null)
         {
-            _logger.LogError("Could not delete Gameattendance");
+            _logger.LogInformation("Could not delete gameattendance. Gameattendance does not exist.");
             return null;
         }
 
@@ -134,7 +136,11 @@ public class GameAttendanceService : IGameAttendanceService
                 var coachId = new CoachId(coachGuid);
 
                 var game = await _gameRepository.GetByIdAsync(gameAttendance.GameId);
-                if (game == null) return null;
+                if (game == null) 
+                {
+                    _logger.LogError("Could not delete gameattendance -> (game == null");
+                    return null;
+                }               
 
                 var homeTeamId = new TeamId(game.HomeTeam.teamId);
                 var awayTeamId = new TeamId(game.AwayTeam.teamId);
@@ -144,7 +150,9 @@ public class GameAttendanceService : IGameAttendanceService
 
                 if (homeTeam == null || awayTeam == null || (homeTeam.CoachId != coachId && awayTeam.CoachId != coachId))
                 {
-                    return null; // custom ex
+                    _logger.LogInformation("Could not delete gameattendance. Hometeam or Awayteam does not exist," +
+                        " or coach is not the coach for either team.");
+                    return null; 
                 }
             }
         }
@@ -156,5 +164,4 @@ public class GameAttendanceService : IGameAttendanceService
 
         return _gameAttendanceMapper.MapToDTO(gameAttendance);
     }
-
 }

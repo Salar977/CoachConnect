@@ -15,7 +15,7 @@ public static class DependencyInjection
         // Database Configuration
         services.AddDbContext<CoachConnectDbContext>(options =>
         {
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            var connectionString = configuration.GetConnectionString("CoachConnectDb");
 
             connectionString = connectionString?
                 .Replace("{COACH_CONNECT_USERNAME}", Environment.GetEnvironmentVariable("COACH_CONNECT_USERNAME"))

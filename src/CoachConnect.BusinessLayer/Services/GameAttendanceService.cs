@@ -66,9 +66,11 @@ public class GameAttendanceService : IGameAttendanceService
     {
         _logger.LogDebug("Create new Gameattendance");
 
+        Player? returnedPlayer = null;
+
         if (!isAdmin)
         {
-            string idFromTokenBeforeExtraction = idFromToken; 
+            string idFromTokenBeforeExtraction = idFromToken;
 
             int startIndex = idFromTokenBeforeExtraction.IndexOf('=') + 1;
             int length = idFromTokenBeforeExtraction.IndexOf('}') - startIndex;
@@ -77,13 +79,12 @@ public class GameAttendanceService : IGameAttendanceService
             if (Guid.TryParse(idFromTokenExtracted, out var coachGuid))
             {
                 var coachId = new CoachId(coachGuid);
-
                 var coach = await _coachRepository.GetByIdAsync(coachId);
-                var returnedPlayer = await _playerRepository.GetByIdAsync(dto.PlayerId);
+                returnedPlayer = await _playerRepository.GetByIdAsync(dto.PlayerId);
                 var game = await _gameRepository.GetByIdAsync(dto.GameId);
 
-                if (returnedPlayer == null || game == null || coach!.Id != returnedPlayer.Team?.CoachId || returnedPlayer.TeamId.teamId != game.HomeTeam.teamId
-                    && returnedPlayer.TeamId.teamId != game.AwayTeam.teamId)
+                if (returnedPlayer == null || game == null || coach?.Id != returnedPlayer.Team?.CoachId ||
+                    (returnedPlayer.TeamId.teamId != game.HomeTeam.teamId && returnedPlayer.TeamId.teamId != game.AwayTeam.teamId))
                 {
                     return null; // custom ex
                 }
@@ -99,13 +100,13 @@ public class GameAttendanceService : IGameAttendanceService
         var gameAttendanceRegistration = _gameAttendanceRegistrationMapper.MapToEntity(dto);
         gameAttendanceRegistration.Id = GameAttendanceId.NewId;
 
-        var player = await _playerRepository.GetByIdAsync(dto.PlayerId);
-        if (player != null) { player.TotalGames++; }
+        if (returnedPlayer != null) { returnedPlayer.TotalGames++; }
 
         var res = await _gameAttendanceRepository.RegisterGameAttendanceAsync(gameAttendanceRegistration);
 
         return res != null ? _gameAttendanceRegistrationMapper.MapToDTO(res) : null;
     }
+
 
     public async Task<GameAttendanceDTO?> DeleteAsync(bool isAdmin, string idFromToken, Guid id)
     {

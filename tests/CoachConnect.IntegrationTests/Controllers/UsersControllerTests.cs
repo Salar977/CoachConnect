@@ -16,7 +16,7 @@ public class UsersControllerTests : BaseIntegrationTests
     {
         // arrange
 
-        LoginDTO dto = new LoginDTO { Username = "Yngve", Password = "hemmelig!" };
+        LoginDTO dto = new LoginDTO { Username = "koppen@gmail.com", Password = "E1derkopp#" };
         var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(dto);
 
         // act

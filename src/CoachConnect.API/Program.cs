@@ -7,10 +7,11 @@ using CoachConnect.API.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using CoachConnect.DataAccess.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Rate Limiter - Simple rate limiter with fixed 5 seconds for each request otherwise 429: Too Many Requests // Husk denne må flyttes til appsettings
+// Rate Limiter - Simple rate limiter with fixed 5 seconds for each request otherwise 429: Too Many Requests
 var config = builder.Configuration;
 builder.Services.AddRateLimiter(rateLimiterOptions =>
 {
@@ -82,6 +83,12 @@ app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.MapControllers().RequireRateLimiting("fixed");
 
+<<<<<<< HEAD
 app.Run();
 
 public partial class Program { }
+=======
+await app.MigrateDbAsync();
+
+app.Run();
+>>>>>>> main

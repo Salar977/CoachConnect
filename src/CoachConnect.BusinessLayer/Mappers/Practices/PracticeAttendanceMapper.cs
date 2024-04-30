@@ -11,8 +11,10 @@ public class PracticeAttendanceMapper : IMapper<PracticeAttendance, PracticeAtte
         return new PracticeAttendanceResponse(entity.Id.practiceAttendanceId,
                                               entity.PracticeId.practiceId,
                                               entity.PlayerId.playerId,
-                                              entity.Created.ToString("f"),
-                                              entity.Updated.ToString("f"));
+                                              entity.Player!.FirstName,
+                                              entity.Player.LastName,
+                                              entity.Created,
+                                              entity.Updated);
     }
 
     public PracticeAttendance MapToEntity(PracticeAttendanceResponse practiceAttendance)

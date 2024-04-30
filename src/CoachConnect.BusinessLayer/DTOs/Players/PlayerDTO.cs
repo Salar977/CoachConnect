@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoachConnect.BusinessLayer.DTOs;
+namespace CoachConnect.BusinessLayer.DTOs.Players;
 public record PlayerDTO
 (
     string FirstName,

@@ -1,4 +1,4 @@
-﻿using CoachConnect.BusinessLayer.DTOs;
+﻿using CoachConnect.BusinessLayer.DTOs.Players;
 using CoachConnect.BusinessLayer.DTOs.Users;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.BusinessLayer.Services.Interfaces;

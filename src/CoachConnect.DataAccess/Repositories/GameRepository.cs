@@ -20,30 +20,7 @@ public class GameRepository : IGameRepository
         _dbContext = dbContext;
         _logger = logger;
     }
-
-    public async Task<Game?> CreateAsync(Game game)
-    {
-        _logger.LogDebug("Adding Game to DB");
-
-        await _dbContext.Games.AddAsync(game);
-        await _dbContext.SaveChangesAsync();
-
-        return game;
-    }
-
-    public async Task<Game?> DeleteAsync(GameId id)
-    {
-        _logger.LogDebug("Deleting Game: {id} from db", id);
-
-        var res = await _dbContext.Games.FindAsync(id);
-        if (res == null) return null;
-
-        _dbContext.Games.Remove(res);
-        await _dbContext.SaveChangesAsync();
-        return res;
-    }
-
-    public async Task<ICollection<Game>> GetAllAsync(GameQuery gameQuery)
+    public async Task<ICollection<Game>> GetAllAsync(GameQuery gameQuery)  
     {
         _logger.LogDebug("Getting Games from db");
 
@@ -93,17 +70,18 @@ public class GameRepository : IGameRepository
         return await _dbContext.Games.FindAsync(id);
     }
 
-    public async Task<Game?> GetByGameTimeAsync(DateTime dateTime)
+    public async Task<ICollection<Game>> GetByGameTimeAsync(DateTime dateTime)
     {
-        _logger.LogDebug("Getting Game by time: {dateTime} from db", dateTime); 
+        _logger.LogDebug("Getting Games by time: {dateTime} from db", dateTime); 
 
         DateTime startDate = dateTime.Date;
         DateTime endDate = startDate.AddDays(1);
 
         return await _dbContext.Games
-            .Where(d => d.GameTime >= startDate && d.GameTime < endDate)
-            .FirstOrDefaultAsync();
+         .Where(d => d.GameTime >= startDate && d.GameTime < endDate)
+         .ToListAsync();
     }
+
     public async Task<Game?> UpdateAsync(GameId id, Game game)
     {
         _logger.LogDebug("Updating Game: {id} in db", id);
@@ -122,4 +100,25 @@ public class GameRepository : IGameRepository
         return gme;
     }
 
+    public async Task<Game?> CreateAsync(Game game)
+    {
+        _logger.LogDebug("Adding Game to DB");
+
+        await _dbContext.Games.AddAsync(game);
+        await _dbContext.SaveChangesAsync();
+
+        return game;
+    }
+
+    public async Task<Game?> DeleteAsync(GameId id)
+    {
+        _logger.LogDebug("Deleting Game: {id} from db", id);
+
+        var res = await _dbContext.Games.FindAsync(id);
+        if (res == null) return null;
+
+        _dbContext.Games.Remove(res);
+        await _dbContext.SaveChangesAsync();
+        return res;
+    }
 }

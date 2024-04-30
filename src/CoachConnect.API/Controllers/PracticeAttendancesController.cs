@@ -49,7 +49,7 @@ public class PracticeAttendancesController : ControllerBase
     }
 
 
-    [HttpPost("register", Name = "AddAttendanceAsync")]
+    [HttpPost(Name = "AddAttendanceAsync")]
     public async Task<ActionResult<PracticeAttendanceResponse>> AddAttendance([FromBody]
                                                                                PracticeAttendanceRequest
                                                                                practiceAttendanceRequest)

@@ -44,7 +44,7 @@ public class UserService : IUserService
         {
             var playerDtos = user.Players.Select(player => _playerMapper.MapToDTO(player)).ToList();
             var userDto = _userMapper.MapToDTO(user);
-            userDto.Players = playerDtos; // Assign mapped player DTOs to the UserDTO
+            userDto.Players = playerDtos;
             return userDto;
         }).ToList();
 
@@ -57,14 +57,18 @@ public class UserService : IUserService
 
         var userId = new UserId(id);
         var user = await _userRepository.GetByIdAsync(userId);
-        if (user == null) return null;
 
-        // var playerDtos = user.Players.Select(player => _playerMapper.MapToDTO(player)).ToList(); // De fordømte playerDTo loades kun når jeg bruker eager loading eller eksplisitt trigger lazy i repolayer!!!!
+        if (user == null)
+        {
+            _logger.LogInformation("Could not get user by id -> user == null");
+            return null;
+        }
+
         var players = user.Players;
-        var playerDtos = players.Select(player => _playerMapper.MapToDTO(player)).ToList(); // De fordømte playerDTo loades kun når jeg bruker eager loading eller eksplisitt trigger lazy i repolayer!!!!
+        var playerDtos = players.Select(player => _playerMapper.MapToDTO(player)).ToList();
 
         var userDto = _userMapper.MapToDTO(user);
-        //userDto = userDto with { Players = userDto.Players.Concat(playerDtos).ToList() }; // brukte når userDTO var record
+      
         userDto.Players = playerDtos;
 
         return userDto;
@@ -82,9 +86,6 @@ public class UserService : IUserService
     {
         _logger.LogDebug("Updating user: {id}", id);
 
-        // husk at users (el admin) kun skal kunne oppdatere sin egen user Dette må vel settes i JWT autorisering. Ikke glem må ha med dette viktig.
-        // kanksje noe som : throw new UnauthorizedAccessException($"User {loggedInUserId} has no access to delete user {id}");
-
         var userId = new UserId(id);
         var user = _userUpdateMapper.MapToEntity(dto);
         user.Id = userId;
@@ -95,8 +96,6 @@ public class UserService : IUserService
 
     public async Task<UserDTO?> DeleteAsync(Guid id)
     {
-        // husk at users (el admin) kun skal kunne slette sin egen user. Dette må vel settes i JWT autorisering. Ikke glem må ha med dette.
-        // kanksje noe som : throw new UnauthorizedAccessException($"User {loggedInUserId} has no access to delete user {id}");
         _logger.LogDebug("Deleting user: {id}", id);
 
         var userId = new UserId(id);
@@ -112,12 +111,12 @@ public class UserService : IUserService
         if (existingUser != null)
         {
             _logger.LogDebug("User already exists: {email}", dto.Email);
-            return null; // sette opp custom exception? user already exists. Returnerer nå bare BadRequesten fra controlleren.
+            return null;
         }
 
         var user = _userRegistrationMapper.MapToEntity(dto);
 
-        user.Id = UserId.NewId; // Generate a new UserId. Må ha med for at UserID Guid skal fungere.
+        user.Id = UserId.NewId; 
         user.Salt = BCrypt.Net.BCrypt.GenerateSalt();
         user.HashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password, user.Salt);
 

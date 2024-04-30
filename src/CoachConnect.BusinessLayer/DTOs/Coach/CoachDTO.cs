@@ -8,4 +8,4 @@ public record CoachDTO(
     string PhoneNumber,
     string Email,
     CoachId Id,
-    IEnumerable<TeamDTO> Teams);
+    IEnumerable<TeamDTO> Teams); // skulle hatt HATEOAS implementert ikke tid 

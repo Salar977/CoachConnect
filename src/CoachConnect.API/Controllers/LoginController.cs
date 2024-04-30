@@ -30,6 +30,7 @@ public class LoginController : Controller
     }
     
     [AllowAnonymous]
+    // POST https://localhost:7036/api/v1/login
     [HttpPost]
     public IActionResult Login([FromBody] LoginDTO loginDto)
     {
@@ -53,7 +54,6 @@ public class LoginController : Controller
         Coach = 2,
         User = 3    
     }
-
 
     private string GenerateJSONWebToken(Login userOrCoach)
     {
@@ -101,7 +101,6 @@ public class LoginController : Controller
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-
     private Login? AuthenticateUser(LoginDTO loginDto)
     {
         _logger.LogDebug("Authenticating user: {username}", loginDto.Username);
@@ -118,7 +117,6 @@ public class LoginController : Controller
             return coach; 
         }
 
-        // Authentication failed
         return null;
     }
 }

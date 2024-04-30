@@ -30,6 +30,7 @@ public class LoginController : Controller
     }
     
     [AllowAnonymous]
+    // POST https://localhost:7036/api/v1/login
     [HttpPost]
     public IActionResult Login([FromBody] LoginDTO loginDto)
     {

@@ -5,7 +5,7 @@ namespace CoachConnect.BusinessLayer.Validators;
 
 public class UserRegistrationDTOValidator : AbstractValidator<UserRegistrationDTO>
 {
-    public UserRegistrationDTOValidator() // må endres etterhvert dersom vi oppdaterer DTOet husk
+    public UserRegistrationDTOValidator() 
     {
         RuleFor(x => x.FirstName)
             .NotEmpty().WithMessage("FirstName can not be null")

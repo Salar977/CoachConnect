@@ -1,4 +1,4 @@
-﻿using CoachConnect.BusinessLayer.DTOs;
+﻿using CoachConnect.BusinessLayer.DTOs.Games;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -6,16 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoachConnect.BusinessLayer.Validators;
-public class GameRegistrationDTOValidator : AbstractValidator<GameRegistrationDTO>
+namespace CoachConnect.BusinessLayer.Validators.GameValidators;
+public class GameUpdateDTOValidator : AbstractValidator<GameUpdateDTO>
 {
-    public GameRegistrationDTOValidator()
+    public GameUpdateDTOValidator()
     {
-        RuleFor(game => game.OpponentName)
-            .NotEmpty().WithMessage("OpponentName is required.")
-            .MinimumLength(3).WithMessage("OpponentName must be at least 3 characters long.")
-            .MaximumLength(50).WithMessage("OpponentName must not exceed 50 characters.");
-
         RuleFor(game => game.Location)
             .NotEmpty().WithMessage("Location is required.")
             .MinimumLength(3).WithMessage("Location must be at least 3 characters long.")

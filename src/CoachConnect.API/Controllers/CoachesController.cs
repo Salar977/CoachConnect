@@ -64,7 +64,7 @@ public class CoachesController : ControllerBase
         return res != null ? Ok(res) : BadRequest("Could not delete coach");
     }
 
-
+    [AllowAnonymous]
     // POST https://localhost:7036/api/v1/coaches/register
     [HttpPost("register", Name = "RegisterCoach")]
     public async Task<ActionResult<CoachDTO>> RegisterCoach([FromBody] CoachRegistrationDTO dto)

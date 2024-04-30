@@ -1,15 +1,16 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
+using CoachConnect.DataAccess.Entities;
 using FluentValidation;
 
 namespace CoachConnect.BusinessLayer.Validators;
 
-public class CoachDTOValidator : AbstractValidator<CoachDTO>
+public class UserDTOValidator : AbstractValidator<UserDTO>
 {
-    public CoachDTOValidator() // må endres ettterhvert som vi oppdaterer DTO
-    {
+    public UserDTOValidator() 
+    {    
         RuleFor(x => x.FirstName)
-              .NotEmpty().WithMessage("FirstName can not be null")
-              .MaximumLength(16).WithMessage("FirstName limit exceeded (max 16 characters)");
+            .NotEmpty().WithMessage("FirstName can not be null")
+            .MaximumLength(16).WithMessage("FirstName limit exceeded (max 16 characters)");
 
         RuleFor(x => x.LastName)
             .NotEmpty().WithMessage("LastName can not be null")
@@ -21,6 +22,6 @@ public class CoachDTOValidator : AbstractValidator<CoachDTO>
 
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email must be included")
-            .EmailAddress().WithMessage("Email must be valid");       
+            .EmailAddress().WithMessage("Email must be valid");    
     }
 }

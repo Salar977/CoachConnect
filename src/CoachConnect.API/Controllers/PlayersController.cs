@@ -1,4 +1,4 @@
-﻿using CoachConnect.BusinessLayer.DTOs;
+﻿using CoachConnect.BusinessLayer.DTOs.Players;
 using CoachConnect.BusinessLayer.Services;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.DataAccess.Entities;
@@ -41,32 +41,32 @@ public class PlayersController : ControllerBase
     }
 
     //userid og teamid
-    /*
+    
     [HttpGet("user/{userId}", Name = "GetPlayersByUserId")]
-    public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetPlayersByUserId(int userId)
+    public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetByUserId(UserId userId)
     {
         _logger.LogTrace("Getting players by userid");
-        var res = await _playerService.GetPlayersByUserId(userId);
+        var res = await _playerService.GetByUserIdAsync(userId);
         return res != null
             ? Ok(res) : NotFound("Could not find any players with this userid");
     }
     
     [HttpGet("team/{teamId}", Name = "GetPlayersByTeamId")]
-    public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetPlayersByTeamId(int teamId)
+    public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetByTeamIdAsync(TeamId teamId)
     {
         _logger.LogTrace("Getting players by userid");
-        var res = await _playerService.GetPlayersByTeamId(teamId);
+        var res = await _playerService.GetByTeamIdAsync(teamId);
         return res != null
             ? Ok(res) : NotFound("Could not find any players with this teamid");
     }
-    */
+    
 
     [HttpPost("register", Name = "CreatePlayer")]
-    public async Task<ActionResult<PlayerDTO>> CreatePlayer([FromBody] PlayerDTO playerDTO)
+    public async Task<ActionResult<PlayerDTO>> CreatePlayer([FromBody] PlayerRequest playerRequest)
     {
         _logger.LogDebug("Create new Player");
 
-        var res = await _playerService.CreateAsync(playerDTO);
+        var res = await _playerService.CreateAsync(playerRequest);
         return res != null ? Ok(res) : BadRequest("Could not Create new player");
     }
     [HttpPut("{id}", Name = "UpdatePlayer")]

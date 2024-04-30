@@ -67,9 +67,11 @@ public class TeamRepository : ITeamRepository
             .ToListAsync();
     }
 
-    public Task<Team?> GetByCoachIdAsync(CoachId coachid)
+    public async Task<ICollection<Team?>> GetByCoachIdAsync(CoachId coachId)
     {
-        throw new NotImplementedException();
+        return await _dbContext.Teams
+            .Where(x => x.CoachId == coachId)
+            .ToListAsync();
     }
 
     public async Task<Team?> GetByIdAsync(TeamId id)

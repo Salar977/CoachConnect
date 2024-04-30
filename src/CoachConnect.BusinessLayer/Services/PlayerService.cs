@@ -1,4 +1,6 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
+using CoachConnect.BusinessLayer.DTOs.Players;
+using CoachConnect.BusinessLayer.DTOs.Teams;
 using CoachConnect.BusinessLayer.Mappers;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.BusinessLayer.Mappers.Practices;
@@ -20,31 +22,57 @@ public class PlayerService : IPlayerService
     private readonly IPlayerRepository _playerRepository;
     private readonly ITeamRepository _teamRepository;
     private readonly IMapper<Player, PlayerDTO> _playerMapper;
+    private readonly IMapper<Player, PlayerRequest> _playerRegisterMapper;
     private readonly ILogger<GameService> _logger;
+    
 
     public PlayerService(IPlayerRepository playerRepository,
                        ITeamRepository teamRepository,
                        IMapper<Player, PlayerDTO> playerMapper,
+                       IMapper<Player, PlayerRequest> playerRegisterMapper,
                        ILogger<GameService> logger)
     {
         _playerRepository = playerRepository;
         _teamRepository = teamRepository;
         _playerMapper = playerMapper;
+        _playerRegisterMapper = playerRegisterMapper;
         _logger = logger;
     }
-    public async Task<PlayerDTO?> CreateAsync(PlayerDTO playerDTO)
+    public async Task<PlayerDTO?> CreateAsync(PlayerRequest playerRequest)
     {
         _logger.LogDebug("Create new Player");
 
 
-        var player = _playerMapper.MapToEntity(playerDTO);
+        var player = _playerRegisterMapper.MapToEntity(playerRequest);
         player.Id = PlayerId.NewId;
 
         var res = await _playerRepository.RegisterPlayerAsync(player);
 
         return res != null ? _playerMapper.MapToDTO(res) : null;
     }
+    public async Task<ICollection<PlayerDTO?>> GetByTeamIdAsync(TeamId teamid)
+    {
+        _logger?.LogDebug("Get player by team id");
+        // Check for null before using the repository and mapper
+        if (_playerRepository == null || _playerMapper == null)
+        {
+            throw new ApplicationException("Player register repository or mapper is null.");
+        }
 
+        // Retrieve arrangement registers by member ID
+        var teamRegisters = await _playerRepository.GetByTeamIdAsync(teamid);
+
+        // Check if the member ID exists
+        if (teamRegisters == null)
+        {
+            return new List<PlayerDTO?>();
+        }
+
+        // Map the result to DTOs
+        var dtos = teamRegisters.Select(register => _playerMapper.MapToDTO(register)).ToList();
+        return dtos;
+
+    }
     public async Task<PlayerDTO?> DeleteAsync(PlayerId id)
     {
         _logger.LogDebug("Deleting Team: {id}", id);
@@ -72,10 +100,7 @@ public class PlayerService : IPlayerService
 
 
 
-    public Task<TeamDTO?> GetByTeamIdAsync(TeamId teamid)
-    {
-        throw new NotImplementedException();
-    }
+
 
     public async Task<PlayerDTO?> UpdateAsync(PlayerId id, PlayerDTO playerDto)
     {
@@ -89,5 +114,29 @@ public class PlayerService : IPlayerService
 
         var res = await _playerRepository.UpdateAsync(id, player);
         return res != null ? _playerMapper.MapToDTO(player) : null;
+    }
+
+    public async Task<ICollection<PlayerDTO?>> GetByUserIdAsync(UserId userid)
+    {
+        _logger?.LogDebug("Get player by team id");
+        // Check for null before using the repository and mapper
+        if (_playerRepository == null || _playerMapper == null)
+        {
+            throw new ApplicationException("Player register repository or mapper is null.");
+        }
+
+        // Retrieve arrangement registers by member ID
+        var playerRegisters = await _playerRepository.GetByUserIdAsync(userid);
+
+        // Check if the member ID exists
+        if (playerRegisters == null)
+        {
+            return new List<PlayerDTO?>();
+        }
+
+        // Map the result to DTOs
+        var dtos = playerRegisters.Select(register => _playerMapper.MapToDTO(register)).ToList();
+        return dtos;
+
     }
 }

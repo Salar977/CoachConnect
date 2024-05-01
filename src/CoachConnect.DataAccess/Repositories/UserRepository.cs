@@ -39,7 +39,12 @@ public class UserRepository : IUserRepository
         if (!string.IsNullOrWhiteSpace(userQuery.PhoneNumber))
         {
             users = users.Where(u => u.PhoneNumber.StartsWith(userQuery.PhoneNumber));
-        }       
+        }
+
+        if (!string.IsNullOrWhiteSpace(userQuery.Email))
+        {
+            users = users.Where(u => u.Email.StartsWith(userQuery.Email));
+        }
 
         if (!string.IsNullOrWhiteSpace(userQuery.SortBy))
         {

@@ -1,4 +1,5 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
+using CoachConnect.BusinessLayer.DTOs.Users;
 using CoachConnect.DataAccess.Entities;
 using CoachConnect.Shared.Helpers;
 using System.Net;
@@ -68,6 +69,31 @@ public class UsersControllerTests : BaseIntegrationTests
     }
 
     [Fact]
+    public async Task Get_Users_By_Email_Using_Query_Async_Return_User()
+    {
+        // arrange
+
+        //LoginDTO dto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
+        //var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(dto);
+
+        var userQuery = new UserQuery { Email = "emma123@hotmail.com" };
+        // act
+
+        //StringContent content = new StringContent(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+        //var loginResult = await Client!.PostAsync("api/v1/login", content);
+        //var token = await loginResult.Content.ReadAsStringAsync();
+        //Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        var response = await Client!.GetAsync("api/v1/users?Email=emma123%40hotmail.com");
+        var userDto = await UserService!.GetByEmailAsync(userQuery.Email);
+
+        // assert
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(userDto);
+    }
+
+    [Fact]
     public async Task Get_User_By_Id_Async_Returns_Status_OK_And_User()
     {
         // arrange
@@ -111,51 +137,5 @@ public class UsersControllerTests : BaseIntegrationTests
         Assert.Equal(user.LastName, userDto.LastName);
         Assert.Equal(user.PhoneNumber, userDto.PhoneNumber);
         Assert.Equal(user.Email, userDto.Email);
-    }
-
-    [Fact]
-    public async Task Get_User_By_Email_Async_Return_User_Data()
-    {
-        // arrange
-
-        //LoginDTO dto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
-        //var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(dto);
-
-        var userId = new UserId(new Guid("22222222-2222-2222-2222-222222222222"));
-        var email = "mariah@yahoo.com";
-
-        User user = new()
-        {
-            Id = userId,
-            FirstName = "Maria",
-            LastName = "Mariah",
-            PhoneNumber = "99999999",
-            Email = email,
-            HashedPassword = "$2a$11$2nb9L2C0b8QLyU5xRdpqtu7/Qw89vF7aLl0yWQ/dnMZ8M2N/cDBhK",
-            Salt = "$2a$11$2nb9L2C0b8QLyU5xRdpqtu",
-            Created = new DateTime(2024, 02, 22, 19, 54, 51),
-            Updated = new DateTime(2024, 02, 22, 19, 54, 51),
-
-        };
-
-        // act
-
-        //StringContent content = new StringContent(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
-        //var loginResult = await Client!.PostAsync("api/v1/login", content);
-        //var token = await loginResult.Content.ReadAsStringAsync();
-        //Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-        var response = await Client!.GetAsync("api/v1/users/mariah@yahoo.com");
-        var userDto = await UserService!.GetByEmailAsync(email);
-
-        // assert
-
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        Assert.NotNull(userDto);
-        Assert.Equal(user.Id, userDto.Id);
-        Assert.Equal(user.FirstName, userDto.FirstName);
-        Assert.Equal(user.LastName, userDto.LastName);
-        Assert.Equal(user.PhoneNumber, userDto.PhoneNumber);
-        Assert.Equal(user.Email, userDto.Email);
-    }
+    }   
 }   

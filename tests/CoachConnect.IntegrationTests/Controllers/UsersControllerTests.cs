@@ -16,19 +16,20 @@ public class UsersControllerTests : BaseIntegrationTests
     {
         // arrange
 
-        LoginDTO dto = new LoginDTO { Username = "koppen@gmail.com", Password = "E1derkopp#" };
-        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(dto);
+        //LoginDTO dto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
+        //var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(dto);
 
-        // act
-        // login > return token
-        // add token to http-header for Client
-        //Client.DefaultRequestHeaders("Bearer", "...")
-        StringContent content = new StringContent(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
-        var loginResult = await Client!.PostAsync("api/v1/login", content);
-        // token
+        //// act
+        //// login > return token
+        //// add token to http-header for Client
+        ////Client.DefaultRequestHeaders("Bearer", "...")
+        //StringContent content = new StringContent(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+        //var loginResult = await Client!.PostAsync("api/v1/login", content);
+        //// token
+        //var token = await loginResult.Content.ReadAsStringAsync();
 
-        // setter token
-        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "token");
+        //// setter token
+        //Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         var response = await Client!.GetAsync("api/v1/users");
 

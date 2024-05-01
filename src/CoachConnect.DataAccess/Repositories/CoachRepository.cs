@@ -37,7 +37,12 @@ public class CoachRepository : ICoachRepository
         if (!string.IsNullOrWhiteSpace(query.PhoneNumber))
         {
             coaches = coaches.Where(u => u.PhoneNumber.StartsWith(query.PhoneNumber));
-        }       
+        }
+
+        if (!string.IsNullOrWhiteSpace(query.Email))
+        {
+            coaches = coaches.Where(u => u.Email.StartsWith(query.Email));
+        }
 
         if (!string.IsNullOrWhiteSpace(query.SortBy))
         {

@@ -1,7 +1,9 @@
 ﻿using CoachConnect.BusinessLayer.DTOs;
 using CoachConnect.BusinessLayer.DTOs.Users;
+using CoachConnect.BusinessLayer.Validators;
 using CoachConnect.DataAccess.Entities;
 using CoachConnect.Shared.Helpers;
+using Newtonsoft.Json;
 using System.Net;
 using System.Text;
 
@@ -115,7 +117,6 @@ public class UsersControllerTests : BaseIntegrationTests
             Salt = "$2a$11$2nb9L2C0b8QLyU5xRdpqtu",
             Created = new DateTime(2024, 02, 22, 19, 54, 51),
             Updated = new DateTime(2024, 02, 22, 19, 54, 51),
-
         };
 
         // act
@@ -142,12 +143,77 @@ public class UsersControllerTests : BaseIntegrationTests
     [Fact]
     public async Task RegisterUserAsync_WithValidUserData_ReturnsStatusOKAndRegisteredUser() 
     {
-
         // arrange
+
+        var UserRegistrationDTO = new UserRegistrationDTO
+        (
+          "Jan",
+          "Jensen",
+          "21212121",
+          "J1nsen###",
+          "jan@gmail.com"
+        );
 
         // act
 
-        // assert
-            
+        var response = await Client.PostAsync("api/v1/users/register", new StringContent(JsonConvert.SerializeObject(UserRegistrationDTO), Encoding.UTF8, "application/json"));
+
+        // assert            
+
+        var content = await response.Content.ReadAsStringAsync();
+        var registeredUser = JsonConvert.DeserializeObject<UserDTO>(content);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(registeredUser);
+        Assert.Equal(UserRegistrationDTO.FirstName, registeredUser.FirstName);
+        Assert.Equal(UserRegistrationDTO.LastName, registeredUser.LastName);
+        Assert.Equal(UserRegistrationDTO.PhoneNumber, registeredUser.PhoneNumber);
+        Assert.Equal(UserRegistrationDTO.Email, registeredUser.Email);
     }
+
+    /*
+    [Fact]
+    public async Task UpdateUserAsync_WithValidUserId_ReturnsStatusOKAndUpdatedUser()
+    {
+        // arrange
+
+        //LoginDTO dto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
+        //var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(dto);
+
+        var userCoachUpdateDTO = new UserCoachUpdateDTO
+        (
+          "Per",
+          "Pedersen",
+          "31313131",          
+          "per@msn.no"
+        );
+
+        // act
+
+        //StringContent content = new StringContent(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+        //var loginResult = await Client!.PostAsync("api/v1/login", content);
+        //var token = await loginResult.Content.ReadAsStringAsync();
+        //Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        var response = await Client.PutAsync("api/v1/users/2e88d66f-1d63-4bc2-90b5-0700458748ef", new StringContent(JsonConvert.SerializeObject(userCoachUpdateDTO), Encoding.UTF8, "application/json"));
+
+        // assert            
+
+        var content = await response.Content.ReadAsStringAsync();
+        var updatedUser = JsonConvert.DeserializeObject<UserCoachUpdateDTO>(content);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(updatedUser);
+        Assert.Equal(userCoachUpdateDTO.FirstName, updatedUser.FirstName);
+        Assert.Equal(userCoachUpdateDTO.LastName, updatedUser.LastName);
+        Assert.Equal(userCoachUpdateDTO.PhoneNumber, updatedUser.PhoneNumber);
+        Assert.Equal(userCoachUpdateDTO.Email, updatedUser.Email);
+    }
+    */
+
+    /*
+    [Fact]
+    public async Task DeleteUserAsync_WithValidUserId_ReturnsStatusOKAndDeletedUser()
+    */
+
 }

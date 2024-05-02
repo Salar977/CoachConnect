@@ -15,7 +15,7 @@ public class UsersControllerTests : BaseIntegrationTests
     }
 
     [Fact]
-    public async Task Get_Users_Async_DefaultPageSize_Empty_Query_Return_Status_OK_And_Users() 
+    public async Task GetUsersAsync_DefaultPageSizeAndEmptyQuery_ReturnStatusOKAndUsers() 
     {
         // arrange
 
@@ -42,7 +42,7 @@ public class UsersControllerTests : BaseIntegrationTests
     }
 
     [Fact]
-    public async Task Get_Users_By_LastName_Using_Query_Async_DefaultSize_10_Return_Users()
+    public async Task GetUsersByLastNameAsync_UsingValidQuery_ReturnsOKAndDefaultSizeListUsers()
     {
         // arrange
 
@@ -69,7 +69,7 @@ public class UsersControllerTests : BaseIntegrationTests
     }
 
     [Fact]
-    public async Task Get_Users_By_Email_Using_Query_Async_Return_User()
+    public async Task GetUsersByEmailAsync_WithValidQuery_ReturnsOKAndUser()
     {
         // arrange
 
@@ -94,7 +94,7 @@ public class UsersControllerTests : BaseIntegrationTests
     }
 
     [Fact]
-    public async Task Get_User_By_Id_Async_Returns_Status_OK_And_User()
+    public async Task GetUserByIdAsync_WithValidId_Returns_StatusOKAndUser()
     {
         // arrange
 
@@ -137,5 +137,17 @@ public class UsersControllerTests : BaseIntegrationTests
         Assert.Equal(user.LastName, userDto.LastName);
         Assert.Equal(user.PhoneNumber, userDto.PhoneNumber);
         Assert.Equal(user.Email, userDto.Email);
-    }   
-}   
+    }
+
+    [Fact]
+    public async Task RegisterUserAsync_WithValidUserData_ReturnsStatusOKAndRegisteredUser() 
+    {
+
+        // arrange
+
+        // act
+
+        // assert
+            
+    }
+}

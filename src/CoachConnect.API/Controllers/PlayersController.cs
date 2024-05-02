@@ -40,37 +40,18 @@ public class PlayersController : ControllerBase
         return player != null ? Ok(player) : NotFound($"Player with ID '{id}' not found");
     }
 
-    //userid og teamid
-    /*
-    [HttpGet("user/{userId}", Name = "GetPlayersByUserId")]
-    public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetPlayersByUserId(int userId)
-    {
-        _logger.LogTrace("Getting players by userid");
-        var res = await _playerService.GetPlayersByUserId(userId);
-        return res != null
-            ? Ok(res) : NotFound("Could not find any players with this userid");
-    }
-    
-    [HttpGet("team/{teamId}", Name = "GetPlayersByTeamId")]
-    public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetPlayersByTeamId(int teamId)
-    {
-        _logger.LogTrace("Getting players by userid");
-        var res = await _playerService.GetPlayersByTeamId(teamId);
-        return res != null
-            ? Ok(res) : NotFound("Could not find any players with this teamid");
-    }
-    */
+
 
     [HttpPost("register", Name = "CreatePlayer")]
-    public async Task<ActionResult<PlayerDTO>> CreatePlayer([FromBody] PlayerDTO playerDTO)
+    public async Task<ActionResult<PlayerDTO>> CreatePlayer([FromBody] PlayerRequest playerReq)
     {
         _logger.LogDebug("Create new Player");
 
-        var res = await _playerService.CreateAsync(playerDTO);
+        var res = await _playerService.CreateAsync(playerReq);
         return res != null ? Ok(res) : BadRequest("Could not Create new player");
     }
     [HttpPut("{id}", Name = "UpdatePlayer")]
-    public async Task<ActionResult<PlayerDTO>> UpdatePlayer(Guid id, [FromBody] PlayerDTO playerDTO)
+    public async Task<ActionResult<PlayerUpdate>> UpdatePlayer(Guid id, [FromBody] PlayerDTO playerDTO)
     {
         _logger.LogDebug("Updating player with ID: {id}", id);
 

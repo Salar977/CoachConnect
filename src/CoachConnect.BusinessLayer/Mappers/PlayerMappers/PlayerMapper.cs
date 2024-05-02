@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoachConnect.BusinessLayer.Mappers;
+namespace CoachConnect.BusinessLayer.Mappers.PlayerMappers;
 public class PlayerMapper : IMapper<Player, PlayerDTO>
 {
     public PlayerDTO MapToDTO(Player entity)
@@ -15,6 +15,8 @@ public class PlayerMapper : IMapper<Player, PlayerDTO>
         return new PlayerDTO(
             entity.FirstName,
             entity.LastName,
+            entity.TotalGames,
+            entity.TotalPractices,
             entity.Created,
             entity.Updated,
             entity.UserId,

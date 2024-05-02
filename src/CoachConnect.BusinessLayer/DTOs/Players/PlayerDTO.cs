@@ -10,7 +10,8 @@ public record PlayerDTO
 (
     string FirstName,
     string LastName,
-
+    int TotalGames,
+    int TotalPractices,
     DateTime Created,
     DateTime Updated,
     UserId UserId,

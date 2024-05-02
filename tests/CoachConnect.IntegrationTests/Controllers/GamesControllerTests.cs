@@ -61,7 +61,7 @@ public class GamesControllerTests : BaseIntegrationTests
             Location = "Bærum",
             HomeTeam = homeTeamId,
             AwayTeam = awayTeamId,
-            GameTime = new DateTime(2024, 04, 17, 13, 00, 49), 
+            GameTime = new DateTime(2024, 04, 17, 13, 00, 49, 312), 
         };
 
         // act
@@ -77,7 +77,6 @@ public class GamesControllerTests : BaseIntegrationTests
         Assert.Equal(game.Location, gameDto.Location);
         Assert.Equal(game.HomeTeam, gameDto.HomeTeam);
         Assert.Equal(game.AwayTeam, gameDto.AwayTeam);
-
+        Assert.Equal(game.GameTime, gameDto.GameTime);
     }
-
 }

@@ -18,8 +18,7 @@ public class UsersController : ControllerBase
         _logger = logger;
     }
 
-
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     // GET: https://localhost:7036/api/v1/users
     [HttpGet(Name = "GetUsers")]
     public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers([FromQuery] UserQuery userQuery) 
@@ -31,8 +30,7 @@ public class UsersController : ControllerBase
         return Ok(await _userService.GetAllAsync(userQuery));
     }
 
-
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     // GET https://localhost:7036/api/v1/users/8f2466af-57c3-458c-82d8-676d80573c6c
     [HttpGet("{id}", Name = "GetUserById")] 
     public async Task<ActionResult<UserDTO>> GetUserById([FromRoute] Guid id) 
@@ -43,7 +41,7 @@ public class UsersController : ControllerBase
         return res != null ? Ok(res) : NotFound("Could not find any user with this id");        
     }
 
-    [Authorize(Roles = "Admin, User")]
+    //[Authorize(Roles = "Admin, User")]
     // PUT https://localhost:7036/api/v1/users/8f2466af-57c3-458c-82d8-676d80573c6c
     [HttpPut("{id}", Name = "UpdateUser")]
     public async Task<ActionResult<UserCoachUpdateDTO>> UpdateUser([FromRoute] Guid id, [FromBody] UserCoachUpdateDTO dto)
@@ -61,7 +59,7 @@ public class UsersController : ControllerBase
         return res != null ? Ok(res) : BadRequest("Could not update user");
     }
 
-    [Authorize(Roles = "Admin, User")]
+    //[Authorize(Roles = "Admin, User")]
     // DELETE https://localhost:7036/api/v1/users/8f2466af-57c3-458c-82d8-676d80573c6c
     [HttpDelete("{id}", Name = "DeleteUser")]
     public async Task<ActionResult<UserDTO>> DeleteUser([FromRoute] Guid id)

@@ -1,4 +1,4 @@
-﻿using CoachConnect.BusinessLayer.DTOs.Practices;
+﻿using CoachConnect.BusinessLayer.DTOs.PracticeAttendanceDtos;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Authorization;

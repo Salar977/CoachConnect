@@ -1,4 +1,4 @@
-﻿namespace CoachConnect.BusinessLayer.DTOs.Practices;
+﻿namespace CoachConnect.BusinessLayer.DTOs.PracticeAttendanceDtos;
 
 public record PracticeAttendanceResponse(Guid PracticeAttendanceId,
                                          Guid PracticeId,

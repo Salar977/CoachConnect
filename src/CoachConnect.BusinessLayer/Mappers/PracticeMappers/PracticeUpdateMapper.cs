@@ -16,7 +16,7 @@ public class PracticeUpdateMapper : IMapper<Practice, PracticeUpdate>
         return new Practice
         {
             Location = practiceUpdate.Location!,
-            PracticeDate = (DateTime) practiceUpdate.PracticeDate!,
+            PracticeDate = practiceUpdate.PracticeDate,
             Updated = DateTime.Now
         };
     }

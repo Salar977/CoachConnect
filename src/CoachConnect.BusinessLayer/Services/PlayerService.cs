@@ -21,24 +21,30 @@ public class PlayerService : IPlayerService
     private readonly IPlayerRepository _playerRepository;
     private readonly ITeamRepository _teamRepository;
     private readonly IMapper<Player, PlayerDTO> _playerMapper;
+    private readonly IMapper<Player, PlayerRequest> _playerReqMapper;
+    private readonly IMapper<Player, PlayerUpdate> _playerUpdateMapper;
     private readonly ILogger<GameService> _logger;
 
     public PlayerService(IPlayerRepository playerRepository,
                        ITeamRepository teamRepository,
                        IMapper<Player, PlayerDTO> playerMapper,
+                       IMapper<Player, PlayerRequest> playerReqMapper,
+                       IMapper<Player, PlayerUpdate> playerUpdateMapper,
                        ILogger<GameService> logger)
     {
         _playerRepository = playerRepository;
         _teamRepository = teamRepository;
         _playerMapper = playerMapper;
+        _playerReqMapper = playerReqMapper;
+        _playerUpdateMapper = playerUpdateMapper;
         _logger = logger;
     }
-    public async Task<PlayerDTO?> CreateAsync(PlayerDTO playerDTO)
+    public async Task<PlayerDTO?> CreateAsync(PlayerRequest playerDTO)
     {
         _logger.LogDebug("Create new Player");
 
 
-        var player = _playerMapper.MapToEntity(playerDTO);
+        var player = _playerReqMapper.MapToEntity(playerDTO);
         player.Id = PlayerId.NewId;
 
         var res = await _playerRepository.RegisterPlayerAsync(player);
@@ -78,14 +84,14 @@ public class PlayerService : IPlayerService
         throw new NotImplementedException();
     }
 
-    public async Task<PlayerDTO?> UpdateAsync(PlayerId id, PlayerDTO playerDto)
+    public async Task<PlayerDTO?> UpdateAsync(PlayerId id, PlayerUpdate playerupdate)
     {
         _logger.LogDebug("Updating Player: {id}", id);
 
         // husk at users (el admin) kun skal kunne eoppdatere sin egen user Dette må vel settes i JWT autorisering. Ikke glem må ha med dette viktig.
         // kanksje noe som : throw new UnauthorizedAccessException($"User {loggedInUserId} has no access to delete user {id}");
 
-        var player = _playerMapper.MapToEntity(playerDto);
+        var player = _playerUpdateMapper.MapToEntity(playerupdate);
         player.Id = id;
 
         var res = await _playerRepository.UpdateAsync(id, player);

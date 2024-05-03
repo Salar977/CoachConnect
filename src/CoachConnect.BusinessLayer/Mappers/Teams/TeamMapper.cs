@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoachConnect.BusinessLayer.Mappers;
+namespace CoachConnect.BusinessLayer.Mappers.Teams;
 public class TeamMapper : IMapper<Team, TeamDTO>
 {
     public TeamDTO MapToDTO(Team entity)

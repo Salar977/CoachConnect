@@ -53,11 +53,11 @@ public class TeamsController : ControllerBase
     }
 
     [HttpPost("register", Name = "CreateTeam")]
-    public async Task<ActionResult<TeamDTO>> CreateTeam([FromBody] TeamDTO teamDTO)
+    public async Task<ActionResult<TeamDTO>> CreateTeam([FromBody] TeamRequest teamReq)
     {
         _logger.LogDebug("Create new Team");
 
-        var res = await _teamService.CreateAsync(teamDTO);
+        var res = await _teamService.CreateAsync(teamReq);
         return res != null ? Ok(res) : BadRequest("Could not Create new team");
     }
 
@@ -70,11 +70,11 @@ public class TeamsController : ControllerBase
         return res != null ? Ok(res) : BadRequest("Could not delete Team");
     }
     [HttpPut("{id}", Name = "UpdateTeam")]
-    public async Task<ActionResult<TeamDTO>> UpdateTeam(Guid id, [FromBody] TeamDTO teamDTO)
+    public async Task<ActionResult<TeamDTO>> UpdateTeam(Guid id, [FromBody] TeamUpdate teamupdate)
     {
         _logger.LogDebug("Updating team with ID: {id}", id);
 
-        var res = await _teamService.UpdateAsync(new TeamId(id), teamDTO);
+        var res = await _teamService.UpdateAsync(new TeamId(id), teamupdate);
         return res != null ? Ok(res) : BadRequest("Could not update Team");
     }
 }

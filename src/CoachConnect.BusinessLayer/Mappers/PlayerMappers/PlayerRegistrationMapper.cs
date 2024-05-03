@@ -17,9 +17,15 @@ public class PlayerRegistrationMapper : IMapper<Player, PlayerRequest>
 
     public Player MapToEntity(PlayerRequest dto)
     {
+        var now = DateTime.Now;
         return new Player
-        { 
-            
-        }
+        {
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            UserId = dto.UserId,
+            TeamId = dto.TeamId,
+            Created = now,
+            Updated = DateTime.MinValue
+        };
     }
 }

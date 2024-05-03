@@ -51,11 +51,11 @@ public class PlayersController : ControllerBase
         return res != null ? Ok(res) : BadRequest("Could not Create new player");
     }
     [HttpPut("{id}", Name = "UpdatePlayer")]
-    public async Task<ActionResult<PlayerUpdate>> UpdatePlayer(Guid id, [FromBody] PlayerDTO playerDTO)
+    public async Task<ActionResult<PlayerUpdate>> UpdatePlayer(Guid id, [FromBody] PlayerUpdate playerUpdate)
     {
         _logger.LogDebug("Updating player with ID: {id}", id);
 
-        var res = await _playerService.UpdateAsync(new PlayerId(id), playerDTO);
+        var res = await _playerService.UpdateAsync(new PlayerId(id), playerUpdate);
         return res != null ? Ok(res) : BadRequest("Could not update Player");
     }
 

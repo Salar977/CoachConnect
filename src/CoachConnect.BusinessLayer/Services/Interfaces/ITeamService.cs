@@ -15,9 +15,9 @@ public interface ITeamService
 
     Task<ICollection<TeamDTO>> GetAllAsync(TeamQuery teamQuery); 
 
-    Task<TeamDTO?> CreateAsync(TeamDTO teamDTO); 
+    Task<TeamDTO?> CreateAsync(TeamRequest teamReq); 
 
-    Task<TeamDTO?> UpdateAsync(TeamId id, TeamDTO teamDto); 
+    Task<TeamDTO?> UpdateAsync(TeamId id, TeamUpdate teamupdate); 
 
     Task<TeamDTO?> DeleteAsync(TeamId id); 
 }

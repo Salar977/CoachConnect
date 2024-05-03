@@ -18,23 +18,29 @@ public class TeamService : ITeamService
 {
     private readonly ITeamRepository _teamRepository;
     private readonly IMapper<Team, TeamDTO> _teamMapper;
+    private readonly IMapper<Team, TeamRequest> _teamReqMapper;
+    private readonly IMapper<Team, TeamUpdate> _teamUpdateMapper;
     private readonly ILogger<TeamService> _logger;
 
     public TeamService(ITeamRepository teamRepository,
                        IMapper<Team, TeamDTO> teamMapper,
+                       IMapper<Team, TeamRequest> teamReqMapper,
+                       IMapper<Team, TeamUpdate> teamUpdateMapper,
                        ILogger<TeamService> logger)
     {
         _teamRepository = teamRepository;
         _teamMapper = teamMapper;
+        _teamReqMapper = teamReqMapper;
+        _teamUpdateMapper = teamUpdateMapper;
         _logger = logger;
     }
 
-    public async Task<TeamDTO?> CreateAsync(TeamDTO teamDTO)
+    public async Task<TeamDTO?> CreateAsync(TeamRequest teamReq)
     {
         _logger.LogDebug("Create new Team");
         
 
-        var team = _teamMapper.MapToEntity(teamDTO);
+        var team = _teamReqMapper.MapToEntity(teamReq);
         team.Id = TeamId.NewId;
 
         var res = await _teamRepository.RegisterTeamAsync(team);
@@ -75,14 +81,14 @@ public class TeamService : ITeamService
         throw new NotImplementedException();
     }
 
-    public async Task<TeamDTO?> UpdateAsync(TeamId id, TeamDTO teamDto)
+    public async Task<TeamDTO?> UpdateAsync(TeamId id, TeamUpdate teamupdate)
     {
         _logger.LogDebug("Updating Team: {id}", id);
 
         // husk at users (el admin) kun skal kunne eoppdatere sin egen user Dette må vel settes i JWT autorisering. Ikke glem må ha med dette viktig.
         // kanksje noe som : throw new UnauthorizedAccessException($"User {loggedInUserId} has no access to delete user {id}");
 
-        var team = _teamMapper.MapToEntity(teamDto);
+        var team = _teamUpdateMapper.MapToEntity(teamupdate);
         team.Id = id;
 
         var res = await _teamRepository.UpdateAsync(id, team);

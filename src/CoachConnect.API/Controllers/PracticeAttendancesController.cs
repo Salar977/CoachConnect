@@ -1,6 +1,7 @@
 ﻿using CoachConnect.BusinessLayer.DTOs.Practices;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.Shared.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoachConnect.API.Controllers;
@@ -19,13 +20,14 @@ public class PracticeAttendancesController : ControllerBase
         _logger = logger;
     }
 
+    [Authorize(Roles = "Admin, Coach")]
     [HttpGet(Name = "GetAllAsync")]
     public async Task<ActionResult<IEnumerable<PracticeAttendanceResponse>>> GetAllAsync([FromQuery] PracticeAttendanceQuery attendanceQuery)
     {
         _logger.LogInformation("Get all practices - Controller");
         return Ok(await _practiceAttendanceService.GetAllAsync(attendanceQuery));
     }
-
+    [Authorize(Roles = "Admin, Coach")]
     [HttpGet("/api/v1/practice/{practiceId:guid}", Name = "GetAllByPracticeAsync")]
     public async Task<ActionResult<IEnumerable<PracticeAttendanceResponse>>> GetAllByPractice([FromRoute] Guid practiceId)
     {
@@ -33,7 +35,7 @@ public class PracticeAttendancesController : ControllerBase
         return Ok(await _practiceAttendanceService.GetByPracticeAsync(practiceId));
     }
 
-
+    [Authorize(Roles = "Admin, Coach")]
     [HttpGet("{id:guid}", Name = "GetAttendanceByIdAsync")]
     public async Task<ActionResult<PracticeAttendanceResponse>> GetById([FromRoute] Guid id)
     {
@@ -48,7 +50,7 @@ public class PracticeAttendancesController : ControllerBase
         return Ok(attendance);
     }
 
-
+    [Authorize(Roles = "Admin, Coach")]
     [HttpPost(Name = "AddAttendanceAsync")]
     public async Task<ActionResult<PracticeAttendanceResponse>> AddAttendance([FromBody]
                                                                                PracticeAttendanceRequest
@@ -62,6 +64,7 @@ public class PracticeAttendancesController : ControllerBase
         return Ok(attendance);
     }
 
+    [Authorize(Roles = "Admin, Coach")]
     [HttpDelete("{id:guid}", Name = "DeleteAttendanceByIdAsync")]
     public async Task<ActionResult<PracticeAttendanceResponse>> DeleteById([FromRoute] Guid id)
     {

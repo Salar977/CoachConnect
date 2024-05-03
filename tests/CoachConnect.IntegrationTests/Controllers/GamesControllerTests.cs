@@ -28,10 +28,10 @@ public class GamesControllerTests : BaseIntegrationTests
 
         LoginDTO loginDto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
         var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        StringContent content = new StringContent(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
 
         // act
 
-        StringContent content = new StringContent(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
         var loginResult = await Client!.PostAsync("api/v1/login", content);
         var tokenResponse = await loginResult.Content.ReadAsStringAsync();
         var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
@@ -56,6 +56,7 @@ public class GamesControllerTests : BaseIntegrationTests
 
         LoginDTO loginDto = new() { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
         var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
 
         var gameId = new GameId(new Guid("2f042e86-d75e-4591-a810-aca808725555"));
 
@@ -73,7 +74,6 @@ public class GamesControllerTests : BaseIntegrationTests
 
         // act
 
-        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
         var loginResult = await Client!.PostAsync("api/v1/login", content);
         var tokenResponse = await loginResult.Content.ReadAsStringAsync();
         var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();

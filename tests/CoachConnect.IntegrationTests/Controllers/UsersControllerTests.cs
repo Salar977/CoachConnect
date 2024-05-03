@@ -22,10 +22,10 @@ public class UsersControllerTests : BaseIntegrationTests
 
         LoginDTO loginDto = new() { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
         var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
 
         // act
 
-        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
         var loginResult = await Client!.PostAsync("api/v1/login", content);
         var tokenResponse = await loginResult.Content.ReadAsStringAsync();
         var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();        
@@ -50,12 +50,12 @@ public class UsersControllerTests : BaseIntegrationTests
 
         LoginDTO loginDto = new() { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
         var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
 
         var query = "?LastName=Andersen";
 
         // act
 
-        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
         var loginResult = await Client!.PostAsync("api/v1/login", content);
         var tokenResponse = await loginResult.Content.ReadAsStringAsync();
         var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
@@ -80,12 +80,12 @@ public class UsersControllerTests : BaseIntegrationTests
 
         LoginDTO loginDto = new() { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
         var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
 
         var query = "?Email=emma123%40hotmail.com";
 
         // act
 
-        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
         var loginResult = await Client!.PostAsync("api/v1/login", content);
         var tokenResponse = await loginResult.Content.ReadAsStringAsync();
         var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
@@ -109,6 +109,7 @@ public class UsersControllerTests : BaseIntegrationTests
 
         LoginDTO loginDto = new() { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
         var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
 
         var userId = new UserId(new Guid("22222222-2222-2222-2222-222222222222"));
 
@@ -127,7 +128,6 @@ public class UsersControllerTests : BaseIntegrationTests
 
         // act
 
-        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
         var loginResult = await Client!.PostAsync("api/v1/login", content);
         var tokenResponse = await loginResult.Content.ReadAsStringAsync();
         var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
@@ -185,6 +185,7 @@ public class UsersControllerTests : BaseIntegrationTests
 
         LoginDTO loginDto = new() { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
         var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(loginDto);
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
 
         var userId = "2e88d66f-1d63-4bc2-90b5-0700458748ef";
         var userUpdateDto = new UserCoachUpdateDTO
@@ -197,7 +198,6 @@ public class UsersControllerTests : BaseIntegrationTests
 
         // act
 
-        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
         var loginResult = await Client!.PostAsync("api/v1/login", content);
         var tokenResponse = await loginResult.Content.ReadAsStringAsync();
         var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
@@ -226,11 +226,11 @@ public class UsersControllerTests : BaseIntegrationTests
         var userId = "48a9d05a-8b21-46d8-8714-8aa73a46c4e5";    
 
         LoginDTO loginDto = new() { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
-        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(loginDto);
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
 
         // act
 
-        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
         var loginResult = await Client!.PostAsync("api/v1/login", content);
         var tokenResponse = await loginResult.Content.ReadAsStringAsync();
         var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();

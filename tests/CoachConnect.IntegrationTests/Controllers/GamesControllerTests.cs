@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using CoachConnect.BusinessLayer.DTOs;
 
 namespace CoachConnect.IntegrationTests.Controllers;
 public class GamesControllerTests : BaseIntegrationTests
@@ -22,17 +23,19 @@ public class GamesControllerTests : BaseIntegrationTests
     {
         // arrange
 
-        //LoginDTO dto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
-        //var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(dto);
+        LoginDTO dto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(dto);
 
         var gameQuery = new GameQuery();
 
         // act
 
-        //StringContent content = new StringContent(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
-        //var loginResult = await Client!.PostAsync("api/v1/login", content);
-        //var token = await loginResult.Content.ReadAsStringAsync();
-        //Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        StringContent content = new StringContent(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+        var loginResult = await Client!.PostAsync("api/v1/login", content);
+        var tokenResponse = await loginResult.Content.ReadAsStringAsync();
+        var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
+
+        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         var response = await Client!.GetAsync("api/v1/games");
         var gameDtos = await GameService!.GetAllAsync(gameQuery);
@@ -48,6 +51,9 @@ public class GamesControllerTests : BaseIntegrationTests
     public async Task GetGameByIdAsync_WithValidId_Returns_StatusOKAndGame()
     {
         // arrange
+
+        LoginDTO dto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(dto);
 
         var guid = new Guid("2f042e86-d75e-4591-a810-aca808725555");
         var gameId = new GameId(new Guid("2f042e86-d75e-4591-a810-aca808725555"));
@@ -65,6 +71,13 @@ public class GamesControllerTests : BaseIntegrationTests
         };
 
         // act
+
+        StringContent content = new StringContent(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+        var loginResult = await Client!.PostAsync("api/v1/login", content);
+        var tokenResponse = await loginResult.Content.ReadAsStringAsync();
+        var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
+
+        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         var response = await Client!.GetAsync("api/v1/games/2f042e86-d75e-4591-a810-aca808725555");
         var gameDto = await GameService!.GetByIdAsync(guid);

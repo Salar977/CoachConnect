@@ -19,7 +19,7 @@ public class GamesController : ControllerBase
         _logger = logger;
     }
 
-    //[Authorize(Roles = "Admin, Coach, User")]
+    [Authorize(Roles = "Admin, Coach, User")]
     // https://localhost:7036/api/v1/games
     [HttpGet(Name = "GetAllGames")]
     public async Task<ActionResult<IEnumerable<GameDTO>>> GetAllGames([FromQuery] GameQuery gameQuery)
@@ -31,7 +31,7 @@ public class GamesController : ControllerBase
         return Ok(await _gameService.GetAllAsync(gameQuery));
     }
 
-    //[Authorize(Roles = "Admin, Coach, User")]
+    [Authorize(Roles = "Admin, Coach, User")]
     // https://localhost:7036/api/v1/games/2f042e86-d75e-4591-a810-aca808725555
     [HttpGet("{id}", Name = "GetGameById")]
     public async Task<ActionResult<GameDTO>> GetGameById(Guid id)

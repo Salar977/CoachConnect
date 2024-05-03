@@ -21,17 +21,19 @@ public class UsersControllerTests : BaseIntegrationTests
     {
         // arrange
 
-        //LoginDTO dto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
-        //var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(dto);
+        LoginDTO dto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(dto);
 
         var userQuery = new UserQuery();
 
         // act
 
-        //StringContent content = new StringContent(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
-        //var loginResult = await Client!.PostAsync("api/v1/login", content);
-        //var token = await loginResult.Content.ReadAsStringAsync();
-        //Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        StringContent content = new StringContent(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+        var loginResult = await Client!.PostAsync("api/v1/login", content);
+        var tokenResponse = await loginResult.Content.ReadAsStringAsync();
+        var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
+        
+        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         var response = await Client!.GetAsync("api/v1/users");
         var userDtos = await UserService!.GetAllAsync(userQuery);
@@ -48,17 +50,19 @@ public class UsersControllerTests : BaseIntegrationTests
     {
         // arrange
 
-        //LoginDTO dto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
-        //var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(dto);
+        LoginDTO dto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(dto);
 
         var userQuery = new UserQuery { LastName = "Andersen" };
 
         // act
 
-        //StringContent content = new StringContent(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
-        //var loginResult = await Client!.PostAsync("api/v1/login", content);
-        //var token = await loginResult.Content.ReadAsStringAsync();
-        //Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        StringContent content = new StringContent(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+        var loginResult = await Client!.PostAsync("api/v1/login", content);
+        var tokenResponse = await loginResult.Content.ReadAsStringAsync();
+        var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
+
+        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         var response = await Client!.GetAsync("/api/v1/users?LastName=Andersen");
         var userDtos = await UserService!.GetAllAsync(userQuery);
@@ -75,16 +79,18 @@ public class UsersControllerTests : BaseIntegrationTests
     {
         // arrange
 
-        //LoginDTO dto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
-        //var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(dto);
+        LoginDTO dto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(dto);
 
         var userQuery = new UserQuery { Email = "emma123@hotmail.com" };
         // act
 
-        //StringContent content = new StringContent(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
-        //var loginResult = await Client!.PostAsync("api/v1/login", content);
-        //var token = await loginResult.Content.ReadAsStringAsync();
-        //Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        StringContent content = new StringContent(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+        var loginResult = await Client!.PostAsync("api/v1/login", content);
+        var tokenResponse = await loginResult.Content.ReadAsStringAsync();
+        var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
+
+        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         var response = await Client!.GetAsync("api/v1/users?Email=emma123%40hotmail.com");
         var userDto = await UserService!.GetByEmailAsync(userQuery.Email);
@@ -100,8 +106,8 @@ public class UsersControllerTests : BaseIntegrationTests
     {
         // arrange
 
-        //LoginDTO dto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
-        //var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(dto);
+        LoginDTO dto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(dto);
 
         var guid = new Guid("22222222-2222-2222-2222-222222222222");
         var userId = new UserId(new Guid("22222222-2222-2222-2222-222222222222"));
@@ -121,10 +127,12 @@ public class UsersControllerTests : BaseIntegrationTests
 
         // act
 
-        //StringContent content = new StringContent(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
-        //var loginResult = await Client!.PostAsync("api/v1/login", content);
-        //var token = await loginResult.Content.ReadAsStringAsync();
-        //Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        StringContent content = new StringContent(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+        var loginResult = await Client!.PostAsync("api/v1/login", content);
+        var tokenResponse = await loginResult.Content.ReadAsStringAsync();
+        var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
+
+        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         var response = await Client!.GetAsync("api/v1/users/22222222-2222-2222-2222-222222222222");
         var userDto = await UserService!.GetByIdAsync(guid);

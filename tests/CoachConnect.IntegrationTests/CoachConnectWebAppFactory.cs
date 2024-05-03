@@ -21,6 +21,7 @@ public class CoachConnectWebAppFactory : WebApplicationFactory<Program>, IAsyncL
             .WithDatabase("coach_connect")
             .WithUsername("{COACH_CONNECT_USERNAME}")
             .WithPassword("{COACH_CONNECT_PASSWORD}")
+            .WithPortBinding(_port)
             .Build();            
     }
 

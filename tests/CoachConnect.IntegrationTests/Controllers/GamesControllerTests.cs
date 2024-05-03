@@ -9,6 +9,9 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using CoachConnect.BusinessLayer.DTOs;
+using CoachConnect.BusinessLayer.DTOs.Users;
+using CoachConnect.BusinessLayer.DTOs.Games;
+using System.Net.Http.Json;
 
 namespace CoachConnect.IntegrationTests.Controllers;
 public class GamesControllerTests : BaseIntegrationTests
@@ -24,9 +27,7 @@ public class GamesControllerTests : BaseIntegrationTests
         // arrange
 
         LoginDTO loginDto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
-        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(loginDto);
-
-        var gameQuery = new GameQuery();
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
 
         // act
 
@@ -38,7 +39,8 @@ public class GamesControllerTests : BaseIntegrationTests
         Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         var response = await Client!.GetAsync("api/v1/games");
-        var gameDtos = await GameService!.GetAllAsync(gameQuery);
+        var responseData = await response.Content.ReadAsStringAsync();
+        var gameDtos = System.Text.Json.JsonSerializer.Deserialize<List<GameDTO>>(responseData);
 
         // assert
 
@@ -52,10 +54,9 @@ public class GamesControllerTests : BaseIntegrationTests
     {
         // arrange
 
-        LoginDTO loginDto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
-        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(loginDto);
+        LoginDTO loginDto = new() { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
 
-        var guid = new Guid("2f042e86-d75e-4591-a810-aca808725555");
         var gameId = new GameId(new Guid("2f042e86-d75e-4591-a810-aca808725555"));
 
         var homeTeamId = new TeamId(Guid.Parse("a3b2a7e5-b0e2-40e2-a42d-69e10a22d011"));
@@ -72,15 +73,15 @@ public class GamesControllerTests : BaseIntegrationTests
 
         // act
 
-        StringContent content = new StringContent(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
         var loginResult = await Client!.PostAsync("api/v1/login", content);
         var tokenResponse = await loginResult.Content.ReadAsStringAsync();
         var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
 
         Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-        var response = await Client!.GetAsync("api/v1/games/2f042e86-d75e-4591-a810-aca808725555");
-        var gameDto = await GameService!.GetByIdAsync(guid);
+        var response = await Client!.GetAsync($"api/v1/games/{gameId.gameId}");
+        var gameDto = await response.Content.ReadFromJsonAsync<GameDTO>();
 
         // assert
 

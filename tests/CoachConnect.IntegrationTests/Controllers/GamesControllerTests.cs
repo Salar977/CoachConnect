@@ -23,8 +23,8 @@ public class GamesControllerTests : BaseIntegrationTests
     {
         // arrange
 
-        LoginDTO dto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
-        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(dto);
+        LoginDTO loginDto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(loginDto);
 
         var gameQuery = new GameQuery();
 
@@ -52,8 +52,8 @@ public class GamesControllerTests : BaseIntegrationTests
     {
         // arrange
 
-        LoginDTO dto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
-        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(dto);
+        LoginDTO loginDto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(loginDto);
 
         var guid = new Guid("2f042e86-d75e-4591-a810-aca808725555");
         var gameId = new GameId(new Guid("2f042e86-d75e-4591-a810-aca808725555"));

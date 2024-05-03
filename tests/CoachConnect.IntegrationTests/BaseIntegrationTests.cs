@@ -14,10 +14,13 @@ public class BaseIntegrationTests : IClassFixture<CoachConnectWebAppFactory>, ID
         Client = factory.CreateClient();
 
         UserService = _scope.ServiceProvider.GetService<IUserService>();
+        GameService = _scope.ServiceProvider.GetService<IGameService>();
+
     }
 
     public HttpClient Client { get; init; }
     public IUserService? UserService { get; init; }
+    public IGameService? GameService { get; init; }
 
     public void Dispose()
     {

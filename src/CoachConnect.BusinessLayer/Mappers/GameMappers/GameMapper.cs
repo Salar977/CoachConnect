@@ -19,15 +19,6 @@ public class GameMapper : IMapper<Game, GameDTO>
 
     public Game MapToEntity(GameDTO dto)
     {
-        var dtnow = DateTime.Now;
-        return new Game
-        {
-            Location = dto.Location,
-            HomeTeam = dto.HomeTeam,
-            AwayTeam = dto.AwayTeam,
-            GameTime = dto.GameTime,
-            Created = dtnow,
-            Updated = dtnow
-        };
+       throw new NotImplementedException();
     }
 }

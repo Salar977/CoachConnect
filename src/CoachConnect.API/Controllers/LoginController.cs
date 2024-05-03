@@ -55,7 +55,6 @@ public class LoginController : Controller
         User = 3    
     }
 
-
     private string GenerateJSONWebToken(Login userOrCoach)
     {
         _logger.LogDebug("Generating Token");
@@ -102,7 +101,6 @@ public class LoginController : Controller
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-
     private Login? AuthenticateUser(LoginDTO loginDto)
     {
         _logger.LogDebug("Authenticating user: {username}", loginDto.Username);
@@ -119,7 +117,6 @@ public class LoginController : Controller
             return coach; 
         }
 
-        // Authentication failed
         return null;
     }
 }

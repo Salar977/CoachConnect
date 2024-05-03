@@ -83,6 +83,6 @@ app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.MapControllers().RequireRateLimiting("fixed");
 
-app.MigrateDb();
-
 app.Run();
+
+public partial class Program { }

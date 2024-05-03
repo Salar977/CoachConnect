@@ -43,6 +43,7 @@ public class PracticeAttendanceRepository : IPracticeAttendanceRepository
         var skipNumber = (practiceAttendanceQuery.PageNumber - 1) * practiceAttendanceQuery.PageSize;
 
         return await practiceAttendances
+            .Include(p => p.Player)
             .OrderBy(x => x.Created)
             .Skip(skipNumber)
             .Take(practiceAttendanceQuery.PageSize)

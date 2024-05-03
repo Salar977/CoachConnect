@@ -19,7 +19,7 @@ public class GameAttendancesController : ControllerBase
         _logger = logger;
     }
 
-    // [Authorize(Roles = "Admin, Coach")]
+    [Authorize(Roles = "Admin, Coach")]
     // https://localhost:7036/api/v1/gameattendances
     [HttpGet(Name = "GetAllGameAttendances")]
     public async Task<ActionResult<IEnumerable<GameAttendanceDTO>>> GetAllGameAttendances([FromQuery] GameAttendanceQuery gameAttendanceQuery)
@@ -31,7 +31,7 @@ public class GameAttendancesController : ControllerBase
         return Ok(await _gameAttendanceService.GetAllAsync(gameAttendanceQuery));
     }
 
-    // [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     // https://localhost:7036/api/v1/gameattendances/8215514a-c2f8-46fd-a547-ab5c1fc76004
     [HttpGet("{id}", Name = "GetGameAttendanceById")]
     public async Task<ActionResult<GameAttendanceDTO>> GetGameAttendanceById([FromRoute] Guid id)

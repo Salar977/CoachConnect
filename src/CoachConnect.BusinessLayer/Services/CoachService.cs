@@ -75,14 +75,6 @@ public class CoachService : ICoachService
         return coachDto;
     }
 
-    public async Task<CoachDTO?> GetByEmailAsync(string email)
-    {
-        _logger.LogDebug("Getting coach by email: {email}", email);
-
-        var res = await _coachRepository.GetByEmailAsync(email);
-        return res != null ? _coachMapper.MapToDTO(res) : null;
-    }     
-
     public async Task<UserCoachUpdateDTO?> UpdateAsync(Guid id, UserCoachUpdateDTO dto)
     {
         _logger.LogDebug("Updating coach: {id}", id);

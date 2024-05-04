@@ -76,7 +76,6 @@ public class UserRepository : IUserRepository
                                 .Include(u => u.Players) 
                                 .FirstOrDefaultAsync(u => u.Id == id);
     }
-
     public async Task<User?> GetByEmailAsync(string email)
     {
         _logger.LogDebug("Getting user by email: {email} from db", email);

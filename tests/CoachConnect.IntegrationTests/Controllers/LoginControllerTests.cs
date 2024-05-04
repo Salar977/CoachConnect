@@ -16,20 +16,55 @@ public class LoginControllerTests :BaseIntegrationTests
     {
         // arrange
 
-        LoginDTO dto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
-        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(dto);
+        LoginDTO LoginDto = new() { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(LoginDto);
 
         // act
 
-        StringContent content = new StringContent(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
         var loginResult = await Client!.PostAsync("api/v1/login", content);
         var token = await loginResult.Content.ReadAsStringAsync();
-        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         // assert
 
         Assert.Equal(HttpStatusCode.OK, loginResult.StatusCode);
         Assert.NotNull(loginResult);
-        Assert.NotNull(loginResult);
+        Assert.NotNull(token);
+    }
+
+    [Fact]
+    public async Task LoginAsync_WithIncorrectCredentials_ReturnsUnathorized()
+    {
+        // arrange
+
+        LoginDTO loginDto = new() { Username = "thisuserdoesnotexist@gmail.com", Password = "doesnotexist" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(loginDto);
+
+        // act
+
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+        var loginResult = await Client!.PostAsync("api/v1/login", content);
+
+        // assert
+
+        Assert.Equal(HttpStatusCode.Unauthorized, loginResult.StatusCode);
+    }
+
+    [Fact]
+    public async Task LoginAsync_WithIncorrectPassword_ReturnsUnauthorized()
+    {
+        // arrange
+
+        LoginDTO loginDto = new() { Username = "quyen123@hotmail.com", Password = "incorrectpassword" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(loginDto);
+
+        // act
+
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+        var loginResult = await Client!.PostAsync("api/v1/login", content);
+
+        // assert
+
+        Assert.Equal(HttpStatusCode.Unauthorized, loginResult.StatusCode);
     }
 }

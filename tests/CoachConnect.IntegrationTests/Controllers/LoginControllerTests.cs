@@ -25,7 +25,6 @@ public class LoginControllerTests :BaseIntegrationTests
         var loginResult = await Client!.PostAsync("api/v1/login", content);
         var token = await loginResult.Content.ReadAsStringAsync();
 
-
         // assert
 
         Assert.Equal(HttpStatusCode.OK, loginResult.StatusCode);

@@ -95,7 +95,6 @@ public class GamesControllerTests : BaseIntegrationTests
         Assert.Equal(game.GameTime, gameDto.GameTime);
     }
 
-
     [Fact]
     public async Task UpdateGameAsync_WithValidGameId_WithValidCoachId_ReturnsStatusOKAndUpdatedGame()
     {
@@ -140,7 +139,7 @@ public class GamesControllerTests : BaseIntegrationTests
     }
 
     [Fact]
-    public async Task UpdateGameAsync_WithValidGameId_WithoutValidCoachId_ReturnsBadRequest()
+    public async Task UpdateGameAsync_WithValidGameId_WithUnathorizedCoachId_AsCoachIsNotEitherTeamsCoach_ReturnsBadRequest()
     {
         // arrange
 
@@ -219,7 +218,7 @@ public class GamesControllerTests : BaseIntegrationTests
     }
 
     [Fact]
-    public async Task CreateGameAsync_WithoutValidCoachId_AsCoachIsNotEitherTeamsCoach_ReturnsBadRequest()
+    public async Task CreateGameAsync_WithUnathorizedCoachId_AsCoachIsNotEitherTeamsCoach_ReturnsBadRequest()
     {
         // arrange
 
@@ -253,4 +252,113 @@ public class GamesControllerTests : BaseIntegrationTests
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.NotNull(response);
     }
+
+    [Fact]
+    public async Task CreateGameAsync_WithValidCoachId_WhereTeamGameAlreadyExistOnDate_ReturnsBadRequest()
+    {
+        // arrange
+
+        LoginDTO loginDto = new() { Username = "ottis@epost.no", Password = "O1tesen#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+
+        var homeTeamId = new TeamId(Guid.Parse("b2d84d4e-921c-4c17-af43-18d13b105004"));
+        var awayTeamId = new TeamId(Guid.Parse("b01b6b08-2f43-4be5-b40b-7b9fd2d3d009"));
+
+        var gameRegistrationDto = new GameRegistrationDTO
+        (
+            "Frankfurt",
+            homeTeamId,
+            awayTeamId,
+            new DateTime(2024, 12, 06, 09, 30, 49, 312)
+        );
+
+        // act
+
+        var loginResult = await Client!.PostAsync("api/v1/login", content);
+        var tokenResponse = await loginResult.Content.ReadAsStringAsync();
+        var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
+
+        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        var response = await Client!.PostAsync($"api/v1/games/register", new StringContent(JsonConvert.SerializeObject(gameRegistrationDto), Encoding.UTF8, "application/json"));
+
+        //assert
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.NotNull(response);
+    }
+
+    [Fact]
+    public async Task DeleteGameAsync_WithValidCoachId_ReturnsOKAndDeletedGame()
+    {
+        //// arrange
+
+        //LoginDTO loginDto = new() { Username = "ottis@epost.no", Password = "O1tesen#" };
+        //var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        //StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+
+        //var homeTeamId = new TeamId(Guid.Parse("b2d84d4e-921c-4c17-af43-18d13b105004"));
+        //var awayTeamId = new TeamId(Guid.Parse("b01b6b08-2f43-4be5-b40b-7b9fd2d3d009"));
+
+        //var gameRegistrationDto = new GameRegistrationDTO
+        //(
+        //    "Frankfurt",
+        //    homeTeamId,
+        //    awayTeamId,
+        //    new DateTime(2024, 12, 06, 09, 30, 49, 312)
+        //);
+
+        //// act
+
+        //var loginResult = await Client!.PostAsync("api/v1/login", content);
+        //var tokenResponse = await loginResult.Content.ReadAsStringAsync();
+        //var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
+
+        //Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        //var response = await Client!.PostAsync($"api/v1/games/register", new StringContent(JsonConvert.SerializeObject(gameRegistrationDto), Encoding.UTF8, "application/json"));
+
+        ////assert
+
+        //Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        //Assert.NotNull(response);
+    }
+
+    [Fact]
+    public async Task DeleteGameAsync_WithUnauthorizedCoachId_ReturnsBadRequest()
+    {
+        //// arrange
+
+        //LoginDTO loginDto = new() { Username = "ottis@epost.no", Password = "O1tesen#" };
+        //var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        //StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+
+        //var homeTeamId = new TeamId(Guid.Parse("b2d84d4e-921c-4c17-af43-18d13b105004"));
+        //var awayTeamId = new TeamId(Guid.Parse("b01b6b08-2f43-4be5-b40b-7b9fd2d3d009"));
+
+        //var gameRegistrationDto = new GameRegistrationDTO
+        //(
+        //    "Frankfurt",
+        //    homeTeamId,
+        //    awayTeamId,
+        //    new DateTime(2024, 12, 06, 09, 30, 49, 312)
+        //);
+
+        //// act
+
+        //var loginResult = await Client!.PostAsync("api/v1/login", content);
+        //var tokenResponse = await loginResult.Content.ReadAsStringAsync();
+        //var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
+
+        //Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        //var response = await Client!.PostAsync($"api/v1/games/register", new StringContent(JsonConvert.SerializeObject(gameRegistrationDto), Encoding.UTF8, "application/json"));
+
+        ////assert
+
+        //Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        //Assert.NotNull(response);
+    }
+
 }

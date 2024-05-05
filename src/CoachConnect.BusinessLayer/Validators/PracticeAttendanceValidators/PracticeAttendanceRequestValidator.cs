@@ -8,8 +8,8 @@ public class PracticeAttendanceRequestValidator : AbstractValidator<PracticeAtte
     public PracticeAttendanceRequestValidator()
     {
         RuleFor(attendance => attendance.PracticeId)
-                .NotEmpty()
-                .WithMessage("PracticeId is required.");
+            .NotEmpty()
+            .WithMessage("PracticeId is required.");
 
         RuleFor(attendance => attendance.PlayerId)
             .NotEmpty()

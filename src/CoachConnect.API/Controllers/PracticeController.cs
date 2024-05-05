@@ -47,8 +47,8 @@ public class PracticeController : ControllerBase
     }
 
     [Authorize(Roles = "Admin, Coach")]
-    [HttpPost(Name = "CreatePracticeAsync")]
-    public async Task<ActionResult<PracticeResponse>> CreatePractice([FromBody] PracticeRequest practice)
+    [HttpPost("register", Name = "CreatePracticeAsync")]
+    public async Task<ActionResult<PracticeResponse>> CreatePracticeAsync([FromBody] PracticeRequest practice)
     {
         if (!ModelState.IsValid) return BadRequest();
 
@@ -61,7 +61,7 @@ public class PracticeController : ControllerBase
 
     [Authorize(Roles = "Admin, Coach")]
     [HttpDelete("{id:guid}", Name = "DeletePracticeByIdAsync")]
-    public async Task<ActionResult<PracticeResponse>> DeleteById([FromRoute] Guid id)
+    public async Task<ActionResult<PracticeResponse>> DeleteByIdAsync([FromRoute] Guid id)
     {
         var practice = await _practiceService.GetByIdAsync(id);
         if (practice is null)
@@ -77,7 +77,7 @@ public class PracticeController : ControllerBase
 
     [Authorize(Roles = "Admin, Coach")]
     [HttpPut("{id:guid}", Name = "UpdatePracticeByIdAsync")]
-    public async Task<ActionResult<PracticeResponse>> UpdateById([FromRoute] Guid id,
+    public async Task<ActionResult<PracticeResponse>> UpdateByIdAsync([FromRoute] Guid id,
                                                                  [FromBody] PracticeUpdate practiceUpdate)
     {
         var practice = await _practiceService.GetByIdAsync(id);

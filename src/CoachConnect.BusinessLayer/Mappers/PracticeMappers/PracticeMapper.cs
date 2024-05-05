@@ -12,15 +12,15 @@ public class PracticeMapper : IMapper<Practice, PracticeResponse>
         {
             return new PracticeResponse(entity.Id.practiceId,
                                     entity.Location,
-                                    entity.PracticeDate.ToString("f"),
-                                    entity.Created.ToString("f"),
+                                    entity.PracticeDate,
+                                    entity.Created,
                                     null);
         }
         return new PracticeResponse(entity.Id.practiceId,
                                     entity.Location,
-                                    entity.PracticeDate.ToString("f"),
-                                    entity.Created.ToString("f"),
-                                    entity.Updated.ToString("f"));
+                                    entity.PracticeDate,
+                                    entity.Created,
+                                    entity.Updated);
     }
 
     public Practice MapToEntity(PracticeResponse practiceResponse)

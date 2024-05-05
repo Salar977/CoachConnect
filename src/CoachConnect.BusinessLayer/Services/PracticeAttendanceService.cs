@@ -1,4 +1,4 @@
-﻿using CoachConnect.BusinessLayer.DTOs.Practices;
+﻿using CoachConnect.BusinessLayer.DTOs.PracticeAttendanceDtos;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.DataAccess.Entities;

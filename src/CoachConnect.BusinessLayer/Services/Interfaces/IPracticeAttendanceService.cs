@@ -1,4 +1,4 @@
-﻿using CoachConnect.BusinessLayer.DTOs.Practices;
+﻿using CoachConnect.BusinessLayer.DTOs.PracticeAttendanceDtos;
 using CoachConnect.DataAccess.Entities;
 using CoachConnect.Shared.Helpers;
 

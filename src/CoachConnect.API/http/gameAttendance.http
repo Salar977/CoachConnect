@@ -1,0 +1,21 @@
+﻿@baseUrl=https://localhost:7036
+
+### GET ALL / Filtered
+
+GET {{baseUrl}}/api/v1/gameattendances
+Authorization: Bearer inputJwtTokenHere 
+
+### GET BY ID
+
+GET {{baseUrl}}/api/v1/gameattendances/8215514a-c2f8-46fd-a547-ab5c1fc76004
+Authorization: Bearer inputJwtTokenHere
+
+### REGISTER
+
+POST {{baseUrl}}/api/v1/gameattendances/register
+Authorization: Bearer inputTokenHere
+
+### DELETE
+
+DELETE {{baseUrl}}/api/v1/gameattendances/aa15514a-c2f8-46fd-a547-ab5c1fc76e14
+Authorization: Bearer inputTokenHere

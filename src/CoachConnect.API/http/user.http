@@ -10,17 +10,17 @@ Authorization: Bearer inputJwtTokenHere
 GET {{baseUrl}}/api/v1/users/8f2466af-57c3-458c-82d8-676d80573c6c
 Authorization: Bearer inputJwtTokenHere
 
-### REGISTER USER
+### REGISTER
 
 POST {{baseUrl}}/api/v1/users/register
 Authorization: Bearer inputTokenHere
 
-### UPDATE USER
+### UPDATE
 
 PUT {{baseUrl}}/api/v1/users/8f2466af-57c3-458c-82d8-676d80573c6c
 Authorization: Bearer inputTokenHere
 
-### DELETE USER
+### DELETE
 DELETE {{baseUrl}}/api/v1/users/8f2466af-57c3-458c-82d8-676d80573c6c
 Authorization: Bearer inputTokenHere
 

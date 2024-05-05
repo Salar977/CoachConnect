@@ -73,14 +73,6 @@ public class UserService : IUserService
 
         return userDto;
     }
-
-    public async Task<UserDTO?> GetByEmailAsync(string email)
-    {
-        _logger.LogDebug("Getting user by email: {email}", email);
-
-        var res = await _userRepository.GetByEmailAsync(email);
-        return res != null ? _userMapper.MapToDTO(res) : null;
-    }  
     
     public async Task<UserCoachUpdateDTO?> UpdateAsync(Guid id, UserCoachUpdateDTO dto)
     {

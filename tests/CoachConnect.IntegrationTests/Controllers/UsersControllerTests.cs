@@ -1,4 +1,4 @@
-﻿using CoachConnect.BusinessLayer.DTOs;
+﻿using CoachConnect.BusinessLayer.DTOs.Login;
 using CoachConnect.BusinessLayer.DTOs.Users;
 using CoachConnect.DataAccess.Entities;
 using Newtonsoft.Json;

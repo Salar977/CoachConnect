@@ -24,13 +24,12 @@ public class CoachesController : ControllerBase
     [Authorize(Roles = "Admin, Coach, User")]
     // GET: https://localhost:7036/api/v1/coaches
     [HttpGet(Name = "GetCoaches")]
-    public async Task<ActionResult<IEnumerable<CoachDTO>>> GetCoaches([FromQuery] CoachQuery query)
+    public async Task<ActionResult<IEnumerable<CoachDTO>>> GetCoaches([FromQuery] CoachQuery coachQuery)
     {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
-
         _logger.LogDebug("Getting coaches");
+        var res = await _coachService.GetAllAsync(coachQuery);
 
-        return Ok(await _coachService.GetAllAsync(query));
+        return res != null ? Ok(res) : NotFound("Could not find any coaches");
     }
 
     [Authorize(Roles = "Admin")]

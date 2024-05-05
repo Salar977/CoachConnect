@@ -24,11 +24,10 @@ public class GamesController : ControllerBase
     [HttpGet(Name = "GetAllGames")]
     public async Task<ActionResult<IEnumerable<GameDTO>>> GetAllGames([FromQuery] GameQuery gameQuery)
     {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
-
         _logger.LogDebug("Getting Games");
 
-        return Ok(await _gameService.GetAllAsync(gameQuery));
+        var res = await _gameService.GetAllAsync(gameQuery);
+        return res != null ? Ok(res) : NotFound("Could not find any games");
     }
 
     [Authorize(Roles = "Admin, Coach, User")]

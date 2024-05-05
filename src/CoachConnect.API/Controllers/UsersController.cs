@@ -23,11 +23,10 @@ public class UsersController : ControllerBase
     [HttpGet(Name = "GetUsers")]
     public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers([FromQuery] UserQuery userQuery) 
     {
-        if(!ModelState.IsValid) return BadRequest(ModelState);
-
         _logger.LogDebug("Getting users");
+        var res = await _userService.GetAllAsync(userQuery);
 
-        return Ok(await _userService.GetAllAsync(userQuery));
+        return res != null ? Ok(res) : NotFound("Could not find any users");
     }
 
     [Authorize(Roles = "Admin")]

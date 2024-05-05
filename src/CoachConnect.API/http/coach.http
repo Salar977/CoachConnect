@@ -10,17 +10,17 @@ Authorization: Bearer inputJwtTokenHere
 GET {{baseUrl}}/api/v1/coaches/9b5b194a-f273-4ab2-a87d-620b8898e473
 Authorization: Bearer inputTokenHere
 
-### REGISTER COACH
+### REGISTER
 
 POST {{baseUrl}}/api/v1/coaches/register
 Authorization: Bearer inputTokenHere
 
-### UPDATE COACH
+### UPDATE
 
 PUT {{baseUrl}}/api/v1/coaches/9b5b194a-f273-4ab2-a87d-620b8898e473
 Authorization: Bearer inputTokenHere
 
-### DELETE COACH
+### DELETE
 DELETE {{baseUrl}}/api/v1/coaches/9b5b194a-f273-4ab2-a87d-620b8898e473
 Authorization: Bearer inputTokenHere
 

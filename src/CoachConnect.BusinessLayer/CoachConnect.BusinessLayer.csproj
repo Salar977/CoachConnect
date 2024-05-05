@@ -21,8 +21,4 @@
     <ProjectReference Include="..\CoachConnect.DataAccess\CoachConnect.DataAccess.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Validators\PlayerValidators\" />
-  </ItemGroup>
-
 </Project>

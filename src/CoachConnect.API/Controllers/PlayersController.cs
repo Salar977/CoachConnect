@@ -4,6 +4,7 @@ using CoachConnect.BusinessLayer.Services;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.DataAccess.Entities;
 using CoachConnect.Shared.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -22,6 +23,8 @@ public class PlayersController : ControllerBase
         _logger = logger;
     }
 
+    [Authorize(Roles = "Admin, Coach, User")]
+    // GET: 
     [HttpGet(Name = "GetAllPlayers")]
     public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetAllPlayers([FromQuery] PlayerQuery playerQuery)
     {

@@ -1,11 +1,11 @@
 ﻿using CoachConnect.BusinessLayer.DTOs.Practices;
 using FluentValidation;
 
-namespace CoachConnect.BusinessLayer.Validators;
+namespace CoachConnect.BusinessLayer.Validators.PracticeValidators;
 
-public class PracticeRequestValidator : AbstractValidator<PracticeRequest>
+public class PracticeUpdateValidator : AbstractValidator<PracticeUpdate>
 {
-    public PracticeRequestValidator()
+    public PracticeUpdateValidator()
     {
         RuleFor(x => x.Location)
             .NotEmpty().WithMessage("Cannot be empty")

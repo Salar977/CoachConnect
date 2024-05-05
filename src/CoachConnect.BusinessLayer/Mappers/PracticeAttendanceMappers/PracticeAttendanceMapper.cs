@@ -1,8 +1,8 @@
-﻿using CoachConnect.BusinessLayer.DTOs.Practices;
+﻿using CoachConnect.BusinessLayer.DTOs.PracticeAttendanceDtos;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.DataAccess.Entities;
 
-namespace CoachConnect.BusinessLayer.Mappers.Practices;
+namespace CoachConnect.BusinessLayer.Mappers.PracticeAttendanceMappers;
 
 public class PracticeAttendanceMapper : IMapper<PracticeAttendance, PracticeAttendanceResponse>
 {

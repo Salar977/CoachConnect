@@ -1,6 +1,7 @@
-﻿using CoachConnect.BusinessLayer.DTOs.Practices;
+﻿using CoachConnect.BusinessLayer.DTOs.PracticeAttendanceDtos;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.Shared.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoachConnect.API.Controllers;
@@ -19,23 +20,24 @@ public class PracticeAttendancesController : ControllerBase
         _logger = logger;
     }
 
+    [Authorize(Roles = "Admin, Coach")]
     [HttpGet(Name = "GetAllAsync")]
     public async Task<ActionResult<IEnumerable<PracticeAttendanceResponse>>> GetAllAsync([FromQuery] PracticeAttendanceQuery attendanceQuery)
     {
         _logger.LogInformation("Get all practices - Controller");
         return Ok(await _practiceAttendanceService.GetAllAsync(attendanceQuery));
     }
-
+    [Authorize(Roles = "Admin, Coach")]
     [HttpGet("/api/v1/practice/{practiceId:guid}", Name = "GetAllByPracticeAsync")]
-    public async Task<ActionResult<IEnumerable<PracticeAttendanceResponse>>> GetAllByPractice([FromRoute] Guid practiceId)
+    public async Task<ActionResult<IEnumerable<PracticeAttendanceResponse>>> GetAllByPracticeAsync([FromRoute] Guid practiceId)
     {
         _logger.LogInformation("Getting all attendences for the practice - Controller");
         return Ok(await _practiceAttendanceService.GetByPracticeAsync(practiceId));
     }
 
-
+    [Authorize(Roles = "Admin, Coach")]
     [HttpGet("{id:guid}", Name = "GetAttendanceByIdAsync")]
-    public async Task<ActionResult<PracticeAttendanceResponse>> GetById([FromRoute] Guid id)
+    public async Task<ActionResult<PracticeAttendanceResponse>> GetByIdAsync([FromRoute] Guid id)
     {
         var attendance = await _practiceAttendanceService.GetByIdAsync(id);
         if(attendance is null)
@@ -48,9 +50,9 @@ public class PracticeAttendancesController : ControllerBase
         return Ok(attendance);
     }
 
-
-    [HttpPost(Name = "AddAttendanceAsync")]
-    public async Task<ActionResult<PracticeAttendanceResponse>> AddAttendance([FromBody]
+    [Authorize(Roles = "Admin, Coach")]
+    [HttpPost("register", Name = "RegisterAttendanceAsync")]
+    public async Task<ActionResult<PracticeAttendanceResponse>> RegisterAttendanceAsync([FromBody]
                                                                                PracticeAttendanceRequest
                                                                                practiceAttendanceRequest)
     {
@@ -62,8 +64,9 @@ public class PracticeAttendancesController : ControllerBase
         return Ok(attendance);
     }
 
+    [Authorize(Roles = "Admin, Coach")]
     [HttpDelete("{id:guid}", Name = "DeleteAttendanceByIdAsync")]
-    public async Task<ActionResult<PracticeAttendanceResponse>> DeleteById([FromRoute] Guid id)
+    public async Task<ActionResult<PracticeAttendanceResponse>> DeleteByIdAsync([FromRoute] Guid id)
     {
         var deleteAttendance = await _practiceAttendanceService.DeleteByIdAsync(id);
         if(deleteAttendance is null) return BadRequest();

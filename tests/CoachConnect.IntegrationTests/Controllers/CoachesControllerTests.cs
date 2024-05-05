@@ -179,21 +179,21 @@ public class CoachesControllerTests : BaseIntegrationTests
     }
 
     [Fact]
-    public async Task UpdateCoachesAsync_WithNotValidCoachId_ReturnsBadRequest()
+    public async Task UpdateCoachesAsync_WithNotValidCoachId_ReturnsUnauthorized()
     {
         // arrange
 
-        LoginDTO loginDto = new() { Username = "sara@abc.no", Password = "A1dersen#" };
+        LoginDTO loginDto = new() { Username = "ottis@epost.no", Password = "O1tesen#" };
         var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
         StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
 
-        var userId = "20065784-cdb9-465a-a439-6a627c448ca8";
-        var userUpdateDto = new UserCoachUpdateDTO
+        var coachId = "e00927cb-a616-43d3-a82e-21439469ef13";
+        var coachUpdateDto = new UserCoachUpdateDTO
         (
-          "Sara",
-          "Andersen",
-          "31313131",
-          "sara@abc.no"
+          "Martin",
+          "Ottesen",
+          "90908776",
+          "martin999@abc.no"
         );
 
         // act
@@ -204,73 +204,66 @@ public class CoachesControllerTests : BaseIntegrationTests
 
         Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-        var response = await Client.PutAsync($"api/v1/users/{userId}", new StringContent(JsonConvert.SerializeObject(userUpdateDto), Encoding.UTF8, "application/json"));
-        var updatedUserDto = JsonConvert.DeserializeObject<UserCoachUpdateDTO>(await response.Content.ReadAsStringAsync());
-
+        var response = await Client.PutAsync($"api/v1/coaches/{coachId}", new StringContent(JsonConvert.SerializeObject(coachUpdateDto), Encoding.UTF8, "application/json"));
 
         // assert        
 
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        Assert.NotNull(updatedUserDto);
-        Assert.Equal(userUpdateDto.FirstName, updatedUserDto.FirstName);
-        Assert.Equal(userUpdateDto.LastName, updatedUserDto.LastName);
-        Assert.Equal(userUpdateDto.PhoneNumber, updatedUserDto.PhoneNumber);
-        Assert.Equal(userUpdateDto.Email, updatedUserDto.Email);
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
-    //[Fact]
-    //public async Task DeleteUserAsync_WithValidUserId_ReturnsStatusOKAndDeletedUser()
-    //{
-    //    // arrange
+    [Fact]
+    public async Task DeleteCoachAsync_AsAdmin_ReturnsStatusOKAndDeletedCoach()
+    {
+        // arrange
 
-    //    var userId = "f15a1513-eb40-4ca3-b8bb-c06959e1d6b5";
+        var coachId = "a6c5b4d3-2fcb-4e9a-a457-03e9af6d28e6";
 
-    //    LoginDTO loginDto = new() { Username = "jens@gmail.com", Password = "J1nsen#" };
-    //    var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
-    //    StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+        LoginDTO loginDto = new() { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
 
-    //    // act
+        // act
 
-    //    var loginResult = await Client!.PostAsync("api/v1/login", content);
-    //    var tokenResponse = await loginResult.Content.ReadAsStringAsync();
-    //    var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
+        var loginResult = await Client!.PostAsync("api/v1/login", content);
+        var tokenResponse = await loginResult.Content.ReadAsStringAsync();
+        var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
 
-    //    Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-    //    var response = await Client.DeleteAsync($"api/v1/users/{userId}");
-    //    var deletedUserJson = await response.Content.ReadAsStringAsync();
-    //    var deletedUserDto = JsonConvert.DeserializeObject<UserDTO>(deletedUserJson);
+        var response = await Client.DeleteAsync($"api/v1/coaches/{coachId}");
+        var deletedCoachJson = await response.Content.ReadAsStringAsync();
+        var deletedCoachDto = JsonConvert.DeserializeObject<CoachDTO>(deletedCoachJson);
 
-    //    // assert
+        // assert
 
-    //    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-    //    Assert.NotNull(deletedUserDto);
-    //}
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(deletedCoachDto);
+    }
 
-    //[Fact]
-    //public async Task DeleteUserAsync_WithNonValidUserId_ReturnsUnauthorized()
-    //{
-    //    // arrange
+    [Fact]
+    public async Task DeleteCoachAsync_WithNonValidUserId_ReturnsForbidden()
+    {
+        // arrange
 
-    //    var userId = "d9e4e229-7738-4d26-822d-1b13fb1052c9";
+        var coachId = "b6c7d8e9-1a2b-3c4d-5e6f-7a8b9c0d1e2f";
 
-    //    LoginDTO loginDto = new() { Username = "jens@gmail.com", Password = "J1nsen#" };
-    //    var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
-    //    StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+        LoginDTO loginDto = new() { Username = "jens@gmail.com", Password = "J1nsen#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
 
-    //    // act
+        // act
 
-    //    var loginResult = await Client!.PostAsync("api/v1/login", content);
-    //    var tokenResponse = await loginResult.Content.ReadAsStringAsync();
-    //    var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
+        var loginResult = await Client!.PostAsync("api/v1/login", content);
+        var tokenResponse = await loginResult.Content.ReadAsStringAsync();
+        var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
 
-    //    Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-    //    var response = await Client.DeleteAsync($"api/v1/users/{userId}");
+        var response = await Client.DeleteAsync($"api/v1/coaches/{coachId}");
 
-    //    // assert
+        // assert
 
-    //    Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-    //    Assert.NotNull(response);
-    //}
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.NotNull(response);
+    }
 }

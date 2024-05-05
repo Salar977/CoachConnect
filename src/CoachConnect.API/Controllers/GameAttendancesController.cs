@@ -24,11 +24,10 @@ public class GameAttendancesController : ControllerBase
     [HttpGet(Name = "GetAllGameAttendances")]
     public async Task<ActionResult<IEnumerable<GameAttendanceDTO>>> GetAllGameAttendances([FromQuery] GameAttendanceQuery gameAttendanceQuery)
     {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
-
         _logger.LogDebug("Getting GameAttendances");
 
-        return Ok(await _gameAttendanceService.GetAllAsync(gameAttendanceQuery));
+        var res = await _gameAttendanceService.GetAllAsync(gameAttendanceQuery);
+        return res != null ? Ok(res) : NotFound("Could not find any gameattendances");
     }
 
     [Authorize(Roles = "Admin")]

@@ -1,0 +1,26 @@
+﻿@baseUrl=https://localhost:7036
+
+### GET ALL / Filtered
+
+GET {{baseUrl}}/api/v1/games
+Authorization: Bearer inputJwtTokenHere 
+
+### GET BY ID
+
+GET {{baseUrl}}/api/v1/games/2f042e86-d75e-4591-a810-aca808725555
+Authorization: Bearer inputJwtTokenHere
+
+### REGISTER
+
+POST {{baseUrl}}/api/v1/games/register
+Authorization: Bearer inputTokenHere
+
+### UPDATE
+
+PUT {{baseUrl}}/api/v1/games/2f042e86-d75e-4591-a810-aca80812cde3
+Authorization: Bearer inputTokenHere
+
+### DELETE
+DELETE {{baseUrl}}/api/v1/games/2f042e86-d75e-4591-a810-aca80812cde3
+Authorization: Bearer inputTokenHere
+

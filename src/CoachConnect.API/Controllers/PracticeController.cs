@@ -3,6 +3,7 @@ using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using CoachConnect.BusinessLayer.DTOs.Practices;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CoachConnect.API.Controllers;
 [Route("api/v1/practices")]
@@ -20,6 +21,7 @@ public class PracticeController : ControllerBase
         _logger = logger;
     }
 
+    [Authorize(Roles = "Admin, Coach, User")]
     [HttpGet(Name = "GetAllPracticeAsync")]
     public async Task<ActionResult<IEnumerable<PracticeResponse>>> GetAllPractice([FromQuery] PracticeQuery practiceQuery)
     {
@@ -27,6 +29,7 @@ public class PracticeController : ControllerBase
         return Ok(await _practiceService.GetAllAsync(practiceQuery));
     }
 
+    [Authorize(Roles = "Admin, Coach, User")]
     [HttpGet("{id:guid}", Name = "GetPracticeByIdAsync")]
     public async Task<ActionResult<PracticeResponse>> GetById([FromRoute] Guid id)
     {
@@ -43,9 +46,9 @@ public class PracticeController : ControllerBase
         return Ok(practice);
     }
 
-
-    [HttpPost(Name = "CreatePracticeAsync")]
-    public async Task<ActionResult<PracticeResponse>> CreatePractice([FromBody] PracticeRequest practice)
+    [Authorize(Roles = "Admin, Coach")]
+    [HttpPost("register", Name = "CreatePracticeAsync")]
+    public async Task<ActionResult<PracticeResponse>> CreatePracticeAsync([FromBody] PracticeRequest practice)
     {
         if (!ModelState.IsValid) return BadRequest();
 
@@ -56,8 +59,9 @@ public class PracticeController : ControllerBase
         return Ok(createPractice);
     }
 
+    [Authorize(Roles = "Admin, Coach")]
     [HttpDelete("{id:guid}", Name = "DeletePracticeByIdAsync")]
-    public async Task<ActionResult<PracticeResponse>> DeleteById([FromRoute] Guid id)
+    public async Task<ActionResult<PracticeResponse>> DeleteByIdAsync([FromRoute] Guid id)
     {
         var practice = await _practiceService.GetByIdAsync(id);
         if (practice is null)
@@ -71,8 +75,9 @@ public class PracticeController : ControllerBase
         return Ok(practice);
     }
 
+    [Authorize(Roles = "Admin, Coach")]
     [HttpPut("{id:guid}", Name = "UpdatePracticeByIdAsync")]
-    public async Task<ActionResult<PracticeResponse>> UpdateById([FromRoute] Guid id,
+    public async Task<ActionResult<PracticeResponse>> UpdateByIdAsync([FromRoute] Guid id,
                                                                  [FromBody] PracticeUpdate practiceUpdate)
     {
         var practice = await _practiceService.GetByIdAsync(id);

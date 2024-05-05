@@ -1,5 +1,5 @@
 ﻿using CoachConnect.API.Controllers;
-using CoachConnect.BusinessLayer.DTOs;
+using CoachConnect.BusinessLayer.DTOs.Login;
 using CoachConnect.DataAccess.Data;
 using CoachConnect.DataAccess.Entities;
 using CoachConnect.Shared.Helpers;

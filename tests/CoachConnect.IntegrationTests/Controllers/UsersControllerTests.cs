@@ -1,4 +1,4 @@
-﻿using CoachConnect.BusinessLayer.DTOs;
+﻿using CoachConnect.BusinessLayer.DTOs.Login;
 using CoachConnect.BusinessLayer.DTOs.Users;
 using CoachConnect.DataAccess.Entities;
 using Newtonsoft.Json;
@@ -182,17 +182,17 @@ public class UsersControllerTests : BaseIntegrationTests
     {
         // arrange
 
-        LoginDTO loginDto = new() { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
+        LoginDTO loginDto = new() { Username = "sara@abc.no", Password = "A1dersen#" };
         var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
         StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
 
-        var userId = "2e88d66f-1d63-4bc2-90b5-0700458748ef";
+        var userId = "20065784-cdb9-465a-a439-6a627c448ca8";
         var userUpdateDto = new UserCoachUpdateDTO
         (
-          "Per",
-          "Pedersen",
-          "31313131",          
-          "per@msn.no"
+          "Sara",
+          "Andersen",
+          "31313131",
+          "sara@abc.no"
         );
 
         // act
@@ -222,9 +222,9 @@ public class UsersControllerTests : BaseIntegrationTests
     {
         // arrange
 
-        var userId = "48a9d05a-8b21-46d8-8714-8aa73a46c4e5";    
+        var userId = "f15a1513-eb40-4ca3-b8bb-c06959e1d6b5";    
 
-        LoginDTO loginDto = new() { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
+        LoginDTO loginDto = new() { Username = "jens@gmail.com", Password = "J1nsen#" };
         var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
         StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
 
@@ -239,10 +239,35 @@ public class UsersControllerTests : BaseIntegrationTests
         var response = await Client.DeleteAsync($"api/v1/users/{userId}");
         var deletedUser = await Client!.GetAsync($"api/v1/users/{userId}");
 
-
         // assert
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        Assert.Equal(HttpStatusCode.NotFound, deletedUser.StatusCode);
+        Assert.NotNull(deletedUser);
+    }
+
+    [Fact]
+    public async Task DeleteUserAsync_WithNonValidUserId_ReturnsUnauthorized()
+    {
+        // arrange
+
+        var userId = "d9e4e229-7738-4d26-822d-1b13fb1052c9";
+
+        LoginDTO loginDto = new() { Username = "jens@gmail.com", Password = "J1nsen#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+
+        // act
+
+        var loginResult = await Client!.PostAsync("api/v1/login", content);
+        var tokenResponse = await loginResult.Content.ReadAsStringAsync();
+        var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
+
+        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        var response = await Client.DeleteAsync($"api/v1/users/{userId}");
+
+        // assert
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 }

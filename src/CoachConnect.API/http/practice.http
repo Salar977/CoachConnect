@@ -1,3 +1,33 @@
-GET https://localhost:7036/api/v1/practices?Page=1&Size=10
-###
-GET https://localhost:7036/api/v1/practices/42d441a0-3df4-4568-8d44-e5e10c47eed1
+@baseUrl=https://localhost:7036
+@authToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJDb2FjaElkIHsgY29hY2hJZCA9IGQwMzUwOGIwLTM5NWUtNDM4Ni05NTEwLWUwZmJhNTkzMjUyYSB9IiwiVXNlck5hbWUiOiJzdHJpbmdAZ21haWwuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQ29hY2giLCJleHAiOjE3MTQ3NDE4MjEsImlzcyI6IkNvYWNoQ29ubmVjdC5jb20iLCJhdWQiOiJDb2FjaENvbm5lY3QuY29tIn0.eA98TsM_IUqluQMXLozkodeSlTxg1KhBdX-oWvJ3pds
+
+### GET All practices
+GET {{baseUrl}}/api/v1/practices?Page=1&Size=10
+Authorization: Bearer {{authToken}}
+
+### GET Practice by id
+GET {{baseUrl}}/api/v1/practices/2f042e86-d75e-4591-a810-aca808726604
+Authorization: Bearer {{authToken}}
+
+### POST Create 
+POST {{baseUrl}}/api/v1/practices
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "location": "gokstad",
+  "practiceDate": "2024-09-09T19:30:00:00.651Z"
+}
+### PUT Update practice
+PUT {{baseUrl}}/api/v1/practices/2f042e86-d75e-4591-a810-aca808726604
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "location": "Stavanger",
+  "practiceDate": "2025-11-11T19:30:00:00.651Z"
+}
+
+### DELETE Delete Practice
+DELETE {{baseUrl}}/api/v1/practices/2f042e86-d75e-4591-a810-aca808726501
+Authorization: Bearer {{authToken}}

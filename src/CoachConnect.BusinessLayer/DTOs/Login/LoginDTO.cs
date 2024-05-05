@@ -1,4 +1,4 @@
-﻿namespace CoachConnect.BusinessLayer.DTOs;
+﻿namespace CoachConnect.BusinessLayer.DTOs.Login;
 
 public class LoginDTO
 {

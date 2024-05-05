@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 namespace CoachConnect.BusinessLayer.DTOs.Players;
 public record PlayerRequest(string FirstName,
                             string LastName,
-                            UserId UserId,
-                            TeamId TeamId);
+                            Guid UserId,
+                            Guid TeamId);

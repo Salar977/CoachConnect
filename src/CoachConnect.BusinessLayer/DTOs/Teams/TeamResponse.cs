@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoachConnect.BusinessLayer.DTOs.Teams;
-internal class TeamResponse
-{
-}
+﻿namespace CoachConnect.BusinessLayer.DTOs.Teams;
+public record TeamResponse
+(
+    string TeamCity,
+    string TeamName,
+    DateTime Created,
+    DateTime Updated,
+    Guid CoachId,
+    Guid Id);

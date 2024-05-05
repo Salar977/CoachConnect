@@ -16,7 +16,7 @@ public class UserMapper : IMapper<User, UserDTO>
             PhoneNumber = entity.PhoneNumber,
             Email = entity.Email,
             Id = entity.Id,
-            Players = new List<PlayerDTO>(),
+            Players = new List<PlayerResponse>(),
         };
     }
 

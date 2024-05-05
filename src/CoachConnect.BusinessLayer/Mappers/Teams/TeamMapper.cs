@@ -8,30 +8,22 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CoachConnect.BusinessLayer.Mappers.Teams;
-public class TeamMapper : IMapper<Team, TeamDTO>
+public class TeamMapper : IMapper<Team, TeamResponse>
 {
-    public TeamDTO MapToDTO(Team entity)
+    public TeamResponse MapToDTO(Team entity)
     {
-        return new TeamDTO(
+        return new TeamResponse(
             entity.TeamCity,
             entity.TeamName,
             entity.Updated,
             entity.Created,
-            entity.CoachId,
-            entity.Id
+            entity.CoachId.coachId,
+            entity.Id.teamId
             );
     }
 
-    public Team MapToEntity(TeamDTO dto)
+    public Team MapToEntity(TeamResponse dto)
     {
-        var dtnow = DateTime.Now;
-        return new Team
-        {
-            TeamCity = dto.TeamCity,
-            TeamName = dto.TeamName,
-            CoachId = dto.CoachId,
-            Created = dtnow,
-            Updated = dtnow,
-        };
+        throw new NotImplementedException();
     }
 }

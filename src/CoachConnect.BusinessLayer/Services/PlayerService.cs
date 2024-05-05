@@ -20,14 +20,14 @@ public class PlayerService : IPlayerService
 {
     private readonly IPlayerRepository _playerRepository;
     private readonly ITeamRepository _teamRepository;
-    private readonly IMapper<Player, PlayerDTO> _playerMapper;
+    private readonly IMapper<Player, PlayerResponse> _playerMapper;
     private readonly IMapper<Player, PlayerRequest> _playerReqMapper;
     private readonly IMapper<Player, PlayerUpdate> _playerUpdateMapper;
     private readonly ILogger<GameService> _logger;
 
     public PlayerService(IPlayerRepository playerRepository,
                        ITeamRepository teamRepository,
-                       IMapper<Player, PlayerDTO> playerMapper,
+                       IMapper<Player, PlayerResponse> playerMapper,
                        IMapper<Player, PlayerRequest> playerReqMapper,
                        IMapper<Player, PlayerUpdate> playerUpdateMapper,
                        ILogger<GameService> logger)
@@ -39,7 +39,7 @@ public class PlayerService : IPlayerService
         _playerUpdateMapper = playerUpdateMapper;
         _logger = logger;
     }
-    public async Task<PlayerDTO?> CreateAsync(PlayerRequest playerDTO)
+    public async Task<PlayerResponse?> CreateAsync(PlayerRequest playerDTO)
     {
         _logger.LogDebug("Create new Player");
 
@@ -52,7 +52,7 @@ public class PlayerService : IPlayerService
         return res != null ? _playerMapper.MapToDTO(res) : null;
     }
 
-    public async Task<PlayerDTO?> DeleteAsync(PlayerId id)
+    public async Task<PlayerResponse?> DeleteAsync(PlayerId id)
     {
         _logger.LogDebug("Deleting Team: {id}", id);
 
@@ -60,14 +60,14 @@ public class PlayerService : IPlayerService
         return res != null ? _playerMapper.MapToDTO(res) : null;
     }
 
-    public async Task<ICollection<PlayerDTO>> GetAllAsync(PlayerQuery playerQuery)
+    public async Task<ICollection<PlayerResponse>> GetAllAsync(PlayerQuery playerQuery)
     {
         _logger.LogDebug("Getting all players");
         var res = await _playerRepository.GetAllAsync(playerQuery);
         return res.Select(team => _playerMapper.MapToDTO(team)).ToList();
     }
 
-    public async Task<PlayerDTO?> GetByIdAsync(Guid id)
+    public async Task<PlayerResponse?> GetByIdAsync(Guid id)
     {
         _logger.LogDebug("Get player by id: {id}", id);
 
@@ -76,7 +76,7 @@ public class PlayerService : IPlayerService
         return res != null ? _playerMapper.MapToDTO(res) : null;
     }
 
-    public async Task<ICollection<PlayerDTO?>> GetPlayersByTeamIdAsync(TeamId teamId)
+    public async Task<ICollection<PlayerResponse?>> GetPlayersByTeamIdAsync(TeamId teamId)
     {
         _logger?.LogDebug("Get Players by team id");
         // Check for null before using the repository and mapper
@@ -91,7 +91,7 @@ public class PlayerService : IPlayerService
         // Check if the team ID exists
         if (players == null)
         {
-            return new List<PlayerDTO?>();
+            return new List<PlayerResponse?>();
         }
 
         // Map the result to DTOs
@@ -100,7 +100,7 @@ public class PlayerService : IPlayerService
 
     }
 
-    public async Task<ICollection<PlayerDTO?>> GetPlayersByUserIdAsync(UserId userId)
+    public async Task<ICollection<PlayerResponse?>> GetPlayersByUserIdAsync(UserId userId)
     {
         _logger?.LogDebug("Get players by user id");
         // Check for null before using the repository and mapper
@@ -115,7 +115,7 @@ public class PlayerService : IPlayerService
         // Check if the member ID exists
         if (players == null)
         {
-            return new List<PlayerDTO?>();
+            return new List<PlayerResponse?>();
         }
 
         // Map the result to DTOs
@@ -124,7 +124,7 @@ public class PlayerService : IPlayerService
 
     }
 
-    public async Task<PlayerDTO?> UpdateAsync(PlayerId id, PlayerUpdate playerupdate)
+    public async Task<PlayerResponse?> UpdateAsync(PlayerId id, PlayerUpdate playerupdate)
     {
         _logger.LogDebug("Updating Player: {id}", id);
 

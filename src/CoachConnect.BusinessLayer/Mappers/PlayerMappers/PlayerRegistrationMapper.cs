@@ -22,8 +22,8 @@ public class PlayerRegistrationMapper : IMapper<Player, PlayerRequest>
         {
             FirstName = dto.FirstName,
             LastName = dto.LastName,
-            UserId = dto.UserId,
-            TeamId = dto.TeamId,
+            UserId = new UserId(dto.UserId),
+            TeamId = new TeamId(dto.TeamId),
             Created = now,
             Updated = DateTime.MinValue
         };

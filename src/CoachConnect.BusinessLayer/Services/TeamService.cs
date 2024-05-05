@@ -17,13 +17,13 @@ namespace CoachConnect.BusinessLayer.Services;
 public class TeamService : ITeamService
 {
     private readonly ITeamRepository _teamRepository;
-    private readonly IMapper<Team, TeamDTO> _teamMapper;
+    private readonly IMapper<Team, TeamResponse> _teamMapper;
     private readonly IMapper<Team, TeamRequest> _teamReqMapper;
     private readonly IMapper<Team, TeamUpdate> _teamUpdateMapper;
     private readonly ILogger<TeamService> _logger;
 
     public TeamService(ITeamRepository teamRepository,
-                       IMapper<Team, TeamDTO> teamMapper,
+                       IMapper<Team, TeamResponse> teamMapper,
                        IMapper<Team, TeamRequest> teamReqMapper,
                        IMapper<Team, TeamUpdate> teamUpdateMapper,
                        ILogger<TeamService> logger)
@@ -35,7 +35,7 @@ public class TeamService : ITeamService
         _logger = logger;
     }
 
-    public async Task<TeamDTO?> CreateAsync(TeamRequest teamReq)
+    public async Task<TeamResponse?> CreateAsync(TeamRequest teamReq)
     {
         _logger.LogDebug("Create new Team");
         
@@ -48,7 +48,7 @@ public class TeamService : ITeamService
         return res != null ? _teamMapper.MapToDTO(res) : null;
     }
 
-    public async Task<TeamDTO?> DeleteAsync(TeamId id)
+    public async Task<TeamResponse?> DeleteAsync(TeamId id)
     {
         _logger.LogDebug("Deleting Team: {id}", id);
 
@@ -56,7 +56,7 @@ public class TeamService : ITeamService
         return res != null ? _teamMapper.MapToDTO(res) : null;
     }
 
-    public async Task<ICollection<TeamDTO>> GetAllAsync(TeamQuery teamQuery)
+    public async Task<ICollection<TeamResponse>> GetAllAsync(TeamQuery teamQuery)
     {
         _logger.LogDebug("Getting all teams");
         var res = await _teamRepository.GetAllAsync(teamQuery);
@@ -64,7 +64,7 @@ public class TeamService : ITeamService
     }
 
 
-    public async Task<TeamDTO?> GetByIdAsync(TeamId id)
+    public async Task<TeamResponse?> GetByIdAsync(TeamId id)
     {
         _logger.LogDebug("Getting Team by id: {id}", id);
 
@@ -72,7 +72,7 @@ public class TeamService : ITeamService
         return res != null ? _teamMapper.MapToDTO(res) : null;
     }
 
-    public async Task<ICollection<TeamDTO?>> GetTeamsByCoachId(CoachId coachid)
+    public async Task<ICollection<TeamResponse?>> GetTeamsByCoachId(CoachId coachid)
     {
         _logger?.LogDebug("Get teams by coach id");
  
@@ -86,7 +86,7 @@ public class TeamService : ITeamService
         // Check if the member ID exists
         if (teams == null)
         {
-            return new List<TeamDTO?>();
+            return new List<TeamResponse?>();
         }
 
         // Map the result to DTOs
@@ -95,7 +95,7 @@ public class TeamService : ITeamService
 
     }
 
-    public async Task<TeamDTO?> UpdateAsync(TeamId id, TeamUpdate teamupdate)
+    public async Task<TeamResponse?> UpdateAsync(TeamId id, TeamUpdate teamupdate)
     {
         _logger.LogDebug("Updating Team: {id}", id);
 

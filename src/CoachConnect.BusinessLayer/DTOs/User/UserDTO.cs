@@ -10,5 +10,5 @@ public class UserDTO
     public string PhoneNumber { get; init; } = string.Empty;
     public string Email { get; init; } = string.Empty;
     public UserId Id { get; init; }
-    public IEnumerable<PlayerDTO>? Players { get; set; } // skulle hatt HATEOAS implementert ikke tid 
+    public IEnumerable<PlayerResponse>? Players { get; set; } // skulle hatt HATEOAS implementert ikke tid 
 }

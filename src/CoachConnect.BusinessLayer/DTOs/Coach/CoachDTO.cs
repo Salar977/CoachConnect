@@ -9,4 +9,4 @@ public record CoachDTO(
     string PhoneNumber,
     string Email,
     CoachId Id,
-    IEnumerable<TeamDTO> Teams); // skulle hatt HATEOAS implementert ikke tid 
+    IEnumerable<TeamResponse> Teams); // skulle hatt HATEOAS implementert ikke tid 

@@ -16,14 +16,14 @@ public class UserService : IUserService
     private readonly IUserRepository _userRepository;
     private readonly IMapper<User, UserDTO> _userMapper;
     private readonly IMapper<User, UserCoachUpdateDTO> _userUpdateMapper;    
-    private readonly IMapper<Player, PlayerDTO> _playerMapper;
+    private readonly IMapper<Player, PlayerResponse> _playerMapper;
     private readonly IMapper<User, UserRegistrationDTO> _userRegistrationMapper;
     private readonly ILogger<UserService> _logger;
 
     public UserService(IUserRepository userRepository, 
                        IMapper<User, UserDTO> userMapper,
                        IMapper<User, UserCoachUpdateDTO> userUpdateMapper,
-                       IMapper<Player, PlayerDTO> playerMapper,
+                       IMapper<Player, PlayerResponse> playerMapper,
                        IMapper<User, UserRegistrationDTO> userRegistrationMapper,
                        ILogger<UserService> logger)
     {   

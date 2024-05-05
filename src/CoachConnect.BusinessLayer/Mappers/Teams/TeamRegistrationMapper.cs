@@ -20,7 +20,7 @@ public class TeamRegistrationMapper : IMapper<Team, TeamRequest>
         var dtnow = DateTime.Now;
         return new Team
         {
-            CoachId = dto.CoachId,
+            CoachId = new CoachId(dto.CoachId),
             TeamCity = dto.TeamCity,
             TeamName = dto.TeamName,
             Created = dtnow,

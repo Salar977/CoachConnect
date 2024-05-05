@@ -1,41 +1,27 @@
 ﻿using CoachConnect.BusinessLayer.DTOs.Players;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.DataAccess.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoachConnect.BusinessLayer.Mappers.PlayerMappers;
-public class PlayerMapper : IMapper<Player, PlayerDTO>
+public class PlayerMapper : IMapper<Player, PlayerResponse>
 {
-    public PlayerDTO MapToDTO(Player entity)
+    public PlayerResponse MapToDTO(Player entity)
     {
-        return new PlayerDTO(
+        return new PlayerResponse(
             entity.FirstName,
             entity.LastName,
             entity.TotalGames,
             entity.TotalPractices,
             entity.Created,
             entity.Updated,
-            entity.UserId,
-            entity.TeamId,
-            entity.Id
+            entity.UserId.userId,
+            entity.TeamId.teamId,
+            entity.Id.playerId
             );
     }
 
-    public Player MapToEntity(PlayerDTO dto)
+    public Player MapToEntity(PlayerResponse dto)
     {
-        var dtnow = DateTime.Now;
-        return new Player
-        {
-            FirstName = dto.FirstName,
-            LastName = dto.LastName,
-            UserId = dto.UserId,
-            TeamId = dto.TeamId,
-            Created = dto.Created,
-            Updated = dtnow
-        };
+        throw new NotImplementedException();
     }
 }

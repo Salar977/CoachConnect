@@ -22,7 +22,7 @@ public class PracticeAttendancesController : ControllerBase
 
     [Authorize(Roles = "Admin, Coach")]
     [HttpGet(Name = "GetAllAsync")]
-    public async Task<ActionResult<IEnumerable<PracticeAttendanceResponse>>> GetAllAsync([FromQuery] PracticeAttendanceQuery attendanceQuery)
+    public async Task<ActionResult<IEnumerable<PracticeAttendanceResponse>>> GetAllAttendancesAsync([FromQuery] PracticeAttendanceQuery attendanceQuery)
     {
         _logger.LogInformation("Get all practices - Controller");
         return Ok(await _practiceAttendanceService.GetAllAsync(attendanceQuery));

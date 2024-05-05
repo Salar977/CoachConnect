@@ -23,7 +23,7 @@ public class PracticeController : ControllerBase
 
     [Authorize(Roles = "Admin, Coach, User")]
     [HttpGet(Name = "GetAllPracticeAsync")]
-    public async Task<ActionResult<IEnumerable<PracticeResponse>>> GetAllPractice([FromQuery] PracticeQuery practiceQuery)
+    public async Task<ActionResult<IEnumerable<PracticeResponse>>> GetAllPracticeAsync([FromQuery] PracticeQuery practiceQuery)
     {
         _logger.LogInformation("Get all practices - Controller");
         return Ok(await _practiceService.GetAllAsync(practiceQuery));
@@ -31,7 +31,7 @@ public class PracticeController : ControllerBase
 
     [Authorize(Roles = "Admin, Coach, User")]
     [HttpGet("{id:guid}", Name = "GetPracticeByIdAsync")]
-    public async Task<ActionResult<PracticeResponse>> GetById([FromRoute] Guid id)
+    public async Task<ActionResult<PracticeResponse>> GetByIdAsync([FromRoute] Guid id)
     {
         var practice = await _practiceService.GetByIdAsync(id);
 

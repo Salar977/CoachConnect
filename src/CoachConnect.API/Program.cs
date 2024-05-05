@@ -27,7 +27,7 @@ builder.Services.AddRateLimiter(rateLimiterOptions =>
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerAuth();
 
 builder.RegisterMappers();
 

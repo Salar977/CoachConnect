@@ -76,20 +76,57 @@ public class PlayerService : IPlayerService
         return res != null ? _playerMapper.MapToDTO(res) : null;
     }
 
-
-
-
-    public Task<TeamDTO?> GetByTeamIdAsync(TeamId teamid)
+    public async Task<ICollection<PlayerDTO?>> GetPlayersByTeamIdAsync(TeamId teamId)
     {
-        throw new NotImplementedException();
+        _logger?.LogDebug("Get Players by team id");
+        // Check for null before using the repository and mapper
+        if (_playerRepository == null || _playerMapper == null)
+        {
+            throw new ApplicationException("Player repository or mapper is null.");
+        }
+
+        // Retrieve players by team ID
+        var players = await _playerRepository.GetPlayersByTeamIdAsync(teamId);
+
+        // Check if the team ID exists
+        if (players == null)
+        {
+            return new List<PlayerDTO?>();
+        }
+
+        // Map the result to DTOs
+        var dtos = players.Select(register => _playerMapper.MapToDTO(register)).ToList();
+        return dtos;
+
+    }
+
+    public async Task<ICollection<PlayerDTO?>> GetPlayersByUserIdAsync(UserId userId)
+    {
+        _logger?.LogDebug("Get players by user id");
+        // Check for null before using the repository and mapper
+        if (_playerRepository == null || _playerMapper == null)
+        {
+            throw new ApplicationException("Arrangement register repository or mapper is null.");
+        }
+
+        // Retrieve arrangement registers by user ID
+        var players = await _playerRepository.GetPlayersByUserIdAsync(userId);
+
+        // Check if the member ID exists
+        if (players == null)
+        {
+            return new List<PlayerDTO?>();
+        }
+
+        // Map the result to DTOs
+        var dtos = players.Select(register => _playerMapper.MapToDTO(register)).ToList();
+        return dtos;
+
     }
 
     public async Task<PlayerDTO?> UpdateAsync(PlayerId id, PlayerUpdate playerupdate)
     {
         _logger.LogDebug("Updating Player: {id}", id);
-
-        // husk at users (el admin) kun skal kunne eoppdatere sin egen user Dette må vel settes i JWT autorisering. Ikke glem må ha med dette viktig.
-        // kanksje noe som : throw new UnauthorizedAccessException($"User {loggedInUserId} has no access to delete user {id}");
 
         var player = _playerUpdateMapper.MapToEntity(playerupdate);
         player.Id = id;

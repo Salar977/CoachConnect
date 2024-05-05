@@ -1,4 +1,5 @@
 ﻿using CoachConnect.BusinessLayer.DTOs.Players;
+using CoachConnect.BusinessLayer.DTOs.Teams;
 using CoachConnect.BusinessLayer.Services;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.DataAccess.Entities;
@@ -41,6 +42,25 @@ public class PlayersController : ControllerBase
     }
 
 
+    [HttpGet("player/UserId/{userId}", Name = "GetPlayersByUserId")]
+    public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetTeamsByUserId(Guid userId)
+    {
+        _logger.LogTrace("Getting arrangementRegisters by memberid");
+        var res = await _playerService.GetPlayersByUserIdAsync(new UserId(userId));
+        return res != null
+            ? Ok(res)
+            : NotFound("Could not any find any teams with this coachid");
+    }
+
+    [HttpGet("player/TeamId/{teamId}", Name = "GetPlayersByCoachId")]
+    public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetPlayersByTeamId(Guid teamId)
+    {
+        _logger.LogTrace("Getting arrangementRegisters by memberid");
+        var res = await _playerService.GetPlayersByTeamIdAsync(new TeamId(teamId));
+        return res != null
+            ? Ok(res)
+            : NotFound("Could not any find any players with this teamid");
+    }
 
     [HttpPost("register", Name = "CreatePlayer")]
     public async Task<ActionResult<PlayerDTO>> CreatePlayer([FromBody] PlayerRequest playerReq)

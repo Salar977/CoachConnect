@@ -29,3 +29,4 @@ public class PlayerRegistrationMapper : IMapper<Player, PlayerRequest>
         };
     }
 }
+//new PlayerId(dto.PlayerId)

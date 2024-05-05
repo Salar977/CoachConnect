@@ -12,9 +12,10 @@ namespace CoachConnect.BusinessLayer.Services.Interfaces;
 public interface IPlayerService
 {
     Task<PlayerDTO?> GetByIdAsync(Guid id);
-    Task<TeamDTO?> GetByTeamIdAsync(TeamId teamid);
 
     Task<ICollection<PlayerDTO>> GetAllAsync(PlayerQuery playerQuery);
+    Task<ICollection<PlayerDTO?>> GetPlayersByTeamIdAsync(TeamId teamId);
+    Task<ICollection<PlayerDTO?>> GetPlayersByUserIdAsync(UserId userId);
 
     Task<PlayerDTO?> CreateAsync(PlayerRequest playerReq);
 

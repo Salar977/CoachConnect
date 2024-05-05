@@ -72,7 +72,7 @@ public class PlayerRepository : IPlayerRepository
         return await _dbContext.Players.FindAsync(id);
     }
 
-    public async Task<ICollection<Player>> GetPlayersByTeamsIdAsync(TeamId teamId)
+    public async Task<ICollection<Player>> GetPlayersByTeamIdAsync(TeamId teamId)
     {
         return await _dbContext.Players
             .Where(x => x.TeamId == teamId)

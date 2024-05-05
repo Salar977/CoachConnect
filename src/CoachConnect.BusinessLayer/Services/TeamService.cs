@@ -63,10 +63,6 @@ public class TeamService : ITeamService
         return res.Select(team => _teamMapper.MapToDTO(team)).ToList();
     }
 
-    public Task<TeamDTO?> GetByCoachIdAsync(CoachId coachid)
-    {
-        throw new NotImplementedException();
-    }
 
     public async Task<TeamDTO?> GetByIdAsync(TeamId id)
     {
@@ -76,9 +72,27 @@ public class TeamService : ITeamService
         return res != null ? _teamMapper.MapToDTO(res) : null;
     }
 
-    public Task<TeamDTO?> GetTeamsByCoachId(CoachId coachid)
+    public async Task<ICollection<TeamDTO?>> GetTeamsByCoachId(CoachId coachid)
     {
-        throw new NotImplementedException();
+        _logger?.LogDebug("Get teams by coach id");
+ 
+        if (_teamRepository == null || _teamMapper == null)
+        {
+            throw new ApplicationException("teams repository or mapper is null.");
+        }
+
+        var teams = await _teamRepository.GetByCoachIdAsync(coachid);
+
+        // Check if the member ID exists
+        if (teams == null)
+        {
+            return new List<TeamDTO?>();
+        }
+
+        // Map the result to DTOs
+        var dtos = teams.Select(register => _teamMapper.MapToDTO(register)).ToList();
+        return dtos;
+
     }
 
     public async Task<TeamDTO?> UpdateAsync(TeamId id, TeamUpdate teamupdate)

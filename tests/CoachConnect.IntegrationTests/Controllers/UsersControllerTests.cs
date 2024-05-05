@@ -176,7 +176,6 @@ public class UsersControllerTests : BaseIntegrationTests
         Assert.Equal(UserRegistrationDTO.PhoneNumber, registeredUser.PhoneNumber);
         Assert.Equal(UserRegistrationDTO.Email, registeredUser.Email);
     }
-
     
     [Fact]
     public async Task UpdateUserAsync_WithValidUserId_ReturnsStatusOKAndUpdatedUser()
@@ -184,7 +183,7 @@ public class UsersControllerTests : BaseIntegrationTests
         // arrange
 
         LoginDTO loginDto = new() { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
-        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(loginDto);
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
         StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
 
         var userId = "2e88d66f-1d63-4bc2-90b5-0700458748ef";

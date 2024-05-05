@@ -6,6 +6,10 @@
 # Migrations
 src/CoachConnect.DataAccess/Data/Migrations/
 
+*.bak
+*.sql
+.gitattributes
+
 # User-specific files
 *.rsuser
 *.suo

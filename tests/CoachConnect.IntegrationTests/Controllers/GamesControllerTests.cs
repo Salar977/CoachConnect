@@ -292,73 +292,55 @@ public class GamesControllerTests : BaseIntegrationTests
     [Fact]
     public async Task DeleteGameAsync_WithValidCoachId_ReturnsOKAndDeletedGame()
     {
-        //// arrange
+        // arrange
 
-        //LoginDTO loginDto = new() { Username = "ottis@epost.no", Password = "O1tesen#" };
-        //var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
-        //StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+        LoginDTO loginDto = new() { Username = "ottis@epost.no", Password = "O1tesen#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
 
-        //var homeTeamId = new TeamId(Guid.Parse("b2d84d4e-921c-4c17-af43-18d13b105004"));
-        //var awayTeamId = new TeamId(Guid.Parse("b01b6b08-2f43-4be5-b40b-7b9fd2d3d009"));
+        var gameId = new GameId(new Guid("2f042e86-d75e-4591-a810-aca808728888"));
 
-        //var gameRegistrationDto = new GameRegistrationDTO
-        //(
-        //    "Frankfurt",
-        //    homeTeamId,
-        //    awayTeamId,
-        //    new DateTime(2024, 12, 06, 09, 30, 49, 312)
-        //);
+        // act
 
-        //// act
+        var loginResult = await Client!.PostAsync("api/v1/login", content);
+        var tokenResponse = await loginResult.Content.ReadAsStringAsync();
+        var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
 
-        //var loginResult = await Client!.PostAsync("api/v1/login", content);
-        //var tokenResponse = await loginResult.Content.ReadAsStringAsync();
-        //var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
+        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-        //Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        var response = await Client!.DeleteAsync($"api/v1/games/{gameId.gameId}");
+        var responseDTO = await response.Content.ReadFromJsonAsync<GameRegistrationDTO>();
 
-        //var response = await Client!.PostAsync($"api/v1/games/register", new StringContent(JsonConvert.SerializeObject(gameRegistrationDto), Encoding.UTF8, "application/json"));
+        //assert
 
-        ////assert
-
-        //Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        //Assert.NotNull(response);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(responseDTO);
     }
 
     [Fact]
-    public async Task DeleteGameAsync_WithUnauthorizedCoachId_ReturnsBadRequest()
+    public async Task DeleteGameAsync_WhereCoachIdDoesNotBelongToEitherTeam_ReturnsBadRequest()
     {
-        //// arrange
+        // arrange
 
-        //LoginDTO loginDto = new() { Username = "ottis@epost.no", Password = "O1tesen#" };
-        //var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
-        //StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+        LoginDTO loginDto = new() { Username = "ottis@epost.no", Password = "O1tesen#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
 
-        //var homeTeamId = new TeamId(Guid.Parse("b2d84d4e-921c-4c17-af43-18d13b105004"));
-        //var awayTeamId = new TeamId(Guid.Parse("b01b6b08-2f43-4be5-b40b-7b9fd2d3d009"));
+        var gameId = new GameId(new Guid("2f042e86-d75e-4591-a810-aca80872bbb6"));
 
-        //var gameRegistrationDto = new GameRegistrationDTO
-        //(
-        //    "Frankfurt",
-        //    homeTeamId,
-        //    awayTeamId,
-        //    new DateTime(2024, 12, 06, 09, 30, 49, 312)
-        //);
+        // act
 
-        //// act
+        var loginResult = await Client!.PostAsync("api/v1/login", content);
+        var tokenResponse = await loginResult.Content.ReadAsStringAsync();
+        var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
 
-        //var loginResult = await Client!.PostAsync("api/v1/login", content);
-        //var tokenResponse = await loginResult.Content.ReadAsStringAsync();
-        //var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
+        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-        //Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        var response = await Client!.DeleteAsync($"api/v1/games/{gameId.gameId}");
 
-        //var response = await Client!.PostAsync($"api/v1/games/register", new StringContent(JsonConvert.SerializeObject(gameRegistrationDto), Encoding.UTF8, "application/json"));
+        //assert
 
-        ////assert
-
-        //Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        //Assert.NotNull(response);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.NotNull(response);
     }
-
 }

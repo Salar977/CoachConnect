@@ -16,7 +16,7 @@ public class UsersControllerTests : BaseIntegrationTests
     }
 
     [Fact]
-    public async Task GetUsersAsync_DefaultPageSizeAndEmptyQuery_ReturnStatusOKAndUsers() 
+    public async Task GetUsersAsync_AsAdmin_DefaultPageSizeAndEmptyQuery_ReturnStatusOKAndUsers() 
     {
         // arrange
 
@@ -44,7 +44,7 @@ public class UsersControllerTests : BaseIntegrationTests
     }
 
     [Fact]
-    public async Task GetUsersByLastNameAsync_UsingValidQuery_ReturnsOKAndDefaultSizeListUsers()
+    public async Task GetUsersByLastNameAsync_AsAdmin_UsingValidQuery_ReturnsOKAndDefaultSizeListUsers()
     {
         // arrange
 
@@ -74,7 +74,7 @@ public class UsersControllerTests : BaseIntegrationTests
     }
 
     [Fact]
-    public async Task GetUserByEmailAsync_WithValidQuery_ReturnsOKAndUser()
+    public async Task GetUserByEmailAsync_AsAdmin_WithValidQuery_ReturnsOKAndUser()
     {
         // arrange
 
@@ -103,7 +103,7 @@ public class UsersControllerTests : BaseIntegrationTests
     }
 
     [Fact]
-    public async Task GetUserByIdAsync_WithValidId_Returns_StatusOKAndUser()
+    public async Task GetUserByIdAsync_AsAdmin_WithValidId_Returns_StatusOKAndUser()
     {
         // arrange
 
@@ -153,7 +153,7 @@ public class UsersControllerTests : BaseIntegrationTests
     {
         // arrange
 
-        var UserRegistrationDTO = new UserRegistrationDTO
+        var userRegistrationDTO = new UserRegistrationDTO
         (
           "Jan",
           "Jensen",
@@ -164,17 +164,17 @@ public class UsersControllerTests : BaseIntegrationTests
 
         // act
 
-        var response = await Client.PostAsync("api/v1/users/register", new StringContent(JsonConvert.SerializeObject(UserRegistrationDTO), Encoding.UTF8, "application/json"));
+        var response = await Client.PostAsync("api/v1/users/register", new StringContent(JsonConvert.SerializeObject(userRegistrationDTO), Encoding.UTF8, "application/json"));
         var registeredUser = JsonConvert.DeserializeObject<UserDTO>(await response.Content.ReadAsStringAsync());
 
         // assert            
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(registeredUser);
-        Assert.Equal(UserRegistrationDTO.FirstName, registeredUser.FirstName);
-        Assert.Equal(UserRegistrationDTO.LastName, registeredUser.LastName);
-        Assert.Equal(UserRegistrationDTO.PhoneNumber, registeredUser.PhoneNumber);
-        Assert.Equal(UserRegistrationDTO.Email, registeredUser.Email);
+        Assert.Equal(userRegistrationDTO.FirstName, registeredUser.FirstName);
+        Assert.Equal(userRegistrationDTO.LastName, registeredUser.LastName);
+        Assert.Equal(userRegistrationDTO.PhoneNumber, registeredUser.PhoneNumber);
+        Assert.Equal(userRegistrationDTO.Email, registeredUser.Email);
     }
     
     [Fact]
@@ -204,8 +204,8 @@ public class UsersControllerTests : BaseIntegrationTests
         Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         var response = await Client.PutAsync($"api/v1/users/{userId}", new StringContent(JsonConvert.SerializeObject(userUpdateDto), Encoding.UTF8, "application/json"));
-        var updatedUserJson = await response.Content.ReadAsStringAsync();
-        var updatedUserDto = JsonConvert.DeserializeObject<UserCoachUpdateDTO>(updatedUserJson);
+        var updatedUserDto = JsonConvert.DeserializeObject<UserCoachUpdateDTO>(await response.Content.ReadAsStringAsync());
+
 
         // assert        
 
@@ -237,12 +237,13 @@ public class UsersControllerTests : BaseIntegrationTests
         Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         var response = await Client.DeleteAsync($"api/v1/users/{userId}");
-        var deletedUser = await Client!.GetAsync($"api/v1/users/{userId}");
+        var deletedUserJson = await response.Content.ReadAsStringAsync();
+        var deletedUserDto = JsonConvert.DeserializeObject<UserDTO>(deletedUserJson);
 
         // assert
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        Assert.NotNull(deletedUser);
+        Assert.NotNull(deletedUserDto);
     }
 
     [Fact]
@@ -269,5 +270,6 @@ public class UsersControllerTests : BaseIntegrationTests
         // assert
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        Assert.NotNull(response);
     }
 }

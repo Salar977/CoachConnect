@@ -1,11 +1,9 @@
-﻿using CoachConnect.DataAccess.Entities;
-using CoachConnect.Shared.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using CoachConnect.BusinessLayer.DTOs.Login;
+using CoachConnect.BusinessLayer.DTOs.Players;
+using CoachConnect.BusinessLayer.DTOs.Users;
+using CoachConnect.DataAccess.Entities;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Http.Json;
 
 namespace CoachConnect.IntegrationTests.Controllers;
 public class PlayersControllerTests : BaseIntegrationTests
@@ -20,58 +18,113 @@ public class PlayersControllerTests : BaseIntegrationTests
     {
         // arrange
 
-        //LoginDTO dto = new LoginDTO { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
-        //var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize<LoginDTO>(dto);
 
-        var playerQuery = new PlayerQuery();
+        LoginDTO loginDto = new() { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
 
         // act
 
-        //StringContent content = new StringContent(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
-        //var loginResult = await Client!.PostAsync("api/v1/login", content);
-        //var token = await loginResult.Content.ReadAsStringAsync();
-        //Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        var loginResult = await Client!.PostAsync("api/v1/login", content);
+        var tokenResponse = await loginResult.Content.ReadAsStringAsync();
+        var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
+
+        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         var response = await Client!.GetAsync("api/v1/players");
-        //var gameDtos = await PlayerService!.GetAllAsync(playerQuery);
+        var responseData = await response.Content.ReadAsStringAsync();
+        var playerResp = System.Text.Json.JsonSerializer.Deserialize<List<PlayerResponse>>(responseData);
 
         // assert
-        
+
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        //Assert.NotNull(gameDtos);
-        //Assert.Equal(10, gameDtos.ToList().Count);
+        Assert.NotNull(playerResp);
+        Assert.Equal(10, playerResp.ToList().Count);
     }
 
     [Fact]
-    public async Task GetGameByIdAsync_WithValidId_Returns_StatusOKAndGame()
+    public async Task GetPlayerByFirstNameAsync_UsingValidQuery_ReturnsOKAndDefaultSizeListPlayer()
     {
         // arrange
 
-        var guid = new Guid("2f042e86-d75e-4591-a810-aca808725555");
-        var playerId = new PlayerId(new Guid("2f042e86-d75e-4591-a810-aca808725555"));
+        LoginDTO loginDto = new() { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
 
-        var homeCoachId = new CoachId(Guid.Parse("a3b2a7e5-b0e2-40e2-a42d-69e10a22d011"));
-        var awayCoachId = new CoachId(Guid.Parse("b01b6b08-2f43-4be5-b40b-7b9fd2d3d009"));
+        var query = "?FirstName=Frode";
 
+        /*
         Player player = new()
         {
-            Id = playerId,
+            //Id = Id,
             FirstName = "Kristian",
             LastName = "Walin",
             Created = new DateTime(2024, 04, 17, 13, 00, 49, 312),
         };
+        */
 
         // act
 
-        var response = await Client!.GetAsync("api/v1/players/2f042e86-d75e-4591-a810-aca808725555");
-        //var playerDto = await PlayerService!.GetByIdAsync(guid);
+        var loginResult = await Client!.PostAsync("api/v1/login", content);
+        var tokenResponse = await loginResult.Content.ReadAsStringAsync();
+        var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
 
+        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        var response = await Client!.GetAsync($"api/v1/players{query}");
+        var responseData = await response.Content.ReadAsStringAsync();
+        var playerResp = System.Text.Json.JsonSerializer.Deserialize<List<PlayerResponse>>(responseData);
         // assert
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        //Assert.NotNull(playerDto);
-        //Assert.Equal(player.Id, playerDto.Id);
-        //Assert.Equal(player.FirstName, playerDto.FirstName);
-        //Assert.Equal(player.LastName, playerDto.LastName);
+        Assert.NotNull(playerResp);
+    }
+
+    [Fact]
+    public async Task GetPlayerByIdAsync_WithValidId_Returns_StatusOkAndPlayer()
+    {
+        // arrange
+
+        LoginDTO loginDto = new() { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+
+        var playerId = new PlayerId(new Guid("92752322-5353-8888-5232-226352223422"));
+        var teamId = new TeamId(new Guid("22752322-3333-8888-9999-226352223422"));
+        var userId = new UserId(new Guid("33333333-2233-8888-9999-226352223422"));
+
+        Player player = new()
+        {
+            Id = playerId,
+            TeamId = teamId,
+            UserId = userId,
+            FirstName = "Kristian",
+            LastName = "Walin",
+            TotalGames = 0,
+            TotalPractices = 5,
+            Created = new DateTime(2024, 04, 17, 13, 00, 49, 312),
+            Updated = new DateTime(2024, 04, 17, 13, 00, 49, 312),
+        };
+
+        // act
+
+        var loginResult = await Client!.PostAsync("api/v1/login", content);
+        var tokenResponse = await loginResult.Content.ReadAsStringAsync();
+        var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
+
+        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        var response = await Client!.GetAsync($"api/v1/players/{playerId.playerId}");
+        var playerResp = await response.Content.ReadFromJsonAsync<PlayerResponse>();
+
+        // assert
+        
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(playerResp);
+        //Assert.Equal(player, playerResp);
+        Assert.Equal(player.FirstName, playerResp.FirstName);
+        Assert.Equal(player.LastName, playerResp.LastName);
     }
 }
+
+

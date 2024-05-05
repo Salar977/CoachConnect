@@ -57,7 +57,8 @@ public class TeamRepository : ITeamRepository
                 teams = teamQuery.IsDescending ? teams.OrderByDescending(x => x.TeamName) : teams.OrderBy(x => x.TeamName);
             }
         }
-        
+
+
 
         var skipNumber = (teamQuery.PageNumber - 1) * teamQuery.PageSize;
 
@@ -67,9 +68,11 @@ public class TeamRepository : ITeamRepository
             .ToListAsync();
     }
 
-    public Task<Team?> GetByCoachIdAsync(CoachId coachid)
+    public async Task<ICollection<Team?>> GetByCoachIdAsync(CoachId coachid)
     {
-        throw new NotImplementedException();
+        return await _dbContext.Teams
+            .Where(x => x.CoachId == coachid)
+            .ToListAsync();
     }
 
     public async Task<Team?> GetByIdAsync(TeamId id)

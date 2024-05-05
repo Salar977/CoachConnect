@@ -1,4 +1,4 @@
-﻿using CoachConnect.BusinessLayer.DTOs;
+﻿using CoachConnect.BusinessLayer.DTOs.Teams;
 using CoachConnect.DataAccess.Entities;
 using CoachConnect.Shared.Helpers;
 using System;
@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 namespace CoachConnect.BusinessLayer.Services.Interfaces;
 public interface ITeamService
 {
-    Task<TeamDTO?> GetByIdAsync(TeamId id);
-    Task<TeamDTO?> GetTeamsByCoachId(CoachId coachid);
+    Task<TeamResponse?> GetByIdAsync(TeamId id);
+    Task<ICollection<TeamResponse?>> GetTeamsByCoachId(CoachId coachid);
 
-    Task<ICollection<TeamDTO>> GetAllAsync(TeamQuery teamQuery); 
+    Task<ICollection<TeamResponse>> GetAllAsync(TeamQuery teamQuery); 
 
-    Task<TeamDTO?> CreateAsync(TeamDTO teamDTO); 
+    Task<TeamResponse?> CreateAsync(TeamRequest teamReq); 
 
-    Task<TeamDTO?> UpdateAsync(TeamId id, TeamDTO teamDto); 
+    Task<TeamResponse?> UpdateAsync(TeamId id, TeamUpdate teamupdate); 
 
-    Task<TeamDTO?> DeleteAsync(TeamId id); 
+    Task<TeamResponse?> DeleteAsync(TeamId id); 
 }

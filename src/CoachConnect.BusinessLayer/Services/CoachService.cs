@@ -1,5 +1,5 @@
-﻿using CoachConnect.BusinessLayer.DTOs;
-using CoachConnect.BusinessLayer.DTOs.Coach;
+﻿using CoachConnect.BusinessLayer.DTOs.Coach;
+using CoachConnect.BusinessLayer.DTOs.Teams;
 using CoachConnect.BusinessLayer.DTOs.Users;
 using CoachConnect.BusinessLayer.Mappers;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
@@ -17,14 +17,14 @@ public class CoachService : ICoachService
     private readonly ICoachRepository _coachRepository;
     private readonly IMapper<Coach, CoachDTO> _coachMapper;
     private readonly IMapper<Coach, UserCoachUpdateDTO> _coachUpdateMapper;
-    private readonly IMapper<Team, TeamDTO> _teamMapper;
+    private readonly IMapper<Team, TeamResponse> _teamMapper;
     private readonly IMapper<Coach, CoachRegistrationDTO> _coachRegistartionMapper;
     private readonly ILogger<CoachService> _logger;
 
     public CoachService(ICoachRepository coachRepository,
                         IMapper<Coach, CoachDTO> coachMapper,
                         IMapper<Coach, UserCoachUpdateDTO> coachUpdateMapper,
-                        IMapper<Team, TeamDTO> teamMapper,
+                        IMapper<Team, TeamResponse> teamMapper,
                         IMapper<Coach, CoachRegistrationDTO> coachRegistrationMapper,
                         ILogger<CoachService> logger)
     {

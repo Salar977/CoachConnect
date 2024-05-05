@@ -1,4 +1,4 @@
-﻿using CoachConnect.BusinessLayer.DTOs;
+﻿using CoachConnect.BusinessLayer.DTOs.Players;
 using CoachConnect.BusinessLayer.DTOs.Users;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
 using CoachConnect.DataAccess.Entities;
@@ -16,7 +16,7 @@ public class UserMapper : IMapper<User, UserDTO>
             PhoneNumber = entity.PhoneNumber,
             Email = entity.Email,
             Id = entity.Id,
-            Players = new List<PlayerDTO>(),
+            Players = new List<PlayerResponse>(),
         };
     }
 

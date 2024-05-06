@@ -1,7 +1,7 @@
 @baseUrl=https://localhost:7036
 @authToken=need token here!
 
-### GET All practices
+### GET All practices attebdabces
 GET {{baseUrl}}/api/v1/practices?Page=1&Size=10
 Authorization: Bearer {{authToken}}
 

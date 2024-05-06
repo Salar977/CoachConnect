@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoachConnect.API", "src\Coa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoachConnect.Shared", "src\CoachConnect.Shared\CoachConnect.Shared.csproj", "{630C2D27-B7B6-48EF-949A-AD4D1C10632B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoachConnect.IntegrationTests", "tests\CoachConnect.IntegrationTests\CoachConnect.IntegrationTests.csproj", "{6EDEC46E-C660-40FD-A547-BD841864B7C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoachConnect.IntegrationTests", "tests\CoachConnect.IntegrationTests\CoachConnect.IntegrationTests.csproj", "{6EDEC46E-C660-40FD-A547-BD841864B7C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

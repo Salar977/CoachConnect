@@ -55,7 +55,7 @@ public class CoachesController : ControllerBase
         bool isAdmin = this.User.IsInRole("Admin");
 
         if (!isAdmin && !idFromToken.Equals(idFromRoute))
-            return Unauthorized("No authorization to delete this coach");
+            return Unauthorized("No authorization to update this coach");
 
         var res = await _coachService.UpdateAsync(id, dto);
         return res != null ? Ok(res) : BadRequest("Could not update coach");

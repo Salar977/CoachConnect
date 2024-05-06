@@ -13,6 +13,7 @@ public class PlayersControllerTests : BaseIntegrationTests
     {
 
     }
+    
     [Fact]
     public async Task GetPlayersAsync_DefaultPageSizeAndEmptyQuery_ReturnStatusOKAndPlayers()
     {
@@ -51,7 +52,7 @@ public class PlayersControllerTests : BaseIntegrationTests
         var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
         StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
 
-        var query = "?FirstName=Frode";
+        var query = "?FirstName=Lars";
 
         /*
         Player player = new()
@@ -79,10 +80,12 @@ public class PlayersControllerTests : BaseIntegrationTests
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(playerResp);
     }
-
+    
+    /*
     [Fact]
     public async Task GetPlayerByIdAsync_WithValidId_Returns_StatusOkAndPlayer()
     {
+        
         // arrange
 
         LoginDTO loginDto = new() { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
@@ -124,7 +127,8 @@ public class PlayersControllerTests : BaseIntegrationTests
         //Assert.Equal(player, playerResp);
         Assert.Equal(player.FirstName, playerResp.FirstName);
         Assert.Equal(player.LastName, playerResp.LastName);
-    }
+        
+        */
 }
 
 

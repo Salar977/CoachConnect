@@ -23,7 +23,7 @@ public class PlayersController : ControllerBase
         _logger = logger;
     }
 
-    //[Authorize(Roles = "Admin, Coach, User")]
+    [Authorize(Roles = "Admin, Coach, User")]
     // GET: https://localhost:7036/api/v1/players
     [HttpGet(Name = "GetAllPlayers")]
     public async Task<ActionResult<IEnumerable<PlayerResponse>>> GetAllPlayers([FromQuery] PlayerQuery playerQuery)
@@ -35,6 +35,7 @@ public class PlayersController : ControllerBase
         return Ok(await _playerService.GetAllAsync(playerQuery));
     }
 
+    [Authorize(Roles = "Admin, Coach, User")]
     // GET:https://localhost:7036/api/v1/players/87654321-2345-2345-2345-123456789144
     [HttpGet("{id}", Name = "GetPlayerById")]
     public async Task<ActionResult<PlayerResponse>> GetPlayerById(Guid id)
@@ -45,6 +46,7 @@ public class PlayersController : ControllerBase
         return player != null ? Ok(player) : NotFound($"Player with ID '{id}' not found");
     }
 
+    [Authorize(Roles = "Admin, Coach, User")]
     // GET https://localhost:7036/api/v1/players/player/UserId/12345678-90ab-cdef-1234-567890abcdef
     [HttpGet("player/UserId/{userId}", Name = "GetPlayersByUserId")]
     public async Task<ActionResult<IEnumerable<PlayerResponse>>> GetTeamsByUserId(Guid userId)
@@ -55,6 +57,8 @@ public class PlayersController : ControllerBase
             ? Ok(res)
             : NotFound("Could not any find any teams with this coachid");
     }
+
+    [Authorize(Roles = "Admin, Coach, User")]
     // GET: https://localhost:7036/api/v1/players/player/TeamId/d3b5a3d1-e0f2-4bf6-a5c3-7e8d9f1a2013
     [HttpGet("player/TeamId/{teamId}", Name = "GetPlayersByCoachId")]
     public async Task<ActionResult<IEnumerable<PlayerResponse>>> GetPlayersByTeamId(Guid teamId)
@@ -66,6 +70,7 @@ public class PlayersController : ControllerBase
             : NotFound("Could not any find any players with this teamid");
     }
 
+    [Authorize(Roles = "Admin, Coach, User")]
     // POST: https://localhost:7036/api/v1/players/register
     [HttpPost("register", Name = "CreatePlayer")]
     public async Task<ActionResult<PlayerResponse>> CreatePlayer([FromBody] PlayerRequest playerReq)
@@ -75,22 +80,37 @@ public class PlayersController : ControllerBase
         var res = await _playerService.CreateAsync(playerReq);
         return res != null ? Ok(res) : BadRequest("Could not Create new player");
     }
+
+    [Authorize(Roles = "Admin, Coach, User")]
     // PUT: https://localhost:7036/api/v1/players/
     [HttpPut("{id}", Name = "UpdatePlayer")]
     public async Task<ActionResult<PlayerUpdate>> UpdatePlayer(Guid id, [FromBody] PlayerUpdate playerUpdate)
     {
+
         _logger.LogDebug("Updating player with ID: {id}", id);
+        string idFromToken = (string)this.HttpContext.Items["UserId"]!;
+        string idFromRoute = "PlayerId { playerId = " + id.ToString() + " }";
+        bool isAdmin = this.User.IsInRole("Admin");
+
+        if (!isAdmin && !idFromToken.Equals(idFromRoute))
+            return Unauthorized("No authorization to update this player");
 
         var res = await _playerService.UpdateAsync(new PlayerId(id), playerUpdate);
         return res != null ? Ok(res) : BadRequest("Could not update Player");
     }
 
+    [Authorize(Roles = "Admin, Coach, User")]
     // DEL: https://localhost:7036/api/v1/players/
     [HttpDelete("{id}", Name = "DeletePlayer")]
     public async Task<ActionResult<PlayerResponse>> DeletePlayer(Guid id)
     {
         _logger.LogDebug("Deleting player with ID: {id}", id);
+        string idFromToken = (string)this.HttpContext.Items["UserId"]!;
+        string idFromRoute = "PlayerId { playerId = " + id.ToString() + " }";
+        bool isAdmin = this.User.IsInRole("Admin");
 
+        if (!isAdmin && !idFromToken.Equals(idFromRoute))
+            return Unauthorized("No authorization to delete this player");
         var res = await _playerService.DeleteAsync(new PlayerId(id));
         return res != null ? Ok(res) : BadRequest("Could not delete Player");
     }

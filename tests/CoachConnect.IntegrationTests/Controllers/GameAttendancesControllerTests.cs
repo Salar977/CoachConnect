@@ -191,7 +191,87 @@ public class GameAttendancesControllerTests : BaseIntegrationTests
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.NotNull(response);
-    }       
-   
-      
+    }
+
+    [Fact]
+    public async Task DeleteGameAttendanceAsync_WithValidCoachRole_WhereCoachIsCoachForThePlayerHavingTheirAttendanceDeleted_ReturnsOKAndDeletedGameAttendance()
+    {
+        // arrange
+
+        LoginDTO loginDto = new() { Username = "sol@epost.com", Password = "S1lskjær#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+
+        var gameAttendanceId = new GameAttendanceId(new Guid("aa15514a-c2f8-46fd-a547-ab5c1fc76e14"));
+
+        // act
+
+        var loginResult = await Client!.PostAsync("api/v1/login", content);
+        var tokenResponse = await loginResult.Content.ReadAsStringAsync();
+        var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
+
+        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        var response = await Client!.DeleteAsync($"api/v1/gameattendances/{gameAttendanceId.gameAttendanceId}");
+        var responseDTO = await response.Content.ReadFromJsonAsync<GameAttendanceDTO>();
+
+        //assert
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(responseDTO);
+    }
+
+    [Fact]
+    public async Task DeleteGameAttendanceAsync_WithValidCoachRole_WhereCoachIsNotCoachForThePlayerHavingTheirAttendanceDeleted_ReturnsBadRequest()
+    {
+        // arrange
+
+        LoginDTO loginDto = new() { Username = "sol@epost.com", Password = "S1lskjær#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+
+        var gameAttendanceId = new GameAttendanceId(new Guid("9815514a-c2f8-46fd-a547-ab5c1fc76888"));
+
+        // act
+
+        var loginResult = await Client!.PostAsync("api/v1/login", content);
+        var tokenResponse = await loginResult.Content.ReadAsStringAsync();
+        var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
+
+        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        var response = await Client!.DeleteAsync($"api/v1/gameattendances/{gameAttendanceId.gameAttendanceId}");
+
+        //assert
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.NotNull(response);
+    }
+
+    [Fact]
+    public async Task DeleteGameAttendanceAsync_MissingCoachRoleInToken_ReturnsForbidden()
+    {
+        // arrange
+
+        LoginDTO loginDto = new() { Username = "sara@abc.no", Password = "A1dersen#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+
+        var gameAttendanceId = new GameAttendanceId(new Guid("9815514a-c2f8-46fd-a547-ab5c1fc76888"));
+
+        // act
+
+        var loginResult = await Client!.PostAsync("api/v1/login", content);
+        var tokenResponse = await loginResult.Content.ReadAsStringAsync();
+        var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
+
+        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        var response = await Client!.DeleteAsync($"api/v1/gameattendances/{gameAttendanceId.gameAttendanceId}");
+
+        //assert
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.NotNull(response);
+    }
 }

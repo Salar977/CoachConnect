@@ -1,13 +1,9 @@
 ﻿using CoachConnect.BusinessLayer.DTOs.Players;
-using CoachConnect.BusinessLayer.DTOs.Teams;
-using CoachConnect.BusinessLayer.Services;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.DataAccess.Entities;
 using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CoachConnect.API.Controllers;
 [Route("api/v1/players")]

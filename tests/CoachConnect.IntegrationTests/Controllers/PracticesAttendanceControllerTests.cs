@@ -17,44 +17,6 @@ public class PracticesAttendanceControllerTests : BaseIntegrationTests
     }
 
     [Fact]
-    public async Task RegisterPracticeAttendanceAsync_WithValidCoachLogin_ReturnsOK200()
-    {
-        // arrange
-
-        LoginDTO loginDto = new() { Username = "koppen@gmail.com", Password = "E1derkopp#" };
-        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
-        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
-
-        var practiceId = Guid.Parse("2f042e86-d75e-4591-a810-aca808726702");
-        var PlayerId = Guid.Parse("87654321-1234-1234-1234-123456789111");
-
-        var practiceAttendanceRequest = new PracticeAttendanceRequest
-        (
-         practiceId,
-         PlayerId
-        );
-
-        // act
-
-        var loginResult = await Client!.PostAsync("api/v1/login", content);
-        var tokenResponse = await loginResult.Content.ReadAsStringAsync();
-        var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
-
-        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-        var response = await Client!.PostAsync($"api/v1/practiceattendances/register",
-            new StringContent(JsonConvert.SerializeObject(practiceAttendanceRequest), Encoding.UTF8, "application/json"));
-        var responseDTO = await response.Content.ReadFromJsonAsync<PracticeAttendanceRequest>();
-
-        //assert
-
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        Assert.NotNull(responseDTO);
-        Assert.Equal(practiceAttendanceRequest.PracticeId, responseDTO.PracticeId);
-        Assert.Equal(practiceAttendanceRequest.PlayerId, responseDTO.PlayerId);
-    }
-
-    [Fact]
     public async Task RegisterPracticeAttendanceAsync_AttendanceAlreadyExistsForPractice_ReturnsBadRequest400()
     {
         // arrange

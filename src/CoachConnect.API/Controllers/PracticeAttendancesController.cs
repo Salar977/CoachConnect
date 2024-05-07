@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoachConnect.API.Controllers;
-[Route("api/v1/practice/attendances")]
+[Route("api/v1/practiceattendances")]
 [ApiController]
 
 public class PracticeAttendancesController : ControllerBase
@@ -22,20 +22,20 @@ public class PracticeAttendancesController : ControllerBase
 
     [Authorize(Roles = "Admin, Coach")]
     [HttpGet(Name = "GetAllAsync")]
-    public async Task<ActionResult<IEnumerable<PracticeAttendanceResponse>>> GetAllAsync([FromQuery] PracticeAttendanceQuery attendanceQuery)
+    public async Task<ActionResult<IEnumerable<PracticeAttendanceResponse>>> GetAllAttendancesAsync([FromQuery] PracticeAttendanceQuery attendanceQuery)
     {
         _logger.LogInformation("Get all practices - Controller");
         return Ok(await _practiceAttendanceService.GetAllAsync(attendanceQuery));
     }
-    [Authorize(Roles = "Admin, Coach")]
-    [HttpGet("/api/v1/practice/{practiceId:guid}", Name = "GetAllByPracticeAsync")]
-    public async Task<ActionResult<IEnumerable<PracticeAttendanceResponse>>> GetAllByPracticeAsync([FromRoute] Guid practiceId)
+    [Authorize(Roles = "Admin, Coach, User")]
+    [HttpGet("/api/v1/practiceattendances/practice/{practiceId:guid}", Name = "GetAllByPracticeIdAsync")]
+    public async Task<ActionResult<IEnumerable<PracticeAttendanceResponse>>> GetAllByPracticeIdAsync([FromRoute] Guid practiceId)
     {
         _logger.LogInformation("Getting all attendences for the practice - Controller");
         return Ok(await _practiceAttendanceService.GetByPracticeAsync(practiceId));
     }
 
-    [Authorize(Roles = "Admin, Coach")]
+    [Authorize(Roles = "Admin, Coach, User")]
     [HttpGet("{id:guid}", Name = "GetAttendanceByIdAsync")]
     public async Task<ActionResult<PracticeAttendanceResponse>> GetByIdAsync([FromRoute] Guid id)
     {

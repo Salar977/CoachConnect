@@ -23,7 +23,7 @@ public class PracticeController : ControllerBase
 
     [Authorize(Roles = "Admin, Coach, User")]
     [HttpGet(Name = "GetAllPracticeAsync")]
-    public async Task<ActionResult<IEnumerable<PracticeResponse>>> GetAllPractice([FromQuery] PracticeQuery practiceQuery)
+    public async Task<ActionResult<IEnumerable<PracticeResponse>>> GetAllPracticeAsync([FromQuery] PracticeQuery practiceQuery)
     {
         _logger.LogInformation("Get all practices - Controller");
         return Ok(await _practiceService.GetAllAsync(practiceQuery));
@@ -31,7 +31,7 @@ public class PracticeController : ControllerBase
 
     [Authorize(Roles = "Admin, Coach, User")]
     [HttpGet("{id:guid}", Name = "GetPracticeByIdAsync")]
-    public async Task<ActionResult<PracticeResponse>> GetById([FromRoute] Guid id)
+    public async Task<ActionResult<PracticeResponse>> GetByIdAsync([FromRoute] Guid id)
     {
         var practice = await _practiceService.GetByIdAsync(id);
 
@@ -70,9 +70,9 @@ public class PracticeController : ControllerBase
             return NotFound("Practice was not found");
         }
 
-        await _practiceService.DeleteAsync(id);
+        var deletedPractice = await _practiceService.DeleteAsync(id);
 
-        return Ok(practice);
+        return Ok(deletedPractice);
     }
 
     [Authorize(Roles = "Admin, Coach")]
@@ -87,8 +87,8 @@ public class PracticeController : ControllerBase
             return NotFound("Practice was not found");
         }
 
-        await _practiceService.UpdateAsync(id, practiceUpdate);
+        var updatedPractice = await _practiceService.UpdateAsync(id, practiceUpdate);
 
-        return Ok(practice);
+        return Ok(updatedPractice);
     }
 }

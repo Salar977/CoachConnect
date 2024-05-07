@@ -20,7 +20,6 @@ public class PlayerControllerTests : BaseIntegrationTests
     {
         // arrange
 
-
         LoginDTO loginDto = new() { Username = "quyen123@hotmail.com", Password = "Q1yenAdmin#" };
         var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
         StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");

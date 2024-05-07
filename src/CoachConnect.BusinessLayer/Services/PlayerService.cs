@@ -1,19 +1,10 @@
 ﻿using CoachConnect.BusinessLayer.DTOs.Players;
-using CoachConnect.BusinessLayer.DTOs.Teams;
-using CoachConnect.BusinessLayer.Mappers;
 using CoachConnect.BusinessLayer.Mappers.Interfaces;
-using CoachConnect.BusinessLayer.Mappers.Practices;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.DataAccess.Entities;
-using CoachConnect.DataAccess.Repositories;
 using CoachConnect.DataAccess.Repositories.Interfaces;
 using CoachConnect.Shared.Helpers;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoachConnect.BusinessLayer.Services;
 public class PlayerService : IPlayerService
@@ -79,7 +70,7 @@ public class PlayerService : IPlayerService
     public async Task<ICollection<PlayerResponse?>> GetPlayersByTeamIdAsync(TeamId teamId)
     {
         _logger?.LogDebug("Get Players by team id");
-        // Check for null before using the repository and mapper
+
         if (_playerRepository == null || _playerMapper == null)
         {
             throw new ApplicationException("Player repository or mapper is null.");
@@ -88,7 +79,6 @@ public class PlayerService : IPlayerService
         // Retrieve players by team ID
         var players = await _playerRepository.GetPlayersByTeamIdAsync(teamId);
 
-        // Check if the team ID exists
         if (players == null)
         {
             return new List<PlayerResponse?>();
@@ -103,13 +93,13 @@ public class PlayerService : IPlayerService
     public async Task<ICollection<PlayerResponse?>> GetPlayersByUserIdAsync(UserId userId)
     {
         _logger?.LogDebug("Get players by user id");
-        // Check for null before using the repository and mapper
+
         if (_playerRepository == null || _playerMapper == null)
         {
             throw new ApplicationException("Arrangement register repository or mapper is null.");
         }
 
-        // Retrieve arrangement registers by user ID
+
         var players = await _playerRepository.GetPlayersByUserIdAsync(userId);
 
         // Check if the member ID exists

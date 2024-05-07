@@ -1,11 +1,5 @@
-﻿using CoachConnect.BusinessLayer.DTOs.Players;
-using CoachConnect.BusinessLayer.DTOs.Teams;
+﻿using CoachConnect.BusinessLayer.DTOs.Teams;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoachConnect.BusinessLayer.Validators.TeamValidators;
 public class TeamUpdateDTOValidator : AbstractValidator<TeamUpdate>

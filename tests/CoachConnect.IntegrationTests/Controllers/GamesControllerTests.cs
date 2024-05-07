@@ -343,4 +343,31 @@ public class GamesControllerTests : BaseIntegrationTests
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.NotNull(response);
     }
+
+    [Fact]
+    public async Task DeleteGameAsync_MissingCoachRoleInToken_ReturnsForbidden()
+    {
+        // arrange
+
+        LoginDTO loginDto = new() { Username = "jens@gmail.com", Password = "J1nsen#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+
+        var gameId = new GameId(new Guid("2f042e86-d75e-4591-a810-aca80872bbb6"));
+
+        // act
+
+        var loginResult = await Client!.PostAsync("api/v1/login", content);
+        var tokenResponse = await loginResult.Content.ReadAsStringAsync();
+        var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
+
+        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        var response = await Client!.DeleteAsync($"api/v1/games/{gameId.gameId}");
+
+        //assert
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.NotNull(response);
+    }
 }

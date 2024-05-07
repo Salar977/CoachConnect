@@ -40,13 +40,13 @@ public class PracticeAttendanceRepository : IPracticeAttendanceRepository
 
         var practiceAttendances = _dbContext.Practice_attendences.AsQueryable();
 
-        var skipNumber = (practiceAttendanceQuery.PageNumber - 1) * practiceAttendanceQuery.PageSize;
+        var skipNumber = (practiceAttendanceQuery.Page - 1) * practiceAttendanceQuery.Size;
 
         return await practiceAttendances
             .Include(p => p.Player)
             .OrderBy(x => x.Created)
             .Skip(skipNumber)
-            .Take(practiceAttendanceQuery.PageSize)
+            .Take(practiceAttendanceQuery.Size)
             .ToListAsync();
     }
 

@@ -39,7 +39,8 @@ public class CoachConnectWebAppFactory : WebApplicationFactory<Program>, IAsyncL
             {
                 options.UseMySql(
                     _mySqlContainer.GetConnectionString(),
-                    new MySqlServerVersion(new Version(8, 0, 33)),
+                    new MySqlServerVersion(ServerVersion
+                    .AutoDetect(_mySqlContainer.GetConnectionString())),
                     builder => 
                     {
                         builder.EnableRetryOnFailure();

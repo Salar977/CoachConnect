@@ -25,8 +25,8 @@ public class CoachRegistrationDTOValidator : AbstractValidator<CoachRegistration
             .MaximumLength(16).WithMessage("Password limit exceeded (max 16 characters)")
             .Matches(@"[0-9]+").WithMessage("Password must contain at least 1 number")
             .Matches(@"[A-Z]+").WithMessage("Password must contain at least 1 uppercase letter")
-            .Matches(@"[a-z]+").WithMessage("Password must contain at least 1 lowercase letter");
-            //.Matches(@"[!?*#_-]+").WithMessage("Password must contain at least 1 special character ('! ? * # _ -')");
+            .Matches(@"[a-z]+").WithMessage("Password must contain at least 1 lowercase letter")
+            .Matches(@"[!?*#_-]+").WithMessage("Password must contain at least 1 special character ('! ? * # _ -')");
 
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email must be included")

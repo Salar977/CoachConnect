@@ -1,13 +1,9 @@
 ﻿using CoachConnect.BusinessLayer.DTOs.Players;
-using CoachConnect.BusinessLayer.DTOs.Teams;
-using CoachConnect.BusinessLayer.Services;
 using CoachConnect.BusinessLayer.Services.Interfaces;
 using CoachConnect.DataAccess.Entities;
 using CoachConnect.Shared.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CoachConnect.API.Controllers;
 [Route("api/v1/players")]
@@ -55,12 +51,12 @@ public class PlayersController : ControllerBase
         var res = await _playerService.GetPlayersByUserIdAsync(new UserId(userId));
         return res != null
             ? Ok(res)
-            : NotFound("Could not any find any teams with this coachid");
+            : NotFound("Could not any find any players with this userid");
     }
 
     [Authorize(Roles = "Admin, Coach, User")]
     // GET: https://localhost:7036/api/v1/players/player/TeamId/d3b5a3d1-e0f2-4bf6-a5c3-7e8d9f1a2013
-    [HttpGet("player/TeamId/{teamId}", Name = "GetPlayersByCoachId")]
+    [HttpGet("player/TeamId/{teamId}", Name = "GetPlayersByTeamId")]
     public async Task<ActionResult<IEnumerable<PlayerResponse>>> GetPlayersByTeamId(Guid teamId)
     {
         _logger.LogTrace("Getting arrangementRegisters by memberid");

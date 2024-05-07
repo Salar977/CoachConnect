@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoachConnect.Shared.Helpers;
+﻿namespace CoachConnect.Shared.Helpers;
 public class TeamQuery
 {
     public string TeamCity { get; set; } = string.Empty;

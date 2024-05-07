@@ -272,4 +272,31 @@ public class UsersControllerTests : BaseIntegrationTests
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         Assert.NotNull(response);
     }
+
+    [Fact]
+    public async Task DeleteUserAsync_MissingUserRoleInToken_ReturnsForbidden()
+    {
+        // arrange
+
+        var userId = "d9e4e229-7738-4d26-822d-1b13fb1052c9";
+
+        LoginDTO loginDto = new() { Username = "koppen@gmail.com", Password = "E1derkopp#" };
+        var jsonLoginDto = System.Text.Json.JsonSerializer.Serialize(loginDto);
+        StringContent content = new(jsonLoginDto, System.Text.Encoding.UTF8, "application/json");
+
+        // act
+
+        var loginResult = await Client!.PostAsync("api/v1/login", content);
+        var tokenResponse = await loginResult.Content.ReadAsStringAsync();
+        var token = System.Text.Json.JsonDocument.Parse(tokenResponse).RootElement.GetProperty("token").GetString();
+
+        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        var response = await Client.DeleteAsync($"api/v1/users/{userId}");
+
+        // assert
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.NotNull(response);
+    }
 }

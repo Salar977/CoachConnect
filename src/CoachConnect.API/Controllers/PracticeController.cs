@@ -70,9 +70,9 @@ public class PracticeController : ControllerBase
             return NotFound("Practice was not found");
         }
 
-        await _practiceService.DeleteAsync(id);
+        var deletedPractice = await _practiceService.DeleteAsync(id);
 
-        return Ok(practice);
+        return Ok(deletedPractice);
     }
 
     [Authorize(Roles = "Admin, Coach")]
@@ -87,8 +87,8 @@ public class PracticeController : ControllerBase
             return NotFound("Practice was not found");
         }
 
-        await _practiceService.UpdateAsync(id, practiceUpdate);
+        var updatedPractice = await _practiceService.UpdateAsync(id, practiceUpdate);
 
-        return Ok(practice);
+        return Ok(updatedPractice);
     }
 }
